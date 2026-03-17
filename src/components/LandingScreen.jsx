@@ -50,7 +50,7 @@ export default function LandingScreen({ onSelect, onBackToPlatform }) {
     <main className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
               <Leaf className="h-5 w-5 text-primary" />
@@ -80,17 +80,17 @@ export default function LandingScreen({ onSelect, onBackToPlatform }) {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
-        <div className="container mx-auto px-4 py-16 md:py-24 relative">
+        <div className="w-full max-w-5xl mx-auto px-5 md:px-10 py-16 md:py-24 relative">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-6">
               <BarChart3 className="h-4 w-4" />
               Measure. Understand. Reduce.
             </div>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 text-balance leading-tight">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 text-balance leading-tight">
               Calculate Your
               <span className="text-primary"> Carbon Footprint</span>
             </h2>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-10 text-pretty max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 text-pretty max-w-3xl mx-auto px-4 md:px-0">
               Make informed decisions about your environmental impact. Our calculator helps households, businesses, and industries measure and reduce their greenhouse gas emissions.
             </p>
 
@@ -109,7 +109,7 @@ export default function LandingScreen({ onSelect, onBackToPlatform }) {
       </section>
 
       {/* Calculator Selection */}
-      <section className="container mx-auto px-4 pb-16 md:pb-24">
+      <section className="w-full max-w-7xl mx-auto px-5 md:px-10 pb-16 md:pb-24">
         <div className="text-center mb-10">
           <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Choose Your Calculator</h3>
           <p className="text-lg text-muted-foreground">Select the option that best matches your needs</p>
@@ -138,12 +138,11 @@ export default function LandingScreen({ onSelect, onBackToPlatform }) {
                   ))}
                 </ul>
                 <Button
-                  className="w-full text-lg py-6 hover:bg-primary transition-colors cursor-pointer"
+                  className="w-full text-base sm:text-lg md:text-base py-4 sm:py-6 md:py-6 h-auto whitespace-normal rounded-xl hover:bg-primary transition-colors cursor-pointer flex-wrap justify-center"
                   variant="secondary"
                   onClick={() => onSelect(option.id)}
                 >
                   Start Calculation
-                  <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" />
                 </Button>
               </CardContent>
             </Card>
@@ -153,7 +152,7 @@ export default function LandingScreen({ onSelect, onBackToPlatform }) {
 
       {/* Features Section */}
       <section className="border-t border-border/50 bg-card/30">
-        <div className="container mx-auto px-4 py-16">
+        <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-16">
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
@@ -182,7 +181,7 @@ export default function LandingScreen({ onSelect, onBackToPlatform }) {
 
       {/* Footer */}
       <footer className="border-t border-border/50 py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+        <div className="w-full max-w-7xl mx-auto px-5 md:px-10 text-center text-sm text-muted-foreground">
           <p>Based on GHG Protocol methodology with India-specific emission factors</p>
           <p className="mt-1">Data sources: IPCC, DEFRA, Central Electricity Authority of India</p>
         </div>

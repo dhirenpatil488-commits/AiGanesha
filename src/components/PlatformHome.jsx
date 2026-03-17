@@ -8,15 +8,15 @@ export default function PlatformHome({ onNavigate }) {
 
             {/* ── Navigation ─────────────────────────────────────────────── */}
             <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-                <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+                <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                         {/* G symbol cropped from logo */}
-                        <div className="h-14 w-14 rounded-xl bg-white flex items-center justify-center overflow-hidden shrink-0">
+                        <div className="h-20 w-20 rounded-2xl bg-white flex items-center justify-center overflow-hidden shrink-0 shadow-sm border border-border/50">
                             <img
                                 src="/aiganesha-logo.png"
                                 alt="AiGanesha"
                                 className="w-auto object-cover"
-                                style={{ objectPosition: '52% center', width: '72px', height: '48px', marginLeft: '-10px' }}
+                                style={{ objectPosition: '52% center', width: '104px', height: '68px', marginLeft: '-14px' }}
                             />
                         </div>
                     </div>
@@ -32,79 +32,85 @@ export default function PlatformHome({ onNavigate }) {
             </header>
 
             {/* ── Hero ───────────────────────────────────────────────────── */}
-            <section className="relative overflow-hidden py-24 md:py-36">
+            <section className="relative overflow-hidden pt-10 pb-8 md:pt-14 md:pb-12">
                 {/* Ambient gradients */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-background pointer-events-none" />
                 <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-primary/3 rounded-full blur-3xl pointer-events-none" />
 
-                <div className="container mx-auto px-6 relative">
-                    <div className="max-w-3xl mx-auto text-center space-y-8">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-medium">
-                            <Activity size={16} />
-                            <span>Building for the Future</span>
+                <div className="w-full max-w-5xl mx-auto px-5 md:px-10 relative">
+                    <div className="max-w-3xl mx-auto space-y-12">
+                        {/* Branding & Main Heading (Centered in screen axis) */}
+                        <div className="flex flex-col items-center space-y-8 text-center lg:-mx-32">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-medium">
+                                <Activity size={16} />
+                                <span>Building for the Future</span>
+                            </div>
+
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight tracking-tight">
+                                Intelligence for a<br />
+                                <span className="text-secondary">Sustainable Future</span>
+                            </h1>
                         </div>
 
-                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight tracking-tight">
-                            Intelligence for a<br />
-                            <span className="text-secondary">Sustainable Future</span>
-                        </h1>
+                        {/* Description (Starts at 768px baseline, spans 1024px width) */}
+                        <div className="flex justify-start">
+                            <p className="text-lg sm:text-xl md:text-xl text-muted-foreground w-full lg:w-[1024px] lg:max-w-none leading-relaxed px-2 md:px-0 text-left">
+                                AiGanesha provides accessible tools to understand and measure GHG emissions
+                                across households, businesses, and industries using structured carbon accounting methodologies.
+                            </p>
+                        </div>
 
-                        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                            AiGanesha provides accessible tools to understand and measure greenhouse gas emissions
-                            across households, businesses, and industries using structured carbon accounting methodologies.
-                        </p>
+                        {/* CTA (Centered) */}
+                        <div className="flex justify-center pt-4 md:pt-8">
+                            <div className="relative inline-flex flex-col items-center">
+                                <Button
+                                    onClick={() => onNavigate('landing')}
+                                    variant="secondary"
+                                    size="lg"
+                                    className="text-sm sm:text-base px-6 py-4 sm:px-8 sm:py-6 rounded-xl font-semibold shadow-lg shadow-secondary/30 hover:bg-primary hover:shadow-primary/30 transition-all duration-300 h-auto whitespace-normal"
+                                >
+                                    Take Your First Step Towards Sustainability
+                                </Button>
 
-                        <Button
-                            onClick={() => onNavigate('landing')}
-                            variant="secondary"
-                            size="lg"
-                            className="text-base px-8 py-6 rounded-xl font-semibold group shadow-lg shadow-secondary/30 hover:bg-primary hover:shadow-primary/30 transition-all duration-300"
-                        >
-                            Take Your First Step Towards Sustainability
-                            <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" />
-                        </Button>
+                                {/* Decorative handwritten note */}
+                                <div className="absolute -right-24 top-1/2 -translate-y-1/2 hidden lg:block">
+                                    <span className="font-cursive text-secondary text-2xl rotate-12 inline-block">
+                                        Start here →
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* ── Climate Reality + Vision + Mission ─────────────────────── */}
             <section className="border-t border-border/50 bg-card/20 py-20">
-                <div className="container mx-auto px-6">
-                    <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div className="w-full max-w-7xl mx-auto px-5 md:px-10">
+                    <div className="flex flex-col gap-12 max-w-3xl mx-auto text-left">
 
                         {/* Climate Reality */}
-                        <div className="group p-8 rounded-2xl border border-border/50 bg-card/40 hover:bg-card/60 hover:border-primary/30 transition-all duration-300">
-                            <div className="h-12 w-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-6 group-hover:bg-orange-500/20 transition-colors">
-                                <Flame className="h-6 w-6 text-orange-400" />
-                            </div>
-                            <h2 className="text-base font-semibold text-foreground mb-3">Climate Reality</h2>
-                            <p className="text-muted-foreground text-sm leading-relaxed">
-                                A hotter planet means more floods, droughts, and extreme weather.
-                            </p>
-                            <p className="text-muted-foreground text-sm leading-relaxed mt-3">
+                        <div>
+                            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4">Climate Reality</h2>
+                            <p className="text-muted-foreground text-lg leading-relaxed">
+                                A hotter planet means more floods, droughts, and extreme weather. <br className="hidden sm:block" />
                                 Understanding emissions is the first step toward reducing them.
                             </p>
                         </div>
 
                         {/* Our Vision */}
-                        <div className="group p-8 rounded-2xl border border-border/50 bg-card/40 hover:bg-card/60 hover:border-primary/30 transition-all duration-300">
-                            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                                <Eye className="h-6 w-6 text-primary" />
-                            </div>
-                            <h2 className="text-base font-semibold text-foreground mb-3">Our Vision</h2>
-                            <p className="text-muted-foreground text-sm leading-relaxed">
+                        <div>
+                            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4">Our Vision</h2>
+                            <p className="text-muted-foreground text-lg leading-relaxed">
                                 To buy more time for the planet and the life it sustains.
                             </p>
                         </div>
 
                         {/* Our Mission */}
-                        <div className="group p-8 rounded-2xl border border-border/50 bg-card/40 hover:bg-card/60 hover:border-primary/30 transition-all duration-300">
-                            <div className="h-12 w-12 rounded-xl bg-sky-500/10 flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
-                                <Target className="h-6 w-6 text-sky-400" />
-                            </div>
-                            <h2 className="text-base font-semibold text-foreground mb-3">Our Mission</h2>
-                            <p className="text-muted-foreground text-sm leading-relaxed">
+                        <div>
+                            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4">Our Mission</h2>
+                            <p className="text-muted-foreground text-lg leading-relaxed">
                                 To make sustainability intelligence accessible through powerful and responsible tools.
                             </p>
                         </div>
@@ -114,7 +120,7 @@ export default function PlatformHome({ onNavigate }) {
 
             {/* ── Footer ─────────────────────────────────────────────────── */}
             <footer className="border-t border-border/50 py-6">
-                <div className="container mx-auto px-6 text-center text-sm text-muted-foreground">
+                <div className="w-full max-w-7xl mx-auto px-5 md:px-10 text-center text-sm text-muted-foreground">
                     <p>Based on GHG Protocol methodology with India-specific emission factors</p>
                     <p className="mt-1 text-muted-foreground/60">
                         Data sources: IPCC, DEFRA, Central Electricity Authority of India

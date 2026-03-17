@@ -108,7 +108,9 @@
 
 @theme inline {
   --font-sans: 'Inter', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, monospace;
+  --font-heading: 'Manrope', 'Manrope Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-cursive: 'Caveat', 'Mynerve', cursive;
   --color-background:        var(--background);
   --color-foreground:        var(--foreground);
   --color-card:              var(--card);
@@ -150,6 +152,15 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  html {
+    font-size: 16pt;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  @media (max-width: 640px) {
+    html { font-size: 14pt; }
   }
   body {
     @apply bg-background text-foreground;
@@ -207,7 +218,6 @@ body.nerd-mode-active h3,
 body.nerd-mode-active p,
 body.nerd-mode-active span,
 body.nerd-mode-active div {
-  /* Force a monospace font for technical feel, or keep existing but slightly dimmer */
   color: #cfd2d6;
 }
 

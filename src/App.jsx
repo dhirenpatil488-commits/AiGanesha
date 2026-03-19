@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import LandingScreen from './components/LandingScreen';
 import HouseholdCalculator from './components/calculators/household-calculator';
 import BusinessCalculator from './components/calculators/business-calculator';
@@ -38,6 +39,7 @@ const App = () => {
                 {!isInsideCalculator && <PerformancePanel />}
                 <InspectorOverlay />
             </div>
+            <Analytics />
         </NerdProvider>
     );
 };

@@ -181,47 +181,64 @@
   }
 }
 
-/* ── Nerd Mode Overrides ─────────────────────────────────────── */
-body.nerd-mode-active {
-  background-color: #0d0f17;
+/* ── Global Layout Overrides (Permanent Nerd Mode) ─────────────────────────────────────── */
+body {
+  background-color: #0d0f17 !important;
   color: #cfd2d6;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  background-position: center center;
-  transition: all 0.5s ease-in-out;
 }
 
-body.nerd-mode-active::after {
+.nerd-mode-active {
+  min-height: 100vh;
+}
+
+.nerd-mode-active::after {
   content: '';
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   pointer-events: none;
-  box-shadow: inset 0 0 120px rgba(37, 99, 235, 0.5); /* Blue inner glow */
+  box-shadow: inset 0 0 120px rgba(37, 99, 235, 0.3); /* Subtle Blue inner glow */
   z-index: 9990;
 }
 
-body.nerd-mode-active * {
+.nerd-mode-active * {
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-body.nerd-mode-active .bg-card, 
-body.nerd-mode-active .bg-background {
+.nerd-mode-active .bg-card, 
+.nerd-mode-active .bg-background {
   background-color: transparent !important;
   backdrop-filter: blur(4px);
 }
 
-body.nerd-mode-active h1,
-body.nerd-mode-active h2,
-body.nerd-mode-active h3,
-body.nerd-mode-active p,
-body.nerd-mode-active span,
-body.nerd-mode-active div {
+.nerd-mode-active h1,
+.nerd-mode-active h2,
+.nerd-mode-active h3,
+.nerd-mode-active p,
+.nerd-mode-active span,
+.nerd-mode-active div {
   color: #cfd2d6;
 }
 
-body.nerd-mode-active h1 {
+.nerd-mode-active h1 {
   color: #ffffff;
 }
 
+/* Base structural grid for the entire main container */
+.global-grid-lines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-left: 1px dotted rgba(255, 255, 255, 0.15);
+  border-right: 1px dotted rgba(255, 255, 255, 0.15);
+}
+
+.global-grid-lines > div {
+  border-right: 1px dotted rgba(255, 255, 255, 0.15);
+}
+
+.global-grid-lines > div:last-child {
+  border-right: none;
+}

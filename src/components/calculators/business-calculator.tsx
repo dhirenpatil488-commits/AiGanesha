@@ -109,7 +109,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
   const t = data.businessType;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="w-full flex flex-col relative z-10">
       {/* Header */}
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -144,13 +144,12 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
               <button
                 key={step.id}
                 onClick={() => setCurrentStep(step.id)}
-                className={`flex flex-col items-center gap-1 transition-colors ${
-                  step.id === currentStep
+                className={`flex flex-col items-center gap-1 transition-colors ${step.id === currentStep
                     ? "text-primary"
                     : step.id < currentStep
-                    ? "text-primary/60"
-                    : "text-muted-foreground/50"
-                }`}
+                      ? "text-primary/60"
+                      : "text-muted-foreground/50"
+                  }`}
               >
                 <step.icon className="h-4 w-4 md:h-5 md:w-5" />
                 <span className="text-xs hidden md:block">{step.title}</span>
@@ -162,16 +161,16 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
 
       {/* Form Content */}
       <div className="container mx-auto px-4 py-12">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto">
           {/* Step 1: Business Type */}
           {currentStep === 1 && (
             <Card className="bg-card border-border shadow-lg">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Building2 className="h-8 w-8 text-primary" />
                   Business Type
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Select the type that best describes your business</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Select the type that best describes your business</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 <RadioGroup
@@ -184,10 +183,10 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                       <RadioGroupItem value={type.id} id={type.id} className="peer sr-only" />
                       <Label
                         htmlFor={type.id}
-                        className="flex items-center gap-4 rounded-xl border-2 border-muted bg-secondary/50 p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
+                        className="flex items-center gap-4 rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
                       >
-                        <Building2 className="h-6 w-6 text-muted-foreground" />
-                        <span className="font-medium text-lg">{type.label}</span>
+                        <Building2 className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
+                        <span className="font-medium text-base sm:text-lg">{type.label}</span>
                       </Label>
                     </div>
                   ))}
@@ -204,7 +203,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                       step={1}
                       className="flex-1"
                     />
-                    <span className="text-4xl font-bold text-primary w-16 text-center">{data.employees}</span>
+                    <span className="text-2xl sm:text-4xl font-bold text-primary w-12 sm:w-16 text-center">{data.employees}</span>
                   </div>
                 </div>
               </CardContent>
@@ -215,11 +214,11 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 2 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Zap className="h-8 w-8 text-primary" />
                   Energy Consumption
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Electricity and fuel usage</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Electricity and fuel usage</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 {t === "home" ? (
@@ -264,7 +263,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                           step={1}
                           className="flex-1"
                         />
-                        <span className="text-3xl font-bold text-primary w-12 text-center">{data.acCount}</span>
+                        <span className="text-2xl sm:text-3xl font-bold text-primary w-8 sm:w-12 text-center">{data.acCount}</span>
                       </div>
                     </div>
                     <div className="space-y-4">
@@ -278,7 +277,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                           step={1}
                           className="flex-1"
                         />
-                        <span className="text-3xl font-bold text-primary w-12 text-center">{data.computerCount}</span>
+                        <span className="text-2xl sm:text-3xl font-bold text-primary w-8 sm:w-12 text-center">{data.computerCount}</span>
                       </div>
                     </div>
                   </>
@@ -375,11 +374,11 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 3 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Truck className="h-8 w-8 text-primary" />
                   Operations & Transport
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Delivery, logistics, and business travel</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Delivery, logistics, and business travel</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 {t === "retail" && (
@@ -485,11 +484,11 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 4 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Users className="h-8 w-8 text-primary" />
                   Employee Commuting
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Daily commute of your team</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Daily commute of your team</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 {t !== "home" ? (
@@ -505,7 +504,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                           step={1}
                           className="flex-1"
                         />
-                        <span className="text-3xl font-bold text-primary w-20 text-center">{data.avgCommuteKm} km</span>
+                        <span className="text-2xl sm:text-3xl font-bold text-primary w-16 sm:w-20 text-center">{data.avgCommuteKm} km</span>
                       </div>
                     </div>
 
@@ -539,11 +538,11 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 5 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <ShoppingCart className="h-8 w-8 text-primary" />
                   Procurement & Purchases
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Monthly spend on business supplies</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Monthly spend on business supplies</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 {t === "office" && (
@@ -634,11 +633,11 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 6 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Trash2 className="h-8 w-8 text-primary" />
                   Waste Generation
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Business waste output</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Business waste output</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 {t !== "logistics" ? (
@@ -654,7 +653,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                           step={1}
                           className="flex-1"
                         />
-                        <span className="text-3xl font-bold text-primary w-12 text-center">{data.wasteBags}</span>
+                        <span className="text-2xl sm:text-3xl font-bold text-primary w-8 sm:w-12 text-center">{data.wasteBags}</span>
                       </div>
                     </div>
 
@@ -670,18 +669,18 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                             <RadioGroupItem value="yes" id="compost-yes" className="peer sr-only" />
                             <Label
                               htmlFor="compost-yes"
-                              className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
+                              className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
                             >
-                              <span className="text-lg font-medium">Yes, we compost</span>
+                              <span className="text-base sm:text-lg font-medium">Yes, we compost</span>
                             </Label>
                           </div>
                           <div>
                             <RadioGroupItem value="no" id="compost-no" className="peer sr-only" />
                             <Label
                               htmlFor="compost-no"
-                              className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
+                              className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
                             >
-                              <span className="text-lg font-medium">No</span>
+                              <span className="text-base sm:text-lg font-medium">No</span>
                             </Label>
                           </div>
                         </RadioGroup>
@@ -700,21 +699,21 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           )}
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-12 mb-20">
-            <Button variant="outline" size="lg" onClick={handlePrev} disabled={currentStep === 1} className="gap-2 text-lg px-8 py-6">
-              <ChevronLeft className="h-5 w-5" />
+          <div className="flex items-center justify-between mt-8 sm:mt-12 mb-10 sm:mb-20">
+            <Button variant="outline" size="lg" onClick={handlePrev} disabled={currentStep === 1} className="gap-2 text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6">
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               Previous
             </Button>
-            <Button size="lg" onClick={handleNext} className="gap-2 text-lg px-8 py-6">
+            <Button size="lg" onClick={handleNext} className="gap-2 text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6">
               {currentStep === steps.length ? (
                 <>
                   Calculate
-                  <Gauge className="h-5 w-5" />
+                  <Gauge className="h-4 w-4 sm:h-5 sm:w-5" />
                 </>
               ) : (
                 <>
                   Next
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 </>
               )}
             </Button>

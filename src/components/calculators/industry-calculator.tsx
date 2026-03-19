@@ -906,14 +906,36 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
   };
 
   if (result) {
-    return <EmissionsResult result={result} type="industry" onBack={() => setResult(null)} />;
+    return (
+      <EmissionsResult
+        result={result}
+        type="industry"
+        onBack={() => setResult(null)}
+        onStartOver={() => {
+          setResult(null);
+          setStep("org");
+          setData({
+            orgName: "",
+            employeesTotal: 0,
+            revenue: 0,
+            sector: "",
+            facilities: [],
+            c1Spend: 0,
+            c2Machinery: 0,
+            c2IT: 0,
+            c11ProductEnergy: 0,
+            c15InvestEquity: 0,
+          });
+        }}
+      />
+    );
   }
 
   const facilitySteps = ["Details", "Scope 1", "Scope 2", "Scope 3 (Local)"];
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-12">
-      <div className={`max-w-${step === "results" ? "7xl" : "5xl"} mx-auto transition-all duration-300`}>
+    <div className="w-full flex flex-col relative z-10 p-4 md:p-12">
+      <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto transition-all duration-300">
         {/* Back Button */}
         {step === "hub" && !isEditingFacility && (
           <Button variant="ghost" onClick={onBack} className="mb-4 text-muted-foreground hover:text-foreground">
@@ -1005,7 +1027,7 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
                   {data.facilities.map((fac) => (
                     <div
                       key={fac.id}
-                      className="p-6 rounded-xl bg-secondary/30 border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                      className="p-4 sm:p-6 rounded-xl bg-secondary/30 border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                     >
                       <div>
                         <h3 className="font-medium text-lg text-foreground flex items-center gap-2 mb-1">
@@ -1033,17 +1055,17 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
                   ))}
                 </div>
 
-                <div className="flex justify-between pt-8 border-t border-border mt-8">
-                  <Button variant="outline" size="lg" onClick={() => setStep("org")} className="text-base px-6 py-6 font-medium">
-                    <ChevronLeft className="w-5 h-5 mr-2" /> Back
+                <div className="flex flex-col sm:flex-row justify-between gap-4 pt-8 border-t border-border mt-8">
+                  <Button variant="outline" size="lg" onClick={() => setStep("org")} className="w-full sm:w-auto text-sm sm:text-base px-4 sm:px-6 py-4 sm:py-6 font-medium">
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" /> Back
                   </Button>
                   <Button
                     size="lg"
                     onClick={() => setStep("org_scope3")}
                     disabled={!allFacilitiesComplete}
-                    className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-base px-6 py-6 font-medium"
+                    className="w-full sm:w-auto bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base px-4 sm:px-6 py-4 sm:py-6 font-medium"
                   >
-                    Proceed to Org-Level Emissions <ChevronRight className="w-5 h-5 ml-2" />
+                    Proceed to Org-Level Emissions <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
                   </Button>
                 </div>
               </div>
@@ -1144,12 +1166,12 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
                   <InputRow label="Investments in equities (USD Millions)" name="c15InvestEquity" value={data.c15InvestEquity} onChange={handleOrgInput} />
                 </div>
 
-                <div className="flex justify-between pt-8 border-t border-border mt-8">
-                  <Button variant="outline" size="lg" onClick={() => setStep("hub")} className="text-base px-6 py-6 font-medium">
-                    <ChevronLeft className="w-5 h-5 mr-2" /> Back to Facilities
+                <div className="flex flex-col sm:flex-row justify-between gap-4 pt-8 border-t border-border mt-8">
+                  <Button variant="outline" size="lg" onClick={() => setStep("hub")} className="w-full sm:w-auto text-sm sm:text-base px-4 sm:px-6 py-4 sm:py-6 font-medium">
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" /> Back to Facilities
                   </Button>
-                  <Button size="lg" onClick={calculateResults} className="bg-primary hover:bg-primary/90 text-base px-6 py-6 font-medium">
-                    Calculate ESG Report <Activity className="w-5 h-5 ml-2" />
+                  <Button size="lg" onClick={calculateResults} className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-sm sm:text-base px-4 sm:px-6 py-4 sm:py-6 font-medium">
+                    Calculate ESG Report <Activity className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
                   </Button>
                 </div>
               </div>

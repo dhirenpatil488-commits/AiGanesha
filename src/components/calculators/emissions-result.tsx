@@ -89,7 +89,7 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
 
       <div className="container mx-auto px-4 md:px-8 py-12">
         {/* Hero Stats */}
-        <div className="max-w-6xl mx-auto mb-12">
+        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">Your Carbon Footprint</h1>
             <p className="text-lg md:text-xl text-muted-foreground">Annual greenhouse gas emissions breakdown</p>
@@ -136,12 +136,12 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
         </div>
 
         {/* Charts Section */}
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 mb-12">
+        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto grid md:grid-cols-2 gap-8 mb-12">
           {/* Pie Chart */}
           <Card className="bg-card border-border shadow-md">
             <CardHeader className="pb-2">
-              <CardTitle className="text-2xl">Emissions Breakdown</CardTitle>
-              <CardDescription className="text-base">Distribution by category</CardDescription>
+              <CardTitle className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">Emissions Breakdown</CardTitle>
+              <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Distribution by category</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
@@ -210,14 +210,14 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
         </div>
 
         {/* Equivalents */}
-        <div className="max-w-6xl mx-auto mb-12">
+        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
           <Card className="bg-card border-border shadow-md">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-3 text-2xl">
                 <TrendingDown className="h-6 w-6 text-primary" />
                 What This Means
               </CardTitle>
-              <CardDescription className="text-base">Your emissions in everyday terms</CardDescription>
+              <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Your emissions in everyday terms</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -335,14 +335,14 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
 
         {/* Reduction Tips */}
         {isBusinessResult(result) && result.dashboard.opportunities.length > 0 && (
-          <div className="max-w-6xl mx-auto mb-12">
+          <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
             <Card className="bg-card border-border shadow-md">
               <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Lightbulb className="h-6 w-6 text-amber-400" />
                   Reduction Opportunities
                 </CardTitle>
-                <CardDescription className="text-base">Top actions to reduce your emissions</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Top actions to reduce your emissions</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
@@ -367,25 +367,25 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
 
         {/* Scope Breakdown for Business/Industry */}
         {(isBusinessResult(result) || isIndustryResult(result)) && (
-          <div className="max-w-6xl mx-auto mb-12">
+          <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
             <Card className="bg-card border-border shadow-md">
               <CardHeader className="pb-2">
-                <CardTitle className="text-2xl">GHG Protocol Scopes</CardTitle>
-                <CardDescription className="text-base">Emissions by scope category</CardDescription>
+                <CardTitle className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">GHG Protocol Scopes</CardTitle>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Emissions by scope category</CardDescription>
               </CardHeader>
               <CardContent>
                 {(() => {
                   const total = result.tonnes.total || 1;
-                  const pctScope1 = isBusinessResult(result) 
-                    ? result.percentages.scope1 
+                  const pctScope1 = isBusinessResult(result)
+                    ? result.percentages.scope1
                     : (result.tonnes.scope1 / total) * 100;
-                  const pctScope2 = isBusinessResult(result) 
-                    ? result.percentages.scope2 
+                  const pctScope2 = isBusinessResult(result)
+                    ? result.percentages.scope2
                     : (result.tonnes.scope2 / total) * 100;
-                  const pctScope3 = isBusinessResult(result) 
-                    ? result.percentages.scope3 
+                  const pctScope3 = isBusinessResult(result)
+                    ? result.percentages.scope3
                     : (result.tonnes.scope3 / total) * 100;
-                  
+
                   return (
                     <div className="space-y-8">
                       <div className="space-y-3">
@@ -425,11 +425,11 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
 
         {/* Benchmark Comparison for Household */}
         {isHouseholdResult(result) && (
-          <div className="max-w-6xl mx-auto mb-12">
+          <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
             <Card className="bg-card border-border shadow-md">
               <CardHeader className="pb-2">
-                <CardTitle className="text-2xl">How You Compare</CardTitle>
-                <CardDescription className="text-base">Your footprint vs benchmarks</CardDescription>
+                <CardTitle className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">How You Compare</CardTitle>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Your footprint vs benchmarks</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-8">
@@ -466,14 +466,14 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
         )}
 
         {/* Actions */}
-        <div className="max-w-6xl mx-auto mt-12">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Button variant="outline" size="lg" onClick={onStartOver} className="gap-2 text-lg px-8 py-6">
-              <RotateCcw className="h-5 w-5" />
+        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mt-12">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <Button variant="outline" size="lg" onClick={onStartOver} className="gap-2 text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6">
+              <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5" />
               Start Over
             </Button>
-            <Button size="lg" onClick={onBack} className="gap-2 text-lg px-8 py-6">
-              <ArrowLeft className="h-5 w-5" />
+            <Button size="lg" onClick={onBack} className="gap-2 text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6">
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               Edit Inputs
             </Button>
           </div>

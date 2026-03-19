@@ -109,7 +109,7 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
   const progress = (currentStep / steps.length) * 100;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="w-full flex flex-col relative z-10">
       {/* Header */}
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -144,13 +144,12 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
               <button
                 key={step.id}
                 onClick={() => setCurrentStep(step.id)}
-                className={`flex flex-col items-center gap-1 transition-colors ${
-                  step.id === currentStep
+                className={`flex flex-col items-center gap-1 transition-colors ${step.id === currentStep
                     ? "text-primary"
                     : step.id < currentStep
-                    ? "text-primary/60"
-                    : "text-muted-foreground/50"
-                }`}
+                      ? "text-primary/60"
+                      : "text-muted-foreground/50"
+                  }`}
               >
                 <step.icon className="h-4 w-4 md:h-5 md:w-5" />
                 <span className="text-xs hidden md:block">{step.title}</span>
@@ -162,16 +161,16 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
 
       {/* Form Content */}
       <div className="container mx-auto px-4 py-12">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto">
           {/* Step 1: Household Info */}
           {currentStep === 1 && (
             <Card className="bg-card border-border shadow-lg">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Home className="h-8 w-8 text-primary" />
                   Household Information
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Tell us about your household</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Tell us about your household</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 <div className="space-y-4">
@@ -185,7 +184,7 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
                       step={1}
                       className="flex-1"
                     />
-                    <span className="text-4xl font-bold text-primary w-12 text-center">{data.householdSize}</span>
+                    <span className="text-2xl sm:text-4xl font-bold text-primary w-8 sm:w-12 text-center">{data.householdSize}</span>
                   </div>
                 </div>
 
@@ -205,9 +204,9 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
                         <RadioGroupItem value={option.value} id={option.value} className="peer sr-only" />
                         <Label
                           htmlFor={option.value}
-                          className="flex flex-col items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all min-h-[120px]"
+                          className="flex flex-col items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all min-h-[100px] sm:min-h-[120px]"
                         >
-                          <span className="text-lg font-medium text-center">{option.label}</span>
+                          <span className="text-base sm:text-lg font-medium text-center">{option.label}</span>
                         </Label>
                       </div>
                     ))}
@@ -221,11 +220,11 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
           {currentStep === 2 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Zap className="h-8 w-8 text-primary" />
                   Energy Consumption
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Your electricity and cooking fuel usage</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Your electricity and cooking fuel usage</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 <div className="space-y-4">
@@ -282,9 +281,9 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
                         <RadioGroupItem value={option.value} id={`fuel-${option.value}`} className="peer sr-only" />
                         <Label
                           htmlFor={`fuel-${option.value}`}
-                          className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all min-h-[100px]"
+                          className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all min-h-[80px] sm:min-h-[100px]"
                         >
-                          <span className="text-lg font-medium">{option.label}</span>
+                          <span className="text-base sm:text-lg font-medium">{option.label}</span>
                         </Label>
                       </div>
                     ))}
@@ -326,54 +325,54 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
           {currentStep === 3 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Car className="h-8 w-8 text-primary" />
                   Personal Transportation
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Your vehicles and daily commute</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Your vehicles and daily commute</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 <div className="space-y-6">
                   {data.vehicles.map((vehicle, index) => (
-                    <div key={index} className="p-6 rounded-xl bg-secondary/50 space-y-6">
+                    <div key={index} className="p-4 sm:p-6 rounded-xl bg-secondary/50 space-y-4 sm:space-y-6">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-lg">Vehicle {index + 1}</span>
+                        <span className="font-semibold text-base sm:text-lg">Vehicle {index + 1}</span>
                         <Button variant="ghost" size="sm" onClick={() => removeVehicle(index)} className="text-destructive hover:text-destructive">
                           Remove
                         </Button>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="space-y-3">
-                          <Label className="text-base">Fuel Type</Label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                        <div className="space-y-2 sm:space-y-3">
+                          <Label className="text-sm sm:text-base">Fuel Type</Label>
                           <Select value={vehicle.type} onValueChange={(v) => updateVehicle(index, "type", v)}>
-                            <SelectTrigger className="text-base py-5">
+                            <SelectTrigger className="text-sm sm:text-base py-4 sm:py-5">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="petrol" className="text-base py-2">Petrol Car</SelectItem>
-                              <SelectItem value="diesel" className="text-base py-2">Diesel Car</SelectItem>
-                              <SelectItem value="cng" className="text-base py-2">CNG Car</SelectItem>
-                              <SelectItem value="twoWheeler" className="text-base py-2">Two Wheeler</SelectItem>
-                              <SelectItem value="electric" className="text-base py-2">Electric</SelectItem>
+                              <SelectItem value="petrol" className="text-sm sm:text-base py-2">Petrol Car</SelectItem>
+                              <SelectItem value="diesel" className="text-sm sm:text-base py-2">Diesel Car</SelectItem>
+                              <SelectItem value="cng" className="text-sm sm:text-base py-2">CNG Car</SelectItem>
+                              <SelectItem value="twoWheeler" className="text-sm sm:text-base py-2">Two Wheeler</SelectItem>
+                              <SelectItem value="electric" className="text-sm sm:text-base py-2">Electric</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className="space-y-3">
-                          <Label className="text-base">KM per week</Label>
+                        <div className="space-y-2 sm:space-y-3">
+                          <Label className="text-sm sm:text-base">KM per week</Label>
                           <Input
                             type="number"
                             value={vehicle.kmPerWeek}
                             onChange={(e) => updateVehicle(index, "kmPerWeek", Number(e.target.value))}
-                            className="text-base py-5"
+                            className="text-sm sm:text-base py-4 sm:py-5"
                           />
                         </div>
-                        <div className="space-y-3">
-                          <Label className="text-base">Efficiency (km/l)</Label>
+                        <div className="space-y-2 sm:space-y-3">
+                          <Label className="text-sm sm:text-base">Efficiency (km/l)</Label>
                           <Input
                             type="number"
                             value={vehicle.efficiency}
                             onChange={(e) => updateVehicle(index, "efficiency", Number(e.target.value))}
-                            className="text-base py-5"
+                            className="text-sm sm:text-base py-4 sm:py-5"
                           />
                         </div>
                       </div>
@@ -396,11 +395,11 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
           {currentStep === 4 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Plane className="h-8 w-8 text-primary" />
                   Air Travel
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Number of flights taken per year</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Number of flights taken per year</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 <div className="space-y-4">
@@ -414,7 +413,7 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
                       step={1}
                       className="flex-1"
                     />
-                    <span className="text-3xl font-bold text-primary w-12 text-center">{data.shortFlightsPerYear}</span>
+                    <span className="text-2xl sm:text-3xl font-bold text-primary w-8 sm:w-12 text-center">{data.shortFlightsPerYear}</span>
                   </div>
                 </div>
 
@@ -429,7 +428,7 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
                       step={1}
                       className="flex-1"
                     />
-                    <span className="text-3xl font-bold text-primary w-12 text-center">{data.mediumFlightsPerYear}</span>
+                    <span className="text-2xl sm:text-3xl font-bold text-primary w-8 sm:w-12 text-center">{data.mediumFlightsPerYear}</span>
                   </div>
                 </div>
 
@@ -444,7 +443,7 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
                       step={1}
                       className="flex-1"
                     />
-                    <span className="text-3xl font-bold text-primary w-12 text-center">{data.longFlightsPerYear}</span>
+                    <span className="text-2xl sm:text-3xl font-bold text-primary w-8 sm:w-12 text-center">{data.longFlightsPerYear}</span>
                   </div>
                 </div>
 
@@ -461,11 +460,11 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
           {currentStep === 5 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <Utensils className="h-8 w-8 text-primary" />
                   Food & Diet
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Your eating habits and food choices</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Your eating habits and food choices</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 <div className="space-y-4">
@@ -473,7 +472,7 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
                   <RadioGroup
                     value={data.dietType}
                     onValueChange={(v) => updateData("dietType", v as HouseholdData["dietType"])}
-                    className="grid grid-cols-2 md:grid-cols-3 gap-4"
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"
                   >
                     {[
                       { value: "vegetarian", label: "Vegetarian" },
@@ -486,9 +485,9 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
                         <RadioGroupItem value={option.value} id={`diet-${option.value}`} className="peer sr-only" />
                         <Label
                           htmlFor={`diet-${option.value}`}
-                          className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all min-h-[100px]"
+                          className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all min-h-[80px] sm:min-h-[100px]"
                         >
-                          <span className="text-lg font-medium text-center">{option.label}</span>
+                          <span className="text-base sm:text-lg font-medium text-center">{option.label}</span>
                         </Label>
                       </div>
                     ))}
@@ -560,11 +559,11 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
           {currentStep === 6 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-2xl">
+                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
                   <ShoppingBag className="h-8 w-8 text-primary" />
                   Shopping & Purchases
                 </CardTitle>
-                <CardDescription className="text-lg mt-2">Your consumer spending and major purchases</CardDescription>
+                <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] mt-2 text-muted-foreground">Your consumer spending and major purchases</CardDescription>
               </CardHeader>
               <CardContent className="space-y-10">
                 <div className="space-y-4">
@@ -582,7 +581,7 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
 
                 <div className="space-y-6">
                   <Label className="text-lg">Major purchases this year</Label>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-3">
                       <Label htmlFor="phones" className="text-base text-muted-foreground">
                         Smartphones
@@ -697,21 +696,21 @@ export default function HouseholdCalculator({ onBack }: HouseholdCalculatorProps
           )}
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-12 mb-20">
-            <Button variant="outline" size="lg" onClick={handlePrev} disabled={currentStep === 1} className="gap-2 text-lg px-8 py-6">
-              <ChevronLeft className="h-5 w-5" />
+          <div className="flex items-center justify-between mt-8 sm:mt-12 mb-10 sm:mb-20">
+            <Button variant="outline" size="lg" onClick={handlePrev} disabled={currentStep === 1} className="gap-2 text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6">
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               Previous
             </Button>
-            <Button size="lg" onClick={handleNext} className="gap-2 text-lg px-8 py-6">
+            <Button size="lg" onClick={handleNext} className="gap-2 text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6">
               {currentStep === steps.length ? (
                 <>
                   Calculate
-                  <Gauge className="h-5 w-5" />
+                  <Gauge className="h-4 w-4 sm:h-5 sm:w-5" />
                 </>
               ) : (
                 <>
                   Next
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 </>
               )}
             </Button>

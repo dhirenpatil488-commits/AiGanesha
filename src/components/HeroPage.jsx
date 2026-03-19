@@ -55,8 +55,8 @@ export default function HeroPage({ onStart, onBackToPlatform }) {
             <p className="text-accent font-semibold text-sm uppercase tracking-widest mb-4">AiGanesha</p>
 
             {/* Headline */}
-            <h1 className="text-5xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight tracking-tight">
-              Intelligence for a<br />
+            <h1 className="text-3xl sm:text-5xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight tracking-tight text-balance break-words">
+              Intelligence for a<br className="hidden sm:block" />
               <span className="text-secondary">Sustainable Future</span>
             </h1>
 
@@ -71,7 +71,7 @@ export default function HeroPage({ onStart, onBackToPlatform }) {
               onClick={onStart}
               variant="secondary"
               size="lg"
-              className="text-base px-8 py-6 rounded-xl font-semibold shadow-lg shadow-secondary/30 hover:bg-primary hover:shadow-primary/30 transition-all duration-300"
+              className="text-sm sm:text-base px-5 py-4 sm:px-8 sm:py-6 rounded-xl font-semibold shadow-lg shadow-secondary/30 hover:bg-primary hover:shadow-primary/30 transition-all duration-300"
             >
               Take Your First Step Towards Sustainability
             </Button>

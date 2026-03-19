@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Home, Building2, Factory, Leaf, ArrowRight, BarChart3, Target, Globe } from "lucide-react";
+import React from "react";
+import { Home, Building2, Factory, Leaf, BarChart3, Target, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const calculatorOptions = [
   {
@@ -10,9 +9,8 @@ const calculatorOptions = [
     description: "Calculate your personal and family carbon footprint",
     icon: Home,
     features: ["Energy consumption", "Transportation", "Food & diet", "Shopping habits"],
-    color: "from-emerald-500/20 to-emerald-500/5",
-    borderColor: "border-emerald-500/30",
     iconColor: "text-emerald-400",
+    bgColor: "bg-emerald-500/10",
   },
   {
     id: "business",
@@ -20,9 +18,8 @@ const calculatorOptions = [
     description: "Small to medium business emissions tracking",
     icon: Building2,
     features: ["Office operations", "Employee commuting", "Business travel", "Procurement"],
-    color: "from-sky-500/20 to-sky-500/5",
-    borderColor: "border-sky-500/30",
     iconColor: "text-sky-400",
+    bgColor: "bg-sky-500/10",
   },
   {
     id: "industry",
@@ -30,77 +27,76 @@ const calculatorOptions = [
     description: "Enterprise-level GHG Protocol reporting",
     icon: Factory,
     features: ["Multi-facility tracking", "Full Scope 1-3", "Sector benchmarking", "Reduction targets"],
-    color: "from-amber-500/20 to-amber-500/5",
-    borderColor: "border-amber-500/30",
     iconColor: "text-amber-400",
+    bgColor: "bg-amber-500/10",
   },
 ];
 
 const stats = [
-  { value: "2.0", label: "India Average", sublabel: "tonnes CO₂e/person/year" },
-  { value: "4.7", label: "Global Average", sublabel: "tonnes CO₂e/person/year" },
-  { value: "1.5°C", label: "Paris Target", sublabel: "maximum warming" },
+  { value: "2.0", label: "India Average", sublabel: "tCO₂e/person/yr" },
+  { value: "4.7", label: "Global Average", sublabel: "tCO₂e/person/yr" },
+  { value: "1.5°C", label: "Paris Target", sublabel: "Max warming" },
 ];
 
 export default function LandingScreen({ onSelect, onBackToPlatform }) {
-  // we just render the landing screen here.
-  // App.jsx handles the actual routing to the different calculators based on onSelect.
-
   return (
-    <main className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Leaf className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="font-semibold text-foreground">GHG Calculator</h1>
-              <p className="text-xs text-muted-foreground">Carbon Footprint Tool</p>
+    <main className="min-h-screen flex flex-col relative z-10 transition-colors duration-500">
+      {/* ── Header ─────────────────────────────────────────────── */}
+      <header className="border-b border-dotted border-white/15 sticky top-0 z-50 bg-[#0d0f17]/80 backdrop-blur-md">
+        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0 grid grid-cols-2">
+          {/* Logo */}
+          <div className="py-4 sm:py-6 flex items-center">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
+                <Leaf className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+              </div>
+              <span className="font-bold text-[15px] sm:text-base text-foreground tracking-tight">GHG Calculator</span>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <span className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
-              <Globe className="h-4 w-4" />
-              GHG Protocol Compliant
+
+          {/* Navigation / Back */}
+          <div className="py-4 sm:py-6 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-1 sm:gap-4">
+            <span className="hidden sm:flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-widest opacity-60">
+              <Globe className="h-3 w-3" />
+              Protocol Compliant
             </span>
             {onBackToPlatform && (
               <button
                 onClick={onBackToPlatform}
-                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-1.5 text-[13px] sm:text-[14px] font-mono text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest mt-1 sm:mt-0"
               >
-                ← Back to Home
+                ← Home
               </button>
             )}
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
-        <div className="w-full max-w-5xl mx-auto px-5 md:px-10 py-16 md:py-24 relative">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+      {/* ── Hero Section ─────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden border-b border-dotted border-white/15">
+        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
+          <div className="py-10 sm:py-20 space-y-8 sm:space-y-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] sm:text-[12px] font-mono uppercase tracking-widest">
               <BarChart3 className="h-4 w-4" />
-              Measure. Understand. Reduce.
+              <span>Measure. Understand. Reduce.</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 text-balance leading-tight">
-              Calculate Your
-              <span className="text-primary"> Carbon Footprint</span>
+
+            <h2 className="text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold text-foreground text-balance">
+              Calculate Your<br />
+              <span className="text-primary">Carbon Footprint</span>
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 text-pretty max-w-3xl mx-auto px-4 md:px-0">
+
+            <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground w-full">
               Make informed decisions about your environmental impact. Our calculator helps households, businesses, and industries measure and reduce their greenhouse gas emissions.
             </p>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-xl mx-auto mb-12">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 pt-8 border-t border-dotted border-white/15">
               {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-accent">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                  <div className="text-xs text-muted-foreground/70 hidden md:block">{stat.sublabel}</div>
+                <div key={stat.label} className="text-left">
+                  <div className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold text-accent mb-1">{stat.value}</div>
+                  <div className="text-[11px] sm:text-[12px] font-mono text-muted-foreground uppercase tracking-widest">{stat.label}</div>
+                  <div className="text-[10px] uppercase font-mono text-muted-foreground/60 mt-1">{stat.sublabel}</div>
                 </div>
               ))}
             </div>
@@ -108,84 +104,72 @@ export default function LandingScreen({ onSelect, onBackToPlatform }) {
         </div>
       </section>
 
-      {/* Calculator Selection */}
-      <section className="w-full max-w-7xl mx-auto px-5 md:px-10 pb-16 md:pb-24">
-        <div className="text-center mb-10">
-          <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Choose Your Calculator</h3>
-          <p className="text-lg text-muted-foreground">Select the option that best matches your needs</p>
-        </div>
+      {/* ── Calculator Selection ─────────────────────────────────────────────── */}
+      <section className="border-b border-dotted border-white/15">
+        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
+          <div className="py-6 border-b border-dotted border-white/15">
+            <h3 className="text-[13px] sm:text-[14px] font-mono text-foreground uppercase tracking-widest opacity-80">Choose Your Calculator</h3>
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {calculatorOptions.map((option) => (
-            <Card
-              key={option.id}
-              className={`group relative overflow-hidden bg-gradient-to-b ${option.color} ${option.borderColor} border transition-all duration-300`}
-            >
-              <CardHeader className="pb-6">
-                <div className={`h-16 w-16 rounded-xl bg-secondary flex items-center justify-center mb-4 ${option.iconColor}`}>
-                  <option.icon className="h-8 w-8" />
+          <div className="grid grid-cols-1">
+            {calculatorOptions.map((option, idx) => (
+              <div
+                key={option.id}
+                className={`py-10 flex flex-col ${idx !== calculatorOptions.length - 1 ? "border-b border-dotted border-white/15" : ""}`}
+              >
+                <div className={`h-12 w-12 sm:h-14 sm:w-14 rounded-xl flex items-center justify-center mb-6 border border-white/10 ${option.bgColor} ${option.iconColor}`}>
+                  <option.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
-                <CardTitle className="text-3xl text-foreground">{option.title}</CardTitle>
-                <CardDescription className="text-lg leading-relaxed text-muted-foreground mt-2">{option.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4 mb-8">
+
+                <h3 className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold text-foreground mb-3">{option.title}</h3>
+                <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground mb-8">
+                  {option.description}
+                </p>
+
+                <ul className="space-y-4 mb-10">
                   {option.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-3 text-base text-muted-foreground">
-                      <div className="h-2 w-2 rounded-full bg-primary" />
-                      {feature}
+                    <li key={feature} className="flex items-start gap-3 text-[14px] sm:text-[15px] font-mono text-muted-foreground">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                      <span className="leading-tight">{feature}</span>
                     </li>
                   ))}
                 </ul>
+
                 <Button
-                  className="w-full text-base sm:text-lg md:text-base py-4 sm:py-6 md:py-6 h-auto whitespace-normal rounded-xl hover:bg-primary transition-colors cursor-pointer flex-wrap justify-center"
+                  className="w-full text-[13px] sm:text-[14px] px-10 py-6 rounded-none font-mono uppercase tracking-widest bg-white/5 border border-white/20 hover:bg-white/10 text-white transition-colors"
                   variant="secondary"
                   onClick={() => onSelect(option.id)}
                 >
-                  Start Calculation
+                  Start Calculator
                 </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="border-t border-border/50 bg-card/30">
-        <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-16">
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <BarChart3 className="h-6 w-6 text-primary" />
               </div>
-              <h4 className="font-semibold text-foreground mb-2">Detailed Breakdown</h4>
-              <p className="text-sm text-muted-foreground">Visualize your emissions by category with interactive charts</p>
-            </div>
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <Target className="h-6 w-6 text-primary" />
-              </div>
-              <h4 className="font-semibold text-foreground mb-2">Reduction Tips</h4>
-              <p className="text-sm text-muted-foreground">Get personalized recommendations to lower your footprint</p>
-            </div>
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <Globe className="h-6 w-6 text-primary" />
-              </div>
-              <h4 className="font-semibold text-foreground mb-2">Global Standards</h4>
-              <p className="text-sm text-muted-foreground">Calculations based on GHG Protocol and IPCC guidelines</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border/50 py-8">
-        <div className="w-full max-w-7xl mx-auto px-5 md:px-10 text-center text-sm text-muted-foreground">
-          <p>Based on GHG Protocol methodology with India-specific emission factors</p>
-          <p className="mt-1">Data sources: IPCC, DEFRA, Central Electricity Authority of India</p>
+      {/* ── Features Section ─────────────────────────────────────────────── */}
+      <section className="border-b border-dotted border-white/15">
+        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
+            <div className="py-8 sm:py-10 border-b border-dotted border-white/15 sm:border-b-0">
+              <h4 className="text-[13px] sm:text-[14px] font-mono text-foreground mb-2 flex items-center gap-2 uppercase tracking-widest">
+                <BarChart3 className="h-4 w-4 text-primary" />
+                Detailed Breakdown
+              </h4>
+              <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Visualize your emissions by category with interactive charts.</p>
+            </div>
+
+            <div className="py-8 sm:py-10">
+              <h4 className="text-[13px] sm:text-[14px] font-mono text-foreground mb-2 flex items-center gap-2 uppercase tracking-widest">
+                <Target className="h-4 w-4 text-primary" />
+                Reduction Tips
+              </h4>
+              <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Get personalized recommendations to lower your footprint.</p>
+            </div>
+          </div>
         </div>
-      </footer>
+      </section>
     </main>
   );
 }

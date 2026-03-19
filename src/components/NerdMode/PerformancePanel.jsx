@@ -131,6 +131,7 @@ export default function PerformancePanel() {
     }, [isNerdMode]);
 
     if (!isNerdMode) return null;
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return null; // Hide completely on mobile as requested by user
 
     // ── Derived ───────────────────────────────────────────────────────────────
     const planetRisk = getPlanetRisk(ATMOSPHERIC_CO2_PPM);
@@ -150,8 +151,8 @@ export default function PerformancePanel() {
         : `${digitalEmissions.toFixed(5)} g`;
 
     const posStyle = pos.x !== null
-        ? { left: pos.x, top: pos.y, right: 'auto', bottom: 'auto' }
-        : { top: 80, right: 24 };
+        ? { left: pos.x, top: pos.y, right: 'auto', bottom: 'auto', transform: 'none' }
+        : { top: 80, right: 24, transform: 'none' };
 
     // Label for AQI row: "<City> AQI" if city known, else "AQI"
     const aqiLabel = cityName ? `AQI - ${cityName}` : 'AQI';
@@ -159,7 +160,7 @@ export default function PerformancePanel() {
     return (
         <div
             ref={panelRef}
-            className="nerd-mode-element fixed z-[9999] select-none"
+            className="nerd-mode-element fixed z-[9999] select-none hidden md:block"
             style={{ ...posStyle, touchAction: 'none', cursor: dragging.current ? 'grabbing' : 'grab' }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}

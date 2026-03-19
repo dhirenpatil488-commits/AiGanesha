@@ -31,8 +31,18 @@ const App = () => {
 
     return (
         <NerdProvider>
-            <div className="min-h-screen relative">
-                {renderPage()}
+            <div className="min-h-screen relative w-full overflow-hidden flex flex-col">
+                {/* Global Grid Overlay (680px 2-column, hidden on mobile) */}
+                <div className="absolute inset-0 pointer-events-none z-0 flex justify-center w-full">
+                    <div className="hidden sm:grid grid-cols-2 w-full max-w-[680px] border-x border-dotted border-white/15 h-full opacity-60">
+                        <div className="border-r border-dotted border-white/15 h-full" />
+                        <div className="h-full" />
+                    </div>
+                </div>
+
+                <div className="relative z-10 w-full flex-grow">
+                    {renderPage()}
+                </div>
 
                 {/* Global Overlays — panel hidden when inside a calculator */}
                 {!isInsideCalculator && <PerformancePanel />}

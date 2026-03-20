@@ -12,11 +12,41 @@ import InspectorOverlay from './components/NerdMode/InspectorOverlay';
 const CALCULATOR_PAGES = ['household', 'business', 'industry'];
 
 const App = () => {
-    // Lifted to App level so PerformancePanel can react to route changes
-    const [pathState, setPathState] = useState('home');
+    // Map pathState directly to URL hash to support native browser back/swipe gestures
+    const [pathState, setPathState] = useState(() => {
+        const hash = window.location.hash.replace('#', '');
+        return hash || 'home';
+    });
 
-    const handleNavigate = (path) => setPathState(path);
-    const handleBack = () => setPathState('landing');
+    React.useEffect(() => {
+        const handlePopState = () => {
+            const hash = window.location.hash.replace('#', '');
+            setPathState(hash || 'home');
+        };
+
+        window.addEventListener('popstate', handlePopState);
+        if (!window.location.hash) {
+            window.history.replaceState(null, '', '#home');
+        }
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, []);
+
+    const handleNavigate = (path) => {
+        if (pathState !== path) {
+            setPathState(path);
+            window.history.pushState(null, '', `#${path}`);
+        }
+    };
+
+    const handleBack = () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash === 'landing' || hash === 'home') {
+            window.history.back();
+        } else {
+            // If exiting a calculator, go explicitly to landing via history
+            handleNavigate('landing');
+        }
+    };
 
     const renderPage = () => {
         if (pathState === 'home') return <PlatformHome onNavigate={handleNavigate} />;
@@ -44,9 +74,13 @@ const App = () => {
                     {renderPage()}
                 </div>
 
-                {/* Global Overlays — panel hidden when inside a calculator */}
-                {!isInsideCalculator && <PerformancePanel />}
-                <InspectorOverlay />
+                {/* Global Overlays — hidden when inside a calculator to prevent popups */}
+                {!isInsideCalculator && (
+                    <>
+                        <PerformancePanel />
+                        <InspectorOverlay />
+                    </>
+                )}
             </div>
         </NerdProvider>
     );

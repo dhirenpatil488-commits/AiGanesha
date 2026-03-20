@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, TreeDeciduous, Car, Plane, Home, TrendingDown, Lightbulb, RotateCcw, Share2, Download } from "lucide-react";
+import { ArrowLeft, TreeDeciduous, Car, Plane, Home, TrendingDown, Lightbulb, RotateCcw, Share2, Download, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -135,16 +135,32 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
           </div>
         </div>
 
+        {/* Mobile Warning Banner */}
+        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12 block sm:hidden">
+          <div className="p-8 rounded-xl bg-primary/5 border border-primary/20 text-center flex flex-col items-center">
+            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <Monitor className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground mb-2">Detailed Report Ready</h3>
+            <p className="text-base text-muted-foreground">
+              We've hidden complex charts to keep your mobile experience fast and clean. Please open this website on your desktop or laptop to explore your full interactive breakdown.
+            </p>
+          </div>
+        </div>
+
+        {/* Detailed Analytics Tracker - Hidden on Mobile */}
+        <div className="hidden sm:block">
+
         {/* Charts Section */}
-        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto grid md:grid-cols-2 gap-8 mb-12">
+        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
           {/* Pie Chart */}
           <Card className="bg-card border-border shadow-md">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">Emissions Breakdown</CardTitle>
+              <CardTitle className="text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">Emissions Breakdown</CardTitle>
               <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Distribution by category</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px]">
+              <div className="h-[350px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -153,8 +169,8 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      outerRadius={100}
-                      innerRadius={60}
+                      outerRadius={120}
+                      innerRadius={80}
                       paddingAngle={2}
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                       labelLine={false}
@@ -172,37 +188,6 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
                       }}
                     />
                   </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Bar Chart */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle>Category Comparison</CardTitle>
-              <CardDescription>Emissions by source (kg CO₂e)</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} layout="vertical" margin={{ left: 80 }}>
-                    <XAxis type="number" tickFormatter={(v) => `${(v / 1000).toFixed(1)}t`} />
-                    <YAxis type="category" dataKey="name" width={70} />
-                    <Tooltip
-                      formatter={(value: number) => [`${(value / 1000).toFixed(2)} tonnes`, "Emissions"]}
-                      contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "8px",
-                      }}
-                    />
-                    <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                      {chartData.map((entry, index) => (
-                        <Cell key={`bar-${index}`} fill={entry.fill} />
-                      ))}
-                    </Bar>
-                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
@@ -338,7 +323,7 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
           <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
             <Card className="bg-card border-border shadow-md">
               <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
+                <CardTitle className="flex items-center gap-3 text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">
                   <Lightbulb className="h-6 w-6 text-amber-400" />
                   Reduction Opportunities
                 </CardTitle>
@@ -370,7 +355,7 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
           <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
             <Card className="bg-card border-border shadow-md">
               <CardHeader className="pb-2">
-                <CardTitle className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">GHG Protocol Scopes</CardTitle>
+                <CardTitle className="text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">GHG Protocol Scopes</CardTitle>
                 <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Emissions by scope category</CardDescription>
               </CardHeader>
               <CardContent>
@@ -428,7 +413,7 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
           <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mb-12">
             <Card className="bg-card border-border shadow-md">
               <CardHeader className="pb-2">
-                <CardTitle className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">How You Compare</CardTitle>
+                <CardTitle className="text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">How You Compare</CardTitle>
                 <CardDescription className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Your footprint vs benchmarks</CardDescription>
               </CardHeader>
               <CardContent>
@@ -464,6 +449,8 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
             </Card>
           </div>
         )}
+
+        </div> {/* End of hidden sm:block */}
 
         {/* Actions */}
         <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto mt-12">

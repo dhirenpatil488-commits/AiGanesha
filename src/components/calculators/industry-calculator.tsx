@@ -336,13 +336,13 @@ function InputRow({
 }) {
   return (
     <div className="flex items-center justify-between py-4 border-b border-border/30">
-      <Label className="text-base text-muted-foreground flex-1">{label}</Label>
+      <Label className="text-[15px] sm:text-[16px] text-muted-foreground flex-1">{label}</Label>
       <Input
         type={type}
         name={name}
         value={value}
         onChange={onChange}
-        className={`${type === "text" ? "w-72" : "w-40"} bg-secondary/50 border-border text-right text-lg py-5`}
+        className={`${type === "text" ? "w-72" : "w-40"} bg-secondary/50 border-border text-right text-[15px] sm:text-[16px] py-4 sm:py-5`}
       />
     </div>
   );
@@ -351,7 +351,7 @@ function InputRow({
 // Section Header Component
 function SectionHeader({ title }: { title: string }) {
   return (
-    <h3 className="text-lg font-semibold text-primary border-b border-primary/30 pb-3 mt-8 mb-6">
+    <h3 className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold text-primary border-b border-primary/30 pb-3 mt-8 mb-6">
       {title}
     </h3>
   );
@@ -476,14 +476,14 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
             <SectionHeader title="Facility Details" />
             <InputRow label="Facility Name" name="name" type="text" value={fac.name} onChange={h} />
             <div className="flex items-center justify-between py-4 border-b border-border/30">
-              <Label className="text-base text-muted-foreground">Facility Type</Label>
+              <Label className="text-[15px] sm:text-[16px] text-muted-foreground">Facility Type</Label>
               <Select value={fac.type} onValueChange={(v) => handleFacilityTypeChange(fac.id, v)}>
-                <SelectTrigger className="w-72 bg-secondary/50 text-lg py-5">
+                <SelectTrigger className="w-72 bg-secondary/50 text-[15px] sm:text-[16px] py-4 sm:py-5">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {FACILITY_TYPES.map((type) => (
-                    <SelectItem key={type.id} value={type.id} className="text-base py-3">
+                    <SelectItem key={type.id} value={type.id} className="text-[15px] sm:text-[16px] py-3">
                       {type.label}
                     </SelectItem>
                   ))}
@@ -910,7 +910,10 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
       <EmissionsResult
         result={result}
         type="industry"
-        onBack={() => setResult(null)}
+        onBack={() => {
+          setResult(null);
+          setStep("org_scope3");
+        }}
         onStartOver={() => {
           setResult(null);
           setStep("org");
@@ -945,7 +948,7 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">GHG Protocol Hub</h1>
+          <h1 className="text-[32px] sm:text-[40px] leading-[1.2] bold text-foreground mb-4">GHG Protocol Hub</h1>
           {step === "hub" && !isEditingFacility && (
             <p className="text-xl text-muted-foreground">ISO 14064 Facility-Based Architecture</p>
           )}
@@ -1144,10 +1147,10 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
               <div className="space-y-8">
                 <div className="flex items-center gap-4 mb-8">
                   <Truck className="w-8 h-8 text-primary" />
-                  <h2 className="text-2xl font-semibold text-foreground">Organization-Level Upstream/Downstream</h2>
+                  <h2 className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold text-foreground">Organization-Level Upstream/Downstream</h2>
                 </div>
 
-                <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+                <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">
                   These Scope 3 emissions map across the entire value chain rather than tying to specific facilities.
                 </p>
 
@@ -1167,10 +1170,10 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
                 </div>
 
                 <div className="flex flex-col sm:flex-row justify-between gap-4 pt-8 border-t border-border mt-8">
-                  <Button variant="outline" size="lg" onClick={() => setStep("hub")} className="w-full sm:w-auto text-sm sm:text-base px-4 sm:px-6 py-4 sm:py-6 font-medium">
+                  <Button variant="outline" size="lg" onClick={() => setStep("hub")} className="w-full sm:w-auto text-[13px] sm:text-[14px] px-8 py-6 font-mono uppercase tracking-widest">
                     <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" /> Back to Facilities
                   </Button>
-                  <Button size="lg" onClick={calculateResults} className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-sm sm:text-base px-4 sm:px-6 py-4 sm:py-6 font-medium">
+                  <Button size="lg" onClick={calculateResults} className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-[13px] sm:text-[14px] px-8 py-6 font-mono uppercase tracking-widest">
                     Calculate ESG Report <Activity className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
                   </Button>
                 </div>

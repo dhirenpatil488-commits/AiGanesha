@@ -135,16 +135,16 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
       <div className="border-b border-border/50 bg-card/30">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-base text-muted-foreground">{steps[currentStep - 1].title}</span>
+            <span className="text-[13px] sm:text-[14px] text-muted-foreground">{steps[currentStep - 1].title}</span>
             <span className="text-base font-medium text-primary">{Math.round(progress)}%</span>
           </div>
           <Progress value={progress} className="h-3" />
-          <div className="flex justify-between mt-3">
+          <div className="flex justify-between mt-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:overflow-visible sm:pb-0 hide-scrollbar">
             {steps.map((step) => (
               <button
                 key={step.id}
                 onClick={() => setCurrentStep(step.id)}
-                className={`flex flex-col items-center gap-1 transition-colors ${step.id === currentStep
+                className={`flex flex-col items-center gap-1 transition-colors min-w-[64px] ${step.id === currentStep
                     ? "text-primary"
                     : step.id < currentStep
                       ? "text-primary/60"
@@ -166,7 +166,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 1 && (
             <Card className="bg-card border-border shadow-lg">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
+                <CardTitle className="flex items-center gap-3 text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">
                   <Building2 className="h-8 w-8 text-primary" />
                   Business Type
                 </CardTitle>
@@ -183,17 +183,17 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                       <RadioGroupItem value={type.id} id={type.id} className="peer sr-only" />
                       <Label
                         htmlFor={type.id}
-                        className="flex items-center gap-4 rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
+                        className="flex items-center gap-3 rounded-xl border-2 border-muted bg-secondary/50 p-3 sm:p-4 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
                       >
                         <Building2 className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
-                        <span className="font-medium text-base sm:text-lg">{type.label}</span>
+                        <span className="font-medium text-[15px] sm:text-[16px]">{type.label}</span>
                       </Label>
                     </div>
                   ))}
                 </RadioGroup>
 
                 <div className="space-y-4">
-                  <Label className="text-lg">Number of employees</Label>
+                  <Label className="text-[15px] sm:text-[16px]">Number of employees</Label>
                   <div className="flex items-center gap-6">
                     <Slider
                       value={[data.employees]}
@@ -214,7 +214,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 2 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
+                <CardTitle className="flex items-center gap-3 text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">
                   <Zap className="h-8 w-8 text-primary" />
                   Energy Consumption
                 </CardTitle>
@@ -223,29 +223,29 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
               <CardContent className="space-y-10">
                 {t === "home" ? (
                   <div className="space-y-4">
-                    <Label htmlFor="homeElec" className="text-lg">Additional electricity for business (INR/month)</Label>
+                    <Label htmlFor="homeElec" className="text-[15px] sm:text-[16px]">Additional electricity for business (INR/month)</Label>
                     <Input
                       id="homeElec"
                       type="number"
                       value={data.homeAddtlElectricity}
                       onChange={(e) => updateData("homeAddtlElectricity", Number(e.target.value))}
                       placeholder="e.g., 500"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
-                    <p className="text-base text-muted-foreground">
+                    <p className="text-[13px] sm:text-[14px] text-muted-foreground">
                       Estimate the portion of your home electricity used for business
                     </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <Label htmlFor="electricity" className="text-lg">Monthly electricity bill (INR)</Label>
+                    <Label htmlFor="electricity" className="text-[15px] sm:text-[16px]">Monthly electricity bill (INR)</Label>
                     <Input
                       id="electricity"
                       type="number"
                       value={data.electricityBillPerMonth}
                       onChange={(e) => updateData("electricityBillPerMonth", Number(e.target.value))}
                       placeholder="e.g., 5000"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
                   </div>
                 )}
@@ -253,7 +253,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t === "office" && (
                   <>
                     <div className="space-y-4">
-                      <Label className="text-lg">Number of air conditioners</Label>
+                      <Label className="text-[15px] sm:text-[16px]">Number of air conditioners</Label>
                       <div className="flex items-center gap-6">
                         <Slider
                           value={[data.acCount || 0]}
@@ -267,7 +267,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                       </div>
                     </div>
                     <div className="space-y-4">
-                      <Label className="text-lg">Number of computers/workstations</Label>
+                      <Label className="text-[15px] sm:text-[16px]">Number of computers/workstations</Label>
                       <div className="flex items-center gap-6">
                         <Slider
                           value={[data.computerCount || 0]}
@@ -286,8 +286,8 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t === "retail" && (
                   <div className="flex items-center justify-between p-6 rounded-xl bg-secondary/50">
                     <div className="space-y-2">
-                      <Label className="text-lg">Do you use refrigeration?</Label>
-                      <p className="text-base text-muted-foreground">Display fridges, cold storage</p>
+                      <Label className="text-[15px] sm:text-[16px]">Do you use refrigeration?</Label>
+                      <p className="text-[13px] sm:text-[14px] text-muted-foreground">Display fridges, cold storage</p>
                     </div>
                     <Switch checked={data.usesFridges} onCheckedChange={(v) => updateData("usesFridges", v)} />
                   </div>
@@ -295,13 +295,13 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
 
                 {t === "retail" && data.usesFridges && (
                   <div className="space-y-4">
-                    <Label className="text-lg">Number of refrigeration units</Label>
+                    <Label className="text-[15px] sm:text-[16px]">Number of refrigeration units</Label>
                     <Input
                       type="number"
                       value={data.retailFridges}
                       onChange={(e) => updateData("retailFridges", Number(e.target.value))}
                       placeholder="e.g., 3"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
                   </div>
                 )}
@@ -309,23 +309,23 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t === "restaurant" && (
                   <>
                     <div className="space-y-4">
-                      <Label className="text-lg">Commercial fridges/freezers</Label>
+                      <Label className="text-[15px] sm:text-[16px]">Commercial fridges/freezers</Label>
                       <Input
                         type="number"
                         value={data.commercialFridges}
                         onChange={(e) => updateData("commercialFridges", Number(e.target.value))}
                         placeholder="e.g., 4"
-                        className="text-lg py-6"
+                        className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                       />
                     </div>
                     <div className="space-y-4">
-                      <Label className="text-lg">LPG cylinders used per year</Label>
+                      <Label className="text-[15px] sm:text-[16px]">LPG cylinders used per year</Label>
                       <Input
                         type="number"
                         value={data.commercialLpgCylinders}
                         onChange={(e) => updateData("commercialLpgCylinders", Number(e.target.value))}
                         placeholder="e.g., 24"
-                        className="text-lg py-6"
+                        className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                       />
                     </div>
                   </>
@@ -333,13 +333,13 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
 
                 {t === "home" && (
                   <div className="space-y-4">
-                    <Label className="text-lg">LPG cylinders for business per year</Label>
+                    <Label className="text-[15px] sm:text-[16px]">LPG cylinders for business per year</Label>
                     <Input
                       type="number"
                       value={data.homeBusinessLpg}
                       onChange={(e) => updateData("homeBusinessLpg", Number(e.target.value))}
                       placeholder="e.g., 2"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
                   </div>
                 )}
@@ -347,8 +347,8 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t === "workshop" && (
                   <div className="flex items-center justify-between p-6 rounded-xl bg-secondary/50">
                     <div className="space-y-2">
-                      <Label className="text-lg">Do you use a diesel generator?</Label>
-                      <p className="text-base text-muted-foreground">For backup power</p>
+                      <Label className="text-[15px] sm:text-[16px]">Do you use a diesel generator?</Label>
+                      <p className="text-[13px] sm:text-[14px] text-muted-foreground">For backup power</p>
                     </div>
                     <Switch checked={data.usesGenerator} onCheckedChange={(v) => updateData("usesGenerator", v)} />
                   </div>
@@ -356,13 +356,13 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
 
                 {t === "workshop" && data.usesGenerator && (
                   <div className="space-y-4">
-                    <Label className="text-lg">Diesel used per year (litres)</Label>
+                    <Label className="text-[15px] sm:text-[16px]">Diesel used per year (litres)</Label>
                     <Input
                       type="number"
                       value={data.dieselGeneratorLitres}
                       onChange={(e) => updateData("dieselGeneratorLitres", Number(e.target.value))}
                       placeholder="e.g., 500"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
                   </div>
                 )}
@@ -374,7 +374,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 3 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
+                <CardTitle className="flex items-center gap-3 text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">
                   <Truck className="h-8 w-8 text-primary" />
                   Operations & Transport
                 </CardTitle>
@@ -385,20 +385,20 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                   <>
                     <div className="flex items-center justify-between p-6 rounded-xl bg-secondary/50">
                       <div className="space-y-2">
-                        <Label className="text-lg">Do you offer delivery?</Label>
-                        <p className="text-base text-muted-foreground">Using your own vehicles</p>
+                        <Label className="text-[15px] sm:text-[16px]">Do you offer delivery?</Label>
+                        <p className="text-[13px] sm:text-[14px] text-muted-foreground">Using your own vehicles</p>
                       </div>
                       <Switch checked={data.usesDelivery} onCheckedChange={(v) => updateData("usesDelivery", v)} />
                     </div>
                     {data.usesDelivery && (
                       <div className="space-y-4">
-                        <Label className="text-lg">Fuel used for delivery per year (litres)</Label>
+                        <Label className="text-[15px] sm:text-[16px]">Fuel used for delivery per year (litres)</Label>
                         <Input
                           type="number"
                           value={data.retailDeliveryFuel}
                           onChange={(e) => updateData("retailDeliveryFuel", Number(e.target.value))}
                           placeholder="e.g., 1000"
-                          className="text-lg py-6"
+                          className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                         />
                       </div>
                     )}
@@ -408,29 +408,29 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t === "logistics" && (
                   <>
                     <div className="space-y-4">
-                      <Label className="text-lg">Fuel type</Label>
+                      <Label className="text-[15px] sm:text-[16px]">Fuel type</Label>
                       <Select
                         value={data.logisticsFuelType}
                         onValueChange={(v) => updateData("logisticsFuelType", v as BusinessData["logisticsFuelType"])}
                       >
-                        <SelectTrigger className="text-lg py-6">
+                        <SelectTrigger className="text-[15px] sm:text-[16px] py-4 sm:py-6">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="diesel" className="text-lg py-3">Diesel</SelectItem>
-                          <SelectItem value="petrol" className="text-lg py-3">Petrol</SelectItem>
-                          <SelectItem value="cng" className="text-lg py-3">CNG</SelectItem>
+                          <SelectItem value="diesel" className="text-[15px] sm:text-[16px] py-3 sm:py-4">Diesel</SelectItem>
+                          <SelectItem value="petrol" className="text-[15px] sm:text-[16px] py-3 sm:py-4">Petrol</SelectItem>
+                          <SelectItem value="cng" className="text-[15px] sm:text-[16px] py-3 sm:py-4">CNG</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-4">
-                      <Label className="text-lg">Total fuel used per year (litres/kg)</Label>
+                      <Label className="text-[15px] sm:text-[16px]">Total fuel used per year (litres/kg)</Label>
                       <Input
                         type="number"
                         value={data.logisticsFuelLitres}
                         onChange={(e) => updateData("logisticsFuelLitres", Number(e.target.value))}
                         placeholder="e.g., 5000"
-                        className="text-lg py-6"
+                        className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                       />
                     </div>
                   </>
@@ -439,28 +439,28 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t === "office" && (
                   <>
                     <div className="space-y-4">
-                      <Label htmlFor="flights" className="text-lg">Business flights per year (total km)</Label>
+                      <Label htmlFor="flights" className="text-[15px] sm:text-[16px]">Business flights per year (total km)</Label>
                       <Input
                         id="flights"
                         type="number"
                         value={data.flightsKmPerYear}
                         onChange={(e) => updateData("flightsKmPerYear", Number(e.target.value))}
                         placeholder="e.g., 10000"
-                        className="text-lg py-6"
+                        className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                       />
-                      <p className="text-base text-muted-foreground">
+                      <p className="text-[13px] sm:text-[14px] text-muted-foreground">
                         Tip: Delhi-Mumbai is ~1400km one way
                       </p>
                     </div>
                     <div className="space-y-4">
-                      <Label htmlFor="trains" className="text-lg">Train travel per year (km)</Label>
+                      <Label htmlFor="trains" className="text-[15px] sm:text-[16px]">Train travel per year (km)</Label>
                       <Input
                         id="trains"
                         type="number"
                         value={data.trainKmPerYear}
                         onChange={(e) => updateData("trainKmPerYear", Number(e.target.value))}
                         placeholder="e.g., 5000"
-                        className="text-lg py-6"
+                        className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                       />
                     </div>
                   </>
@@ -484,7 +484,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 4 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
+                <CardTitle className="flex items-center gap-3 text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">
                   <Users className="h-8 w-8 text-primary" />
                   Employee Commuting
                 </CardTitle>
@@ -494,7 +494,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t !== "home" ? (
                   <>
                     <div className="space-y-4">
-                      <Label className="text-lg">Average one-way commute distance (km)</Label>
+                      <Label className="text-[15px] sm:text-[16px]">Average one-way commute distance (km)</Label>
                       <div className="flex items-center gap-6">
                         <Slider
                           value={[data.avgCommuteKm || 0]}
@@ -538,7 +538,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 5 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
+                <CardTitle className="flex items-center gap-3 text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">
                   <ShoppingCart className="h-8 w-8 text-primary" />
                   Procurement & Purchases
                 </CardTitle>
@@ -547,73 +547,73 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
               <CardContent className="space-y-10">
                 {t === "office" && (
                   <div className="space-y-4">
-                    <Label htmlFor="supplies" className="text-lg">Office supplies spend (INR/month)</Label>
+                    <Label htmlFor="supplies" className="text-[15px] sm:text-[16px]">Office supplies spend (INR/month)</Label>
                     <Input
                       id="supplies"
                       type="number"
                       value={data.spendOfficeSupplies}
                       onChange={(e) => updateData("spendOfficeSupplies", Number(e.target.value))}
                       placeholder="e.g., 10000"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
-                    <p className="text-base text-muted-foreground">Paper, stationery, cleaning supplies, etc.</p>
+                    <p className="text-[13px] sm:text-[14px] text-muted-foreground">Paper, stationery, cleaning supplies, etc.</p>
                   </div>
                 )}
 
                 {t === "retail" && (
                   <div className="space-y-4">
-                    <Label htmlFor="resale" className="text-lg">Goods for resale spend (INR/month)</Label>
+                    <Label htmlFor="resale" className="text-[15px] sm:text-[16px]">Goods for resale spend (INR/month)</Label>
                     <Input
                       id="resale"
                       type="number"
                       value={data.spendResaleGoods}
                       onChange={(e) => updateData("spendResaleGoods", Number(e.target.value))}
                       placeholder="e.g., 100000"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
-                    <p className="text-base text-muted-foreground">Cost of inventory purchased</p>
+                    <p className="text-[13px] sm:text-[14px] text-muted-foreground">Cost of inventory purchased</p>
                   </div>
                 )}
 
                 {t === "restaurant" && (
                   <div className="space-y-4">
-                    <Label htmlFor="food" className="text-lg">Food & supplies spend (INR/month)</Label>
+                    <Label htmlFor="food" className="text-[15px] sm:text-[16px]">Food & supplies spend (INR/month)</Label>
                     <Input
                       id="food"
                       type="number"
                       value={data.spendFoodSupply}
                       onChange={(e) => updateData("spendFoodSupply", Number(e.target.value))}
                       placeholder="e.g., 150000"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
-                    <p className="text-base text-muted-foreground">Ingredients, packaging, disposables</p>
+                    <p className="text-[13px] sm:text-[14px] text-muted-foreground">Ingredients, packaging, disposables</p>
                   </div>
                 )}
 
                 {t === "workshop" && (
                   <div className="space-y-4">
-                    <Label htmlFor="materials" className="text-lg">Raw materials spend (INR/month)</Label>
+                    <Label htmlFor="materials" className="text-[15px] sm:text-[16px]">Raw materials spend (INR/month)</Label>
                     <Input
                       id="materials"
                       type="number"
                       value={data.spendRawMaterials}
                       onChange={(e) => updateData("spendRawMaterials", Number(e.target.value))}
                       placeholder="e.g., 200000"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
                   </div>
                 )}
 
                 {t === "home" && (
                   <div className="space-y-4">
-                    <Label htmlFor="packaging" className="text-lg">Packaging & supplies spend (INR/month)</Label>
+                    <Label htmlFor="packaging" className="text-[15px] sm:text-[16px]">Packaging & supplies spend (INR/month)</Label>
                     <Input
                       id="packaging"
                       type="number"
                       value={data.spendPackaging}
                       onChange={(e) => updateData("spendPackaging", Number(e.target.value))}
                       placeholder="e.g., 5000"
-                      className="text-lg py-6"
+                      className="text-[15px] sm:text-[16px] py-4 sm:py-6"
                     />
                   </div>
                 )}
@@ -633,7 +633,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
           {currentStep === 6 && (
             <Card className="bg-card border-border">
               <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold">
+                <CardTitle className="flex items-center gap-3 text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold">
                   <Trash2 className="h-8 w-8 text-primary" />
                   Waste Generation
                 </CardTitle>
@@ -643,7 +643,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t !== "logistics" ? (
                   <>
                     <div className="space-y-4">
-                      <Label className="text-lg">Garbage bags per week</Label>
+                      <Label className="text-[15px] sm:text-[16px]">Garbage bags per week</Label>
                       <div className="flex items-center gap-6">
                         <Slider
                           value={[data.wasteBags || 0]}
@@ -659,11 +659,11 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
 
                     {t === "restaurant" && (
                       <div className="space-y-4">
-                        <Label className="text-lg">Do you compost food waste?</Label>
+                        <Label className="text-[15px] sm:text-[16px]">Do you compost food waste?</Label>
                         <RadioGroup
                           value={data.compostsWaste}
                           onValueChange={(v) => updateData("compostsWaste", v as BusinessData["compostsWaste"])}
-                          className="grid grid-cols-2 gap-4"
+                          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
                         >
                           <div>
                             <RadioGroupItem value="yes" id="compost-yes" className="peer sr-only" />
@@ -671,7 +671,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                               htmlFor="compost-yes"
                               className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
                             >
-                              <span className="text-base sm:text-lg font-medium">Yes, we compost</span>
+                              <span className="text-[15px] sm:text-[16px] font-medium">Yes, we compost</span>
                             </Label>
                           </div>
                           <div>
@@ -680,7 +680,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                               htmlFor="compost-no"
                               className="flex items-center justify-center rounded-xl border-2 border-muted bg-secondary/50 p-4 sm:p-6 hover:bg-secondary hover:border-primary/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer transition-all"
                             >
-                              <span className="text-base sm:text-lg font-medium">No</span>
+                              <span className="text-[15px] sm:text-[16px] font-medium">No</span>
                             </Label>
                           </div>
                         </RadioGroup>
@@ -700,11 +700,11 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
 
           {/* Navigation */}
           <div className="flex items-center justify-between mt-8 sm:mt-12 mb-10 sm:mb-20">
-            <Button variant="outline" size="lg" onClick={handlePrev} disabled={currentStep === 1} className="gap-2 text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6">
+            <Button variant="outline" size="lg" onClick={handlePrev} disabled={currentStep === 1} className="gap-2 text-[13px] sm:text-[14px] px-8 py-6 font-mono uppercase tracking-widest">
               <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               Previous
             </Button>
-            <Button size="lg" onClick={handleNext} className="gap-2 text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6">
+            <Button size="lg" onClick={handleNext} className="gap-2 text-[13px] sm:text-[14px] px-8 py-6 font-mono uppercase tracking-widest">
               {currentStep === steps.length ? (
                 <>
                   Calculate

@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+APP/
+GHG_Calculator_App/
+GHG_Calculator_App.zip
+android/
+
+# Local env
+*.local
+.env
+.env.*
+!.env.example
+
+# Editor
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+temp_landing.txt
+charmie_ref.html
+charmie_style.css
+updateContainerFont.mjs
+updateTypography.js
+package.tmp.json
+vercel_ui/

@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">GHG Calculator</string>
-    <string name="title_activity_main">GHG Calculator</string>
-    <string name="package_name">com.ghg.calculator</string>
-    <string name="custom_url_scheme">com.ghg.calculator</string>
-</resources>

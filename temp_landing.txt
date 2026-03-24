@@ -1,0 +1,284 @@
+﻿import React, { useState } from 'react';
+
+const LandingScreen = ({ onSelect }) => {
+    const [page, setPage] = useState('hero'); // 'hero' | 'calculators'
+
+    const handleCtaClick = (e) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        setPage('calculators');
+    };
+
+    const calculators = [
+        {
+            id: 'household',
+            emoji: 'ðŸŒ¿',
+            title: 'Household Carbon Calculator',
+            desc: 'Understand emissions from daily life including electricity use, travel, food consumption, and household waste.',
+            time: '5 minutes',
+            color: '#10b981',
+            shadow: 'rgba(16,185,129,0.2)',
+            btnLabel: 'Start Household Calculator',
+        },
+        {
+            id: 'business',
+            emoji: 'ðŸ¢',
+            title: 'Small Business Calculator',
+            desc: 'Estimate emissions from business operations such as electricity use, transport, employee commuting, and waste generation.',
+            time: '10 minutes',
+            color: '#3b82f6',
+            shadow: 'rgba(59,130,246,0.2)',
+            btnLabel: 'Start Business Calculator',
+        },
+        {
+            id: 'industry',
+            emoji: 'ðŸ­',
+            title: 'Industry Carbon Accounting Tool',
+            desc: 'Comprehensive greenhouse gas accounting for organizations including facility-level emissions and Scope 1, Scope 2, and Scope 3 analysis.',
+            time: '15â€“20 minutes',
+            color: '#ef4444',
+            shadow: 'rgba(239,68,68,0.2)',
+            btnLabel: 'Start Industry Calculator',
+        },
+    ];
+
+    const features = [
+        { icon: 'ðŸŒ', title: 'Global Methodologies', desc: 'Built using internationally recognized carbon accounting frameworks including the GHG Protocol, IPCC emission factors, and DEFRA conversion factors.' },
+        { icon: 'ðŸ“Š', title: 'Detailed Emissions Analysis', desc: 'Break down emissions across energy use, transportation, supply chains, and operational activities.' },
+        { icon: 'ðŸ­', title: 'Facility-Level Insights', desc: 'Analyze emissions across multiple facilities to understand operational impact in depth.' },
+        { icon: 'ðŸ“ˆ', title: 'Benchmark Comparisons', desc: 'Compare emissions with industry averages across 22 sectors to understand relative performance.' },
+    ];
+
+    const Nav = () => (
+        <nav style={{ position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(7,11,20,0.88)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0.85rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <img 
+                src="/aiganesha-logo.png" 
+                alt="AiGanesha" 
+                style={{ height: '34px', filter: 'invert(1)', objectFit: 'contain', cursor: 'pointer' }} 
+                onClick={(e) => { e.preventDefault(); setPage('hero'); window.scrollTo(0,0); }} 
+            />
+            <div style={{ display: 'flex', gap: '2rem' }}>
+                {['About', 'Methodology', 'Contact'].map(item => (
+                    <a key={item} href={`#${item.toLowerCase()}`} style={{ color: 'rgba(226,232,240,0.55)', fontSize: '0.88rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                        onMouseOver={e => e.target.style.color = '#e2e8f0'}
+                        onMouseOut={e => e.target.style.color = 'rgba(226,232,240,0.55)'}>
+                        {item}
+                    </a>
+                ))}
+            </div>
+        </nav>
+    );
+
+    const Blobs = () => (
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '60vw', height: '60vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)', filter: 'blur(40px)' }}/>
+            <div style={{ position: 'absolute', top: '30%', right: '-15%', width: '50vw', height: '50vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }}/>
+            <div style={{ position: 'absolute', bottom: '10%', left: '20%', width: '40vw', height: '40vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(239,68,68,0.05) 0%, transparent 70%)', filter: 'blur(40px)' }}/>
+        </div>
+    );
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â    if (page === 'hero') return (
+        <div style={{ background: '#070b14', minHeight: '100vh', color: '#e2e8f0', fontFamily: "'Inter', sans-serif", overflowX: 'hidden' }}>
+            <Blobs />
+            <Nav />
+
+            <main style={{ position: 'relative', zIndex: 1, maxWidth: '700px', margin: '0 auto', padding: '7rem 2.5rem 8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+
+                {/* Headline */}
+                <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 4.8rem)', fontWeight: '800', lineHeight: 1.08, margin: '0 0 1.5rem', letterSpacing: '-1px', background: 'linear-gradient(160deg, #ffffff 40%, rgba(255,255,255,0.55) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    Intelligence for a <span style={{ background: 'linear-gradient(135deg, #10b981, #3b82f6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Sustainable Future</span>
+                </h1>
+
+                {/* Tagline */}
+                <p style={{ fontSize: '1.1rem', color: 'rgba(226,232,240,0.58)', lineHeight: 1.85, margin: '0 0 5rem', maxWidth: '560px' }}>
+                    AiGanesha provides accessible tools to understand and measure greenhouse gas emissions across households, businesses, and industries.
+                </p>
+
+                {/* Vision */}
+                <div style={{ width: '100%', marginBottom: '3rem', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '3rem' }}>
+                    <p style={{ fontSize: '0.72rem', fontWeight: '700', letterSpacing: '2.5px', color: '#10b981', textTransform: 'uppercase', margin: '0 0 0.9rem' }}>Our Vision</p>
+                    <p style={{ fontSize: '1.35rem', fontWeight: '500', color: '#f1f5f9', lineHeight: 1.55, margin: 0 }}>
+                        To buy more time for the planet and the life it sustains.
+                    </p>
+                </div>
+
+                {/* Mission */}
+                <div style={{ width: '100%', marginBottom: '3rem', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '3rem' }}>
+                    <p style={{ fontSize: '0.72rem', fontWeight: '700', letterSpacing: '2.5px', color: '#10b981', textTransform: 'uppercase', margin: '0 0 0.9rem' }}>Our Mission</p>
+                    <p style={{ fontSize: '1.35rem', fontWeight: '500', color: '#f1f5f9', lineHeight: 1.55, margin: 0 }}>
+                        To make sustainability intelligence accessible through powerful and responsible tools.
+                    </p>
+                </div>
+
+                {/* Climate Reality */}
+                <div style={{ width: '100%', marginBottom: '4.5rem', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '3rem' }}>
+                    <p style={{ fontSize: '0.72rem', fontWeight: '700', letterSpacing: '2.5px', color: '#ef4444', textTransform: 'uppercase', margin: '0 0 0.9rem' }}>Climate Reality</p>
+                    <p style={{ fontSize: '1.2rem', color: 'rgba(226,232,240,0.75)', lineHeight: 1.7, margin: '0 0 0.6rem' }}>
+                        A hotter planet means more floods, droughts, and extreme weather.
+                    </p>
+                    <p style={{ fontSize: '1.1rem', fontWeight: '500', color: '#10b981', lineHeight: 1.7, margin: 0 }}>
+                        Understanding emissions is the first step toward reducing them.
+                    </p>
+                </div>
+
+                {/* CTA */}
+                <div 
+                    onClick={handleCtaClick}
+                    style={{ 
+                        display: 'inline-block',
+                        background: 'linear-gradient(135deg, #10b981, #059669)', 
+                        color: 'white', 
+                        padding: '1.1rem 2.75rem', 
+                        borderRadius: '12px', gradient(135deg, #10b981, #059669)', 
+                        color: 'white', 
+                        padding: '1.25rem 3rem', 
+                        borderRadius: '14px', 
+                        fontSize: '1.05rem', 
+                        fontWeight: '700', 
+                        cursor: 'pointer', 
+                        letterSpacing: '0.5px', 
+                        boxShadow: '0 10px 35px rgba(16,185,129,0.3)', 
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
+                    }}
+                    onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 15px 45px rgba(16,185,129,0.45)'; }}
+                    onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 35px rgba(16,185,129,0.3)'; }}
+                >
+                    Take Your First Step Towards Sustainability â†’
+                </div>
+            </main>
+
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'); * { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
+        </div>
+    );
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       CALCULATORS PAGE
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    return (
+        <div style={{ background: '#070b14', minHeight: '100vh', color: '#e2e8f0', fontFamily: "'Inter', sans-serif", overflowX: 'hidden' }}>
+            <Blobs />
+            <Nav />
+
+            <div style={{ position: 'relative', zIndex: 1 }}>
+                
+                {/* WHY CALCULATE */}
+                <section style={{ padding: '6rem 2rem 5rem' }}>
+                    <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+                        <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: '700', color: '#f8fafc', marginBottom: '1.5rem', lineHeight: 1.2 }}>
+                            Why Calculate Your Carbon Footprint?
+                        </h2>
+                        <p style={{ fontSize: '1.05rem', color: 'rgba(226,232,240,0.65)', lineHeight: 1.85, marginBottom: '1rem' }}>
+                            Climate change is driven by greenhouse gas emissions from everyday activities and industrial operations. Measuring your carbon footprint helps identify where these emissions come from and where meaningful reductions can be made.
+                        </p>
+                        <p style={{ fontSize: '1.05rem', color: '#10b981', fontWeight: '500', lineHeight: 1.85 }}>
+                            Understanding emissions is the first step toward reducing them.
+                        </p>
+                    </div>
+                </section>
+
+                {/* CHOOSE CALCULATOR */}
+                <section style={{ padding: '2rem 2rem 6rem' }}>
+                    <div style={{ maxWidth: '1150px', margin: '0 auto' }}>
+                        <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: '700', color: '#f8fafc', textAlign: 'center', marginBottom: '4rem' }}>
+                            Choose Your Calculator
+                        </h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+                            {calculators.map(calc => (
+                                <div key={calc.id}
+                                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '24px', padding: '2.5rem 2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
+                                    onMouseOver={e => { e.currentTarget.style.border = `1px solid ${calc.color}44`; e.currentTarget.style.boxShadow = `0 12px 50px ${calc.shadow}`; e.currentTarget.style.transform = 'translateY(-6px)'; }}
+                                    onMouseOut={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{calc.emoji}</div>
+                                    <h3 style={{ fontSize: '1.2rem', fontWeight: '700', color: '#f8fafc', margin: 0 }}>{calc.title}</h3>
+                                    <p style={{ fontSize: '0.9rem', color: 'rgba(226,232,240,0.55)', lineHeight: 1.75, margin: 0, flex: 1 }}>{calc.desc}</p>
+                                    <div style={{ fontSize: '0.8rem', color: 'rgba(226,232,240,0.4)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <span style={{ fontSize: '1rem' }}>â±</span> Approx. time: {calc.time}
+                                    </div>
+                                    <button 
+                                        onClick={() => onSelect(calc.id)}
+                                        style={{ background: `linear-gradient(135deg, ${calc.color}, ${calc.color}aa)`, color: 'white', border: 'none', padding: '1rem 1.5rem', borderRadius: '12px', fontSize: '0.95rem', fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: `0 5px 20px ${calc.shadow}` }}
+                                        onMouseOver={e => e.target.style.filter = 'brightness(1.1)'}
+                                        onMouseOut={e => e.target.style.filter = 'brightness(1)'}>
+                                        {calc.btnLabel} â†’
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* KEY FEATURES */}
+                <section style={{ padding: '6rem 2rem', background: 'rgba(255,255,255,0.015)', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ maxWidth: '1150px', margin: '0 auto' }}>
+                        <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: '700', color: '#f8fafc', textAlign: 'center', marginBottom: '4rem' }}>
+                            Key Features
+                        </h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
+                            {features.map(f => (
+                                <div key={f.title} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '20px', padding: '2rem' }}>
+                                    <div style={{ fontSize: '2.2rem', marginBottom: '1rem' }}>{f.icon}</div>
+                                    <h3 style={{ fontSize: '1.05rem', fontWeight: '600', color: '#f8fafc', marginBottom: '0.75rem' }}>{f.title}</h3>
+                                    <p style={{ fontSize: '0.88rem', color: 'rgba(226,232,240,0.5)', lineHeight: 1.7, margin: 0 }}>{f.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* METHODOLOGY */}
+                <section id="methodology" style={{ padding: '7rem 2rem' }}>
+                    <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+                        <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: '700', color: '#f8fafc', marginBottom: '1.5rem' }}>
+                            Methodology
+                        </h2>
+                        <p style={{ fontSize: '1.05rem', color: 'rgba(226,232,240,0.6)', lineHeight: 1.9, marginBottom: '3rem' }}>
+                            The AiGanesha carbon calculators are built using widely recognized carbon accounting standards. These frameworks ensure transparency, consistency, and reliability in emissions estimation.
+                        </p>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+                            {['GHG Protocol', 'IPCC Emission Factors', 'DEFRA Conversion Factors'].map(std => (
+                                <div key={std} style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '12px', padding: '0.85rem 1.75rem', fontSize: '0.9rem', color: '#10b981', fontWeight: '600' }}>
+                                    âœ“ {std}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* FOOTER */}
+                <footer id="about" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '4rem 2rem' }}>
+                    <div style={{ maxWidth: '1150px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '2rem' }}>
+                        <div style={{ flex: '1 1 300px' }}>
+                            <img src="/aiganesha-logo.png" alt="AiGanesha" style={{ height: '32px', filter: 'invert(1)', objectFit: 'contain', marginBottom: '0.6rem' }}/>
+                            <p style={{ fontSize: '0.8rem', color: 'rgba(226,232,240,0.3)', margin: 0 }}>Intelligence for a Sustainable Future</p>
+                        </div>
+                        <div style={{ display: 'flex', gap: '2.5rem' }}>
+                            {['About', 'Methodology', 'Contact'].map(item => (
+                                <a key={item} href={`#${item.toLowerCase()}`} style={{ color: 'rgba(226,232,240,0.4)', fontSize: '0.9rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                                    onMouseOver={e => e.target.style.color = '#e2e8f0'}
+                                    onMouseOut={e => e.target.style.color = 'rgba(226,232,240,0.4)'}>
+                                    {item}
+                                </a>
+                            ))}
+                        </div>
+                        <div style={{ flex: '1 1 200px', textAlign: 'right' }}>
+                            <a href="https://aiganesha.org" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.85rem', color: 'rgba(226,232,240,0.35)', textDecoration: 'none' }}>
+                                aiganesha.org
+                            </a>
+                        </div>
+                    </div>
+                    <div style={{ textAlign: 'center', marginTop: '3rem', fontSize: '0.75rem', color: 'rgba(226,232,240,0.2)' }}>
+                        Â© {new Date().getFullYear()} AiGanesha. All rights reserved.
+                    </div>
+                </footer>
+            </div>
+
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'); * { box-sizing: border-box; margin: 0; padding: 0; } html { scroll-behavior: smooth; }`}</style>
+        </div>
+    );
+};
+
+export default LandingScreen;
+

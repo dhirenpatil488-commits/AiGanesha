@@ -152,7 +152,7 @@ export default function PerformancePanel() {
 
     const posStyle = pos.x !== null
         ? { left: pos.x, top: pos.y, right: 'auto', bottom: 'auto', transform: 'none' }
-        : { top: 80, right: 24, transform: 'none' };
+        : { top: 108, right: 48, transform: 'none' };
 
     // Label for AQI row: "<City> AQI" if city known, else "AQI"
     const aqiLabel = cityName ? `AQI - ${cityName}` : 'AQI';
@@ -160,7 +160,7 @@ export default function PerformancePanel() {
     return (
         <div
             ref={panelRef}
-            className="nerd-mode-element fixed z-[9999] select-none hidden md:block"
+            className="nerd-mode-element fixed z-[9999] select-none hidden md:block group/panel"
             style={{ ...posStyle, touchAction: 'none', cursor: dragging.current ? 'grabbing' : 'grab' }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -168,48 +168,66 @@ export default function PerformancePanel() {
             onPointerCancel={onPointerUp}
         >
             <div
-                className="nerd-mode-element bg-[#1a1b24] border border-[#2a2b36] rounded-md shadow-xl font-mono overflow-hidden"
-                style={{ minWidth: '270px', maxWidth: 'calc(100vw - 48px)', boxSizing: 'border-box' }}
+                className="nerd-mode-element border border-white/10 group-hover/panel:border-white/20 font-mono overflow-hidden transition-all duration-300"
+                style={{
+                    minWidth: '260px',
+                    maxWidth: 'calc(100vw - 48px)',
+                    boxSizing: 'border-box',
+                    background: 'rgba(8,12,16,0.92)',
+                    backdropFilter: 'blur(12px)',
+                    boxShadow: '0 0 0 0 transparent',
+                    transition: 'border-color 0.3s, box-shadow 0.3s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 24px rgba(255,255,255,0.06)'}
+                onMouseLeave={e => e.currentTarget.style.boxShadow = '0 0 0 0 transparent'}
             >
-                {/* ── Header — centered ── */}
-                <div
-                    className="nerd-mode-element px-4 pt-3 pb-2 border-b border-[#2a2b36] flex items-center justify-center gap-1.5"
-                    style={{ background: 'rgba(98,189,255,0.07)' }}
-                >
-                    <span className="text-[#62bdff] text-[12px] font-bold uppercase tracking-widest">SYS</span>
-                    <span className="text-[#62bdff]/40 text-[12px] font-bold">·</span>
-                    <span className="text-[#62bdff] text-[12px] font-bold uppercase tracking-widest">CLIMATE</span>
+                {/* ── Grip Handle ── */}
+                <div className="nerd-mode-element flex items-center justify-center gap-[5px] pt-2.5 pb-1.5">
+                    {[...Array(6)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="nerd-mode-element rounded-full bg-white/20 group-hover/panel:bg-white/40 transition-all duration-300"
+                            style={{ width: 3, height: 3 }}
+                        />
+                    ))}
                 </div>
 
-                {/* ── Metrics ────────────────────────────────────────────── */}
+                {/* ── Header ── */}
+                <div className="nerd-mode-element px-4 pb-2.5 border-b border-white/8 flex items-center justify-center gap-1.5">
+                    <span className="text-white/25 text-[10px] font-mono uppercase tracking-[0.18em]">SYS</span>
+                    <span className="text-white/15 text-[10px]">·</span>
+                    <span className="text-white/25 text-[10px] font-mono uppercase tracking-[0.18em]">CLIMATE</span>
+                </div>
+
+                {/* ── Metrics ── */}
                 <div className="nerd-mode-element px-4 py-1">
                     <Row label={aqiLabel} rowBorder>
                         <span style={{ color: aqiColor, fontWeight: 600 }}>
                             {aqi !== null ? aqi : '…'}
                         </span>
                         {aqiCategory && (
-                            <span className="text-[#8b949e] text-[11px] ml-2">{aqiCategory}</span>
+                            <span className="text-white/25 text-[11px] ml-2">{aqiCategory}</span>
                         )}
                     </Row>
 
                     <Row label="Atmospheric CO₂" rowBorder>
-                        <span className="text-[#f4a261] font-semibold">{ATMOSPHERIC_CO2_PPM} ppm</span>
+                        <span className="text-white/70 font-semibold">{ATMOSPHERIC_CO2_PPM} ppm</span>
                     </Row>
 
                     <Row label="Global Temp Δ" rowBorder>
-                        <span className="text-[#e76f51] font-semibold">{GLOBAL_TEMP_DELTA}</span>
+                        <span style={{ color: '#e76f51', fontWeight: 600, opacity: 0.8 }}>{GLOBAL_TEMP_DELTA}</span>
                     </Row>
 
                     <Row label="Time Since Load" rowBorder>
-                        <span className="text-gray-300 font-semibold">{timeStr}</span>
+                        <span className="text-white/50 font-semibold">{timeStr}</span>
                     </Row>
 
                     <Row label="Digital Emissions" rowBorder>
-                        <span className="text-[#8b949e] font-semibold">{emStr} CO₂</span>
+                        <span className="text-white/40 font-semibold">{emStr} CO₂</span>
                     </Row>
 
                     <Row label="Planet Risk">
-                        <span style={{ color: riskColor, fontWeight: 700 }}>{planetRisk}</span>
+                        <span style={{ color: riskColor, fontWeight: 700, opacity: 0.85 }}>{planetRisk}</span>
                     </Row>
                 </div>
 
@@ -226,12 +244,13 @@ function Row({ label, children, rowBorder }) {
             className="nerd-mode-element flex items-center justify-between gap-6 py-[7px]"
             style={rowBorder ? { borderBottom: '1px solid rgba(255,255,255,0.06)' } : {}}
         >
-            <span className="text-[#62bdff] font-bold uppercase text-[10px] tracking-widest shrink-0">
+            <span className="text-white/25 font-mono uppercase text-[10px] tracking-[0.12em] shrink-0">
                 {label}
             </span>
-            <div className="flex items-center text-[13px]">
+            <div className="flex items-center text-[12px]">
                 {children}
             </div>
         </div>
     );
 }
+

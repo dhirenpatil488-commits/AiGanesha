@@ -1,6 +1,5 @@
-import React from "react";
-import { Home, Building2, Factory, Leaf, BarChart3, Target, Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React, { useEffect } from "react";
+import { Home, Building2, Factory, BarChart3, Target, Globe, ArrowRight } from "lucide-react";
 
 const calculatorOptions = [
   {
@@ -9,8 +8,6 @@ const calculatorOptions = [
     description: "Calculate your personal and family carbon footprint",
     icon: Home,
     features: ["Energy consumption", "Transportation", "Food & diet", "Shopping habits"],
-    iconColor: "text-emerald-400",
-    bgColor: "bg-emerald-500/10",
   },
   {
     id: "business",
@@ -18,8 +15,6 @@ const calculatorOptions = [
     description: "Small to medium business emissions tracking",
     icon: Building2,
     features: ["Office operations", "Employee commuting", "Business travel", "Procurement"],
-    iconColor: "text-sky-400",
-    bgColor: "bg-sky-500/10",
   },
   {
     id: "industry",
@@ -27,8 +22,6 @@ const calculatorOptions = [
     description: "Enterprise-level GHG Protocol reporting",
     icon: Factory,
     features: ["Multi-facility tracking", "Full Scope 1-3", "Sector benchmarking", "Reduction targets"],
-    iconColor: "text-amber-400",
-    bgColor: "bg-amber-500/10",
   },
 ];
 
@@ -39,137 +32,171 @@ const stats = [
 ];
 
 export default function LandingScreen({ onSelect, onBackToPlatform }) {
-  return (
-    <main className="min-h-screen flex flex-col relative z-10 transition-colors duration-500">
-      {/* ── Header ─────────────────────────────────────────────── */}
-      <header className="border-b border-dotted border-white/15 sticky top-0 z-50 bg-[#0d0f17]/80 backdrop-blur-md">
-        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0 grid grid-cols-2">
-          {/* Logo */}
-          <div className="py-4 sm:py-6 flex items-center">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
-                <Leaf className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-              </div>
-              <span className="font-bold text-[15px] sm:text-base text-foreground tracking-tight">GHG Calculator</span>
-            </div>
-          </div>
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
-          {/* Navigation / Back */}
-          <div className="py-4 sm:py-6 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-1 sm:gap-4">
-            <span className="hidden sm:flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-muted-foreground uppercase tracking-widest opacity-60">
-              <Globe className="h-3 w-3" />
-              Protocol Compliant
-            </span>
-            {onBackToPlatform && (
-              <button
-                onClick={onBackToPlatform}
-                className="flex items-center gap-1.5 text-[13px] sm:text-[14px] font-mono text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest mt-1 sm:mt-0"
-              >
-                ← Home
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {/* ── Hero Section ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-dotted border-white/15">
-        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-          <div className="pt-4 pb-10 sm:pt-6 sm:pb-20 space-y-8 sm:space-y-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] sm:text-[12px] font-mono uppercase tracking-widest">
-              <BarChart3 className="h-4 w-4" />
-              <span>Measure. Understand. Reduce.</span>
-            </div>
-
-            <h2 className="text-[32px] sm:text-[40px] leading-[1.2] tracking-[-0.03em] font-bold text-foreground text-balance">
-              Calculate Your<br />
-              <span className="text-primary">Carbon Footprint</span>
-            </h2>
-
-            <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground w-full">
-              Make informed decisions about your environmental impact. Our calculator helps households, businesses, and industries measure and reduce their greenhouse gas emissions.
-            </p>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 pt-8 border-t border-dotted border-white/15">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-left">
-                  <div className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold text-accent mb-1">{stat.value}</div>
-                  <div className="text-[11px] sm:text-[12px] font-mono text-muted-foreground uppercase tracking-widest">{stat.label}</div>
-                  <div className="text-[10px] uppercase font-mono text-muted-foreground/60 mt-1">{stat.sublabel}</div>
+    return (
+        <main className="min-h-screen flex flex-col relative z-10 transition-colors duration-500">
+            {/* ── Navigation ─────────────────────────────────────────────── */}
+            <header className="border-b border-dotted border-white/10 sticky top-0 z-50 bg-[#080C10]/85 backdrop-blur-md">
+                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0 flex justify-between">
+                    <div className="py-3.5 sm:py-5 flex items-center">
+                        <div
+                            className="flex items-center cursor-pointer"
+                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        >
+                            <span className="font-semibold text-[18px] sm:text-[22px] text-white/90 tracking-[-0.03em] select-none">
+                                ai<span style={{ color: "#F4A261" }}>G</span>anesha
+                            </span>
+                        </div>
+                    </div>
+                    <div className="py-3.5 sm:py-5 flex items-center gap-5 sm:gap-6">
+                        {onBackToPlatform && (
+                            <button
+                                onClick={onBackToPlatform}
+                                className="text-[11px] sm:text-[12px] font-mono text-white/30 hover:text-white/70 transition-colors duration-300 uppercase tracking-[0.12em]"
+                            >
+                                ← Back
+                            </button>
+                        )}
+                    </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+            </header>
 
-      {/* ── Calculator Selection ─────────────────────────────────────────────── */}
-      <section className="border-b border-dotted border-white/15">
-        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-          <div className="py-6 border-b border-dotted border-white/15">
-            <h3 className="text-[13px] sm:text-[14px] font-mono text-foreground uppercase tracking-widest opacity-80">Choose Your Calculator</h3>
-          </div>
+            {/* ── Hero Section ─────────────────────────────────────────────── */}
+            <section className="relative overflow-hidden border-b border-dotted border-white/10">
+                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
+                    <div className="pt-8 pb-12 sm:pt-12 sm:pb-20 space-y-6 sm:space-y-8">
 
-          <div className="grid grid-cols-1">
-            {calculatorOptions.map((option, idx) => (
-              <div
-                key={option.id}
-                className={`py-10 flex flex-col ${idx !== calculatorOptions.length - 1 ? "border-b border-dotted border-white/15" : ""}`}
-              >
-                <div className={`h-12 w-12 sm:h-14 sm:w-14 rounded-xl flex items-center justify-center mb-6 border border-white/10 ${option.bgColor} ${option.iconColor}`}>
-                  <option.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                        {/* Eyebrow + Headline Group */}
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/40 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.12em] mb-4 sm:mb-5">
+                                <BarChart3 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                                <span>Measure. Understand. Reduce.</span>
+                            </div>
+
+                            {/* Headline */}
+                            <h1 className="text-[26px] min-[375px]:text-[28px] sm:text-[36px] md:text-[42px] leading-[1.15] tracking-[-0.03em] text-white font-sans">
+                                <span className="font-semibold">Calculate Your</span><br />
+                                <span className="font-light text-white/50">Carbon Footprint</span>
+                            </h1>
+                        </div>
+
+                        <p className="text-[14px] sm:text-[15px] md:text-[16px] leading-[1.65] tracking-[-0.01em] text-white/35 max-w-[520px] font-sans font-normal">
+                            Make informed decisions about your environmental impact. Our tools help households, businesses, and industries measure and reduce their greenhouse gas emissions.
+                        </p>
+
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-3 border-t border-l border-dotted border-white/10 mt-8 sm:mt-12">
+                            {stats.map((stat, i) => (
+                                <div
+                                    key={i}
+                                    className="py-6 sm:py-8 px-4 sm:px-5 border-r border-b border-dotted border-white/10 flex flex-col justify-between"
+                                >
+                                    <div className="text-[18px] sm:text-[22px] md:text-[26px] font-semibold text-white leading-none tracking-[-0.03em] mb-2">
+                                        {stat.value}
+                                    </div>
+                                    <div>
+                                        <div className="text-[10px] sm:text-[11px] font-mono text-white/30 uppercase tracking-[0.1em] leading-[1.4] mb-0.5">
+                                            {stat.label}
+                                        </div>
+                                        <div className="text-[9px] sm:text-[10px] font-mono text-white/20 uppercase tracking-[0.1em] leading-[1.4]">
+                                            {stat.sublabel}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-                <h3 className="text-[24px] sm:text-[26px] leading-[1.4] tracking-[-0.03em] font-bold text-foreground mb-3">{option.title}</h3>
-                <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground mb-8">
-                  {option.description}
-                </p>
+            {/* ── Calculator Selection ─────────────────────────────────────────────── */}
+            <section className="border-b border-dotted border-white/10">
+                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
+                    
+                    <div className="grid grid-cols-1">
+                        {calculatorOptions.map((option, idx) => (
+                            <div
+                                key={option.id}
+                                className={`py-12 sm:py-16 flex flex-col ${idx !== calculatorOptions.length - 1 ? "border-b border-dotted border-white/10" : ""}`}
+                            >
+                                <div className="flex items-center gap-4 sm:gap-5 mb-5 sm:mb-6">
+                                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
+                                        <option.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white/60" />
+                                    </div>
+                                    <h3 className="text-[20px] sm:text-[24px] md:text-[28px] font-semibold text-white/90 leading-none tracking-[-0.02em]">
+                                        {option.title}
+                                    </h3>
+                                </div>
+                                
+                                <p className="text-[14px] sm:text-[15px] md:text-[16px] leading-[1.65] tracking-[-0.01em] text-white/45 mb-8 sm:mb-10 max-w-[480px]">
+                                    {option.description}
+                                </p>
 
-                <ul className="space-y-4 mb-10">
-                  {option.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-[14px] sm:text-[15px] font-mono text-muted-foreground">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-                      <span className="leading-tight">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+                                <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-10 max-w-[480px]">
+                                    {option.features.map((feature) => (
+                                        <li key={feature} className="flex items-center gap-4 sm:gap-5 text-[14px] sm:text-[15px] text-white/50">
+                                            <span className="text-white/20 text-[12px] sm:text-[14px] font-mono tracking-widest select-none shrink-0">—</span>
+                                            <span className="leading-tight font-light">{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
 
-                <Button
-                  className="w-full text-[13px] sm:text-[14px] px-10 py-6 rounded-none font-mono uppercase tracking-widest bg-white/5 border border-white/20 hover:bg-white/10 text-white transition-colors"
-                  variant="secondary"
-                  onClick={() => onSelect(option.id)}
-                >
-                  Start Calculator
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+                                <div>
+                                    <button
+                                        onClick={() => onSelect(option.id)}
+                                        className="group relative inline-flex items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 border text-[11px] sm:text-[12px] font-mono uppercase tracking-[0.14em] transition-all duration-400 overflow-hidden"
+                                        style={{
+                                            borderColor: 'rgba(255,255,255,0.2)',
+                                            color: 'rgba(255,255,255,0.5)',
+                                        }}
+                                        onMouseEnter={e => {
+                                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)';
+                                            e.currentTarget.style.color = 'rgba(255,255,255,1)';
+                                            e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                                        }}
+                                        onMouseLeave={e => {
+                                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
+                                            e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
+                                            e.currentTarget.style.background = 'transparent';
+                                        }}
+                                    >
+                                        <span className="relative z-10 flex items-center gap-2.5 sm:gap-3">
+                                            Start {option.title}
+                                            <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 group-hover:translate-x-0.5 transition-transform duration-400" />
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
-      {/* ── Features Section ─────────────────────────────────────────────── */}
-      <section className="border-b border-dotted border-white/15">
-        <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
-            <div className="py-8 sm:py-10 border-b border-dotted border-white/15 sm:border-b-0">
-              <h4 className="text-[13px] sm:text-[14px] font-mono text-foreground mb-2 flex items-center gap-2 uppercase tracking-widest">
-                <BarChart3 className="h-4 w-4 text-primary" />
-                Detailed Breakdown
-              </h4>
-              <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Visualize your emissions by category with interactive charts.</p>
-            </div>
+            {/* ── Footer ─────────────────────────────────────────────────── */}
+            <footer className="py-8 sm:py-12">
+                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
+                        <div>
+                            <h4 className="text-[11px] sm:text-[12px] font-mono text-white/30 mb-2.5 flex items-center gap-2 uppercase tracking-[0.1em]">
+                                <BarChart3 className="h-3.5 w-3.5" />
+                                Detailed Breakdown
+                            </h4>
+                            <p className="text-[13px] sm:text-[14px] leading-[1.6] text-white/20">Visualize your emissions by category with interactive charts.</p>
+                        </div>
 
-            <div className="py-8 sm:py-10">
-              <h4 className="text-[13px] sm:text-[14px] font-mono text-foreground mb-2 flex items-center gap-2 uppercase tracking-widest">
-                <Target className="h-4 w-4 text-primary" />
-                Reduction Tips
-              </h4>
-              <p className="text-[15px] sm:text-[16px] leading-[1.48] tracking-[-0.02em] text-muted-foreground">Get personalized recommendations to lower your footprint.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  );
+                        <div>
+                            <h4 className="text-[11px] sm:text-[12px] font-mono text-white/30 mb-2.5 flex items-center gap-2 uppercase tracking-[0.1em]">
+                                <Target className="h-3.5 w-3.5" />
+                                Reduction Tips
+                            </h4>
+                            <p className="text-[13px] sm:text-[14px] leading-[1.6] text-white/20">Get personalized recommendations to lower your footprint.</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    );
 }

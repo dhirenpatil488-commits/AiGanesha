@@ -1,9 +1,6 @@
 "use client";
 
-import { ArrowLeft, TreeDeciduous, Car, Plane, Home, TrendingDown, Lightbulb, RotateCcw, Share2, Download, Monitor } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { ArrowLeft, TreeDeciduous, Car, Plane, Home, TrendingDown, Lightbulb, RotateCcw, Share2, Download, Fingerprint, AlertCircle, Leaf, CheckCircle2 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import type { HouseholdResult, BusinessResult, IndustryResult } from "@/lib/calculations";
 
@@ -15,445 +12,412 @@ interface EmissionsResultProps {
 }
 
 const CHART_COLORS = [
-  "hsl(142 71% 45%)",
-  "hsl(200 80% 50%)",
-  "hsl(45 93% 47%)",
-  "hsl(280 65% 60%)",
-  "hsl(15 80% 55%)",
-  "hsl(220 15% 55%)",
+  "#F4A261", // orange
+  "#4EA8DE", // sky blue
+  "#3fb950", // green
+  "#a78bfa", // purple
+  "#f87171", // red
+  "#60a5fa", // blue
 ];
 
-function isHouseholdResult(result: HouseholdResult | BusinessResult | IndustryResult): result is HouseholdResult {
-  return "annualTonnes" in result && "perCapita" in (result as HouseholdResult).annualTonnes;
+const HOUSEHOLD_RECOMMENDATIONS: Record<string, string[]> = {
+  Energy: [
+    "Switch off appliances at the wall when not in use",
+    "Upgrade to LED lighting and 5-star ACs/fridges",
+    "Set AC temperature to 24°C instead of 18°C",
+  ],
+  Transport: [
+    "Carpool or use public transit twice a week",
+    "Keep tires properly inflated to improve mileage",
+    "Switch to an EV or electric two-wheeler",
+  ],
+  Flights: [
+    "Combine business trips to reduce flight frequency",
+    "Opt for direct flights (takeoffs use the most fuel)",
+    "Replace one short flight with a train journey",
+  ],
+  Food: [
+    "Adopt a meatless meal or day once a week",
+    "Buy local, seasonal produce to reduce transport tags",
+    "Plan meals carefully to reduce food waste",
+  ],
+  Shopping: [
+    "Buy second-hand or refurbished electronics",
+    "Invest in high-quality, long-lasting clothing",
+    "Resist fast fashion and impulse online purchases",
+  ],
+  Waste: [
+    "Start composting wet/kitchen waste at home",
+    "Recycle paper, plastic, and glass locally",
+    "Avoid single-use plastics and over-packaging",
+  ],
+};
+
+function isHouseholdResult(r: any): r is HouseholdResult {
+  return "annualTonnes" in r && "perCapita" in r.annualTonnes;
+}
+function isBusinessResult(r: any): r is BusinessResult {
+  return "dashboard" in r && "score" in r.dashboard;
+}
+function isIndustryResult(r: any): r is IndustryResult {
+  return "facilityEmissions" in r;
 }
 
-function isBusinessResult(result: HouseholdResult | BusinessResult | IndustryResult): result is BusinessResult {
-  return "dashboard" in result && "score" in (result as BusinessResult).dashboard;
+// ── Stat Card ─────────────────────────────────────────────────────────────────
+function StatCard({ value, label, sub, accent }: { value: string | number; label: string; sub?: string; accent?: string }) {
+  return (
+    <div className="relative flex flex-col p-6 rounded-2xl border border-white/[0.07] bg-white/[0.025] overflow-hidden group hover:border-white/[0.14] hover:bg-white/[0.04] transition-all duration-300">
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+      <div
+        className="text-[36px] sm:text-[44px] font-mono font-semibold leading-none tracking-[-0.03em] mb-2"
+        style={{ color: accent || "rgba(255,255,255,0.85)" }}
+      >
+        {value}
+      </div>
+      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-white/30">{label}</div>
+      {sub && <div className="text-[12px] font-mono text-white/50 mt-1">{sub}</div>}
+    </div>
+  );
 }
 
-function isIndustryResult(result: HouseholdResult | BusinessResult | IndustryResult): result is IndustryResult {
-  return "facilityEmissions" in result;
+// ── Progress Bar ───────────────────────────────────────────────────────────────
+function ScopeBar({ label, value, pct, color }: { label: string; value: string; pct: number; color: string }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between text-[12px] font-mono">
+        <span className="text-white/50">{label}</span>
+        <span className="text-white/70">{value}</span>
+      </div>
+      <div className="h-[3px] w-full bg-white/5 rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color }}
+        />
+      </div>
+    </div>
+  );
 }
 
 export default function EmissionsResult({ result, type, onBack, onStartOver }: EmissionsResultProps) {
-  const chartData = result.chartData.map((item, index) => ({
+  const chartData = result.chartData.map((item, i) => ({
     ...item,
-    fill: CHART_COLORS[index % CHART_COLORS.length],
+    fill: CHART_COLORS[i % CHART_COLORS.length],
   }));
 
-  // Get main metrics based on type
+  // ── Derived KPIs ─────────────────────────────────────────────────────────────
   let totalTonnes = 0;
   let perCapitaTonnes = 0;
-  let comparisonValue: string | number = 0;
-  let comparisonLabel = "";
+  let thirdLabel = "";
+  let thirdValue: string | number = "";
+  let thirdSub = "";
+
+  let earths = 0;
+  let biggestMistakeName = "";
+  let biggestMistakePct = 0;
+  let recommendedActions: string[] = [];
 
   if (isHouseholdResult(result)) {
     totalTonnes = result.annualTonnes.total;
     perCapitaTonnes = result.annualTonnes.perCapita;
-    comparisonValue = result.context.indiaMultiplier;
-    comparisonLabel = `${comparisonValue}x India average`;
+    thirdValue = `${result.context.indiaMultiplier}×`;
+    thirdLabel = "India Average";
+    thirdSub = "Benchmark status";
+    
+    // Insights Calculations
+    earths = Number((perCapitaTonnes / 2.0).toFixed(1));
+    const highest = chartData[0] || { name: "Energy", percentage: 0 };
+    biggestMistakeName = highest.name;
+    biggestMistakePct = highest.percentage;
+    recommendedActions = HOUSEHOLD_RECOMMENDATIONS[highest.name] || HOUSEHOLD_RECOMMENDATIONS["Energy"];
   } else if (isBusinessResult(result)) {
     totalTonnes = result.tonnes.total;
     perCapitaTonnes = result.dashboard.perEmployeeTonnes;
-    comparisonValue = result.dashboard.score;
-    comparisonLabel = result.dashboard.ratingStr;
+    thirdValue = result.dashboard.score;
+    thirdLabel = "Efficiency Score";
+    thirdSub = result.dashboard.ratingStr;
   } else if (isIndustryResult(result)) {
     totalTonnes = result.tonnes.total;
     perCapitaTonnes = result.dashboard.perEmployeeTonnes;
-    comparisonLabel = `${result.benchmark.status} vs industry`;
+    thirdLabel = "vs Industry";
+    thirdValue = result.benchmark.status;
   }
 
+  // ── Color for total ───────────────────────────────────────────────────────────
+  const totalColor =
+    perCapitaTonnes < 2 ? "#3fb950" : perCapitaTonnes < 5 ? "#F4A261" : "#f85149";
+
   return (
-    <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="w-full max-w-[860px] mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" size="sm" onClick={onBack} className="gap-2 h-8 text-xs font-medium uppercase tracking-widest text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Back to Form
-            </Button>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="gap-2 h-8 text-xs font-medium uppercase tracking-widest text-muted-foreground hover:text-foreground">
-                <Share2 className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Share</span>
-              </Button>
-              <Button variant="outline" size="sm" className="gap-2 h-8 text-xs font-medium uppercase tracking-widest text-muted-foreground hover:text-foreground">
-                <Download className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Export</span>
-              </Button>
-            </div>
+    <div className="min-h-screen pb-24 font-sans" style={{ background: "#080C10" }}>
+
+      {/* ── Sticky Nav ── */}
+      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080C10]/90 backdrop-blur-xl">
+        <div className="w-full max-w-[900px] mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-[11px] font-mono text-white/30 hover:text-white/70 uppercase tracking-[0.14em] transition-colors bg-transparent border-none cursor-pointer"
+          >
+            <ArrowLeft size={14} /> Back to Form
+          </button>
+          <div className="flex items-center gap-2">
+            <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/[0.08] bg-white/[0.03] text-white/30 hover:text-white/60 hover:border-white/[0.14] transition-all text-[11px] font-mono uppercase tracking-[0.12em] cursor-pointer">
+              <Share2 size={13} /> Share
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/[0.08] bg-white/[0.03] text-white/30 hover:text-white/60 hover:border-white/[0.14] transition-all text-[11px] font-mono uppercase tracking-[0.12em] cursor-pointer">
+              <Download size={13} /> Export
+            </button>
           </div>
         </div>
       </header>
 
-      <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 pt-8 md:pt-12">
-        {/* Title Block */}
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1 tracking-tight">Emissions Dashboard</h1>
-          <p className="text-sm md:text-base text-muted-foreground">Annual greenhouse gas emissions breakdown and insights.</p>
+      <div className="w-full max-w-[900px] mx-auto px-5 sm:px-8 pt-10 sm:pt-14">
+
+        {/* ── Page Title ── */}
+        <div className="mb-10">
+          <p className="text-[11px] sm:text-[12px] font-mono text-white/20 uppercase tracking-[0.2em] mb-3">Results</p>
+          <h1 className="text-[28px] sm:text-[36px] font-semibold tracking-[-0.03em] text-white leading-tight">
+            Emissions Dashboard
+          </h1>
+          <p className="text-[14px] text-white/30 font-mono mt-2">
+            Annual greenhouse gas emissions — breakdown & insights.
+          </p>
         </div>
 
-        {/* Hero KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card className="bg-gradient-to-br from-primary/10 to-transparent border-primary/20 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-110" />
-            <CardContent className="p-5 flex flex-col justify-center h-full relative z-10">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-1">
-                {totalTonnes.toFixed(1)}
-              </div>
-              <div className="text-xs md:text-sm text-muted-foreground font-medium uppercase tracking-wider">Total tCO₂e/year</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border shadow-sm">
-            <CardContent className="p-5 flex flex-col justify-center h-full">
-              <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">
-                {perCapitaTonnes.toFixed(2)}
-              </div>
-              <div className="text-xs md:text-sm text-muted-foreground font-medium uppercase tracking-wider">
-                {type === "household" ? "Per person" : "Per employee"} t/year
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border shadow-sm">
-            <CardContent className="p-5 flex flex-col justify-center h-full">
-              {isBusinessResult(result) ? (
-                <>
-                  <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">{comparisonValue}</div>
-                  <div className="text-xs md:text-sm text-muted-foreground font-medium uppercase tracking-wider">Efficiency Score</div>
-                  <div className="text-xs text-primary mt-1 font-medium">{comparisonLabel}</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-xl md:text-2xl font-bold text-foreground mb-1 leading-tight">{comparisonLabel}</div>
-                  <div className="text-xs md:text-sm text-muted-foreground font-medium uppercase tracking-wider mt-1">Benchmark Status</div>
-                </>
-              )}
-            </CardContent>
-          </Card>
+        {/* ── KPI Cards ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+          <StatCard
+            value={totalTonnes.toFixed(1)}
+            label={`Total tCO₂e / year`}
+            accent={totalColor}
+          />
+          <StatCard
+            value={perCapitaTonnes.toFixed(2)}
+            label={type === "household" ? "Per person  t / year" : "Per employee  t / year"}
+          />
+          <StatCard
+            value={thirdValue}
+            label={thirdLabel}
+            sub={thirdSub}
+          />
         </div>
 
-        {/* Mobile Warning Banner */}
-        <div className="block sm:hidden mb-8">
-          <div className="p-5 rounded-lg bg-primary/5 border border-primary/20 flex flex-col items-center text-center">
-            <Monitor className="h-6 w-6 text-primary mb-3" />
-            <h3 className="text-sm font-bold text-foreground mb-1">View on Desktop</h3>
-            <p className="text-xs text-muted-foreground">
-              Some charts are hidden for mobile optimization. Open on desktop for the full interactive breakdown.
-            </p>
-          </div>
-        </div>
+        {/* ── Analytics Grid ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
-        {/* Detailed Analytics Tracker - Hidden on Mobile */}
-        <div className="hidden sm:block space-y-6">
-
-          {/* Core Analytics Grid: Charts & Equivalents */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-            
-            {/* Pie Chart */}
-            <Card className="bg-card border-border shadow-sm">
-              <CardHeader className="pb-2 pt-5 px-5">
-                <CardTitle className="text-lg font-bold tracking-tight">Emissions Breakdown</CardTitle>
-                <CardDescription className="text-xs text-muted-foreground">Data distribution by category</CardDescription>
-              </CardHeader>
-              <CardContent className="px-5 pb-5">
-                <div className="h-[240px] w-full flex justify-center items-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={chartData}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={90}
-                        innerRadius={60}
-                        paddingAngle={2}
-                        label={({ name, percent }) => percent > 0.05 ? `${name} ${(percent * 100).toFixed(0)}%` : ''}
-                        labelLine={false}
-                        style={{ fontSize: '11px', fill: 'var(--muted-foreground)' }}
-                      >
-                        {chartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.fill} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        formatter={(value: number) => [`${(value / 1000).toFixed(2)} tonnes`, "Volume"]}
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: "6px",
-                          fontSize: "12px",
-                          padding: "8px 12px"
-                        }}
-                        itemStyle={{ color: "hsl(var(--foreground))" }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
+          {/* Pie Chart */}
+          <div className="relative p-6 rounded-2xl border border-white/[0.07] bg-white/[0.02]">
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/25 mb-1">Breakdown</p>
+            <h2 className="text-[15px] font-semibold text-white/80 tracking-[-0.02em] mb-5">Emissions by Category</h2>
+            <div className="h-[220px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartData} dataKey="value" nameKey="name"
+                    cx="50%" cy="50%" outerRadius={85} innerRadius={55}
+                    paddingAngle={2} stroke="none"
+                  >
+                    {chartData.map((entry, i) => (
+                      <Cell key={`c-${i}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(val: number) => [`${(val / 1000).toFixed(2)} t`, "Emissions"]}
+                    contentStyle={{ backgroundColor: "#0d1218", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", fontSize: "12px", color: "#fff" }}
+                    itemStyle={{ color: "#fff" }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            {/* Legend */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 mt-4">
+              {chartData.map((item) => (
+                <div key={item.name} className="flex items-center gap-2.5">
+                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: item.fill }} />
+                  <span className="text-[11px] font-mono text-white/50 truncate">{item.name}</span>
+                  <span className="text-[11px] font-mono text-white/25 ml-auto">{item.percentage ? `${Math.round(item.percentage)}%` : ""}</span>
                 </div>
-              </CardContent>
-            </Card>
+              ))}
+            </div>
+          </div>
 
-            {/* GHG Protocol Scopes OR How You Compare */}
+          {/* Scopes / Benchmark */}
+          <div className="relative p-6 rounded-2xl border border-white/[0.07] bg-white/[0.02]">
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
             {(isBusinessResult(result) || isIndustryResult(result)) ? (
-              <Card className="bg-card border-border shadow-sm h-full">
-                <CardHeader className="pb-4 pt-5 px-5">
-                  <CardTitle className="text-lg font-bold tracking-tight">Protocol Scopes</CardTitle>
-                  <CardDescription className="text-xs text-muted-foreground">Scope 1, 2, and 3 classifications</CardDescription>
-                </CardHeader>
-                <CardContent className="px-5 pb-5">
+              <>
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/25 mb-1">GHG Protocol</p>
+                <h2 className="text-[15px] font-semibold text-white/80 tracking-[-0.02em] mb-6">Protocol Scopes</h2>
+                <div className="space-y-5">
                   {(() => {
                     const total = result.tonnes.total || 1;
-                    const pctScope1 = isBusinessResult(result)
-                      ? result.percentages.scope1
-                      : (result.tonnes.scope1 / total) * 100;
-                    const pctScope2 = isBusinessResult(result)
-                      ? result.percentages.scope2
-                      : (result.tonnes.scope2 / total) * 100;
-                    const pctScope3 = isBusinessResult(result)
-                      ? result.percentages.scope3
-                      : (result.tonnes.scope3 / total) * 100;
-
+                    const s1p = isBusinessResult(result) ? result.percentages.scope1 : (result.tonnes.scope1 / total) * 100;
+                    const s2p = isBusinessResult(result) ? result.percentages.scope2 : (result.tonnes.scope2 / total) * 100;
+                    const s3p = isBusinessResult(result) ? result.percentages.scope3 : (result.tonnes.scope3 / total) * 100;
                     return (
-                      <div className="space-y-6 pt-2">
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-sm font-medium">
-                            <span className="text-foreground">Scope 1 (Direct)</span>
-                            <span className="text-muted-foreground text-xs">
-                              {result.tonnes.scope1.toFixed(2)}t ({pctScope1.toFixed(1)}%)
-                            </span>
-                          </div>
-                          <Progress value={pctScope1} className="h-2 rounded-full" />
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-sm font-medium">
-                            <span className="text-foreground">Scope 2 (Electricity)</span>
-                            <span className="text-muted-foreground text-xs">
-                              {result.tonnes.scope2.toFixed(2)}t ({pctScope2.toFixed(1)}%)
-                            </span>
-                          </div>
-                          <Progress value={pctScope2} className="h-2 rounded-full" />
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-sm font-medium">
-                            <span className="text-foreground">Scope 3 (Value Chain)</span>
-                            <span className="text-muted-foreground text-xs">
-                              {result.tonnes.scope3.toFixed(2)}t ({pctScope3.toFixed(1)}%)
-                            </span>
-                          </div>
-                          <Progress value={pctScope3} className="h-2 rounded-full" />
-                        </div>
-                      </div>
+                      <>
+                        <ScopeBar label="Scope 1 — Direct" value={`${result.tonnes.scope1.toFixed(2)} t  (${s1p.toFixed(1)}%)`} pct={s1p} color="#f85149" />
+                        <ScopeBar label="Scope 2 — Electricity" value={`${result.tonnes.scope2.toFixed(2)} t  (${s2p.toFixed(1)}%)`} pct={s2p} color="#F4A261" />
+                        <ScopeBar label="Scope 3 — Value Chain" value={`${result.tonnes.scope3.toFixed(2)} t  (${s3p.toFixed(1)}%)`} pct={s3p} color="#4EA8DE" />
+                      </>
                     );
                   })()}
-                </CardContent>
-              </Card>
+                </div>
+              </>
             ) : isHouseholdResult(result) ? (
-              <Card className="bg-card border-border shadow-sm h-full">
-                <CardHeader className="pb-4 pt-5 px-5">
-                  <CardTitle className="text-lg font-bold tracking-tight">Benchmark Scaling</CardTitle>
-                  <CardDescription className="text-xs text-muted-foreground">Your footprint against global averages</CardDescription>
-                </CardHeader>
-                <CardContent className="px-5 pb-5">
-                  <div className="relative pt-10 pb-6">
-                    <div className="flex justify-between text-xs text-muted-foreground mb-3 font-medium px-1">
-                      <span>0t</span>
-                      <span className="hidden lg:block">India ({result.context.indiaAverage}t)</span>
-                      <span className="hidden lg:block">Global ({result.context.globalAverage}t)</span>
-                      <span>10t+</span>
-                    </div>
-                    <div className="h-4 bg-gradient-to-r from-emerald-500/80 via-amber-500/80 to-red-500/80 rounded-full relative">
-                      <div
-                        className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-foreground rounded-full border-[3px] border-background shadow-md transition-all duration-700"
-                        style={{
-                          left: `${Math.min((result.annualTonnes.perCapita / 10) * 100, 100)}%`,
-                          transform: "translate(-50%, -50%)",
-                        }}
-                      />
-                      <div
-                        className="absolute bottom-full mb-3 text-xs text-background font-bold bg-foreground px-2.5 py-1 rounded truncate shadow-sm transition-all duration-700"
-                        style={{
-                          left: `${Math.min((result.annualTonnes.perCapita / 10) * 100, 100)}%`,
-                          transform: "translateX(-50%)",
-                        }}
-                      >
-                        You: {result.annualTonnes.perCapita.toFixed(2)}t
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-solid border-t-foreground border-t-4 border-x-transparent border-x-4 border-b-0"></div>
-                      </div>
-                    </div>
+              <>
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/25 mb-1">Benchmarks</p>
+                <h2 className="text-[15px] font-semibold text-white/80 tracking-[-0.02em] mb-6">How You Compare</h2>
+                <div className="space-y-5">
+                  <ScopeBar label="India Average" value={`${result.context.indiaAverage} t`} pct={(result.context.indiaAverage / 10) * 100} color="#3fb950" />
+                  <ScopeBar label="Global Average" value={`${result.context.globalAverage} t`} pct={(result.context.globalAverage / 10) * 100} color="#F4A261" />
+                  <ScopeBar label="Your Footprint" value={`${result.annualTonnes.perCapita.toFixed(2)} t`} pct={(result.annualTonnes.perCapita / 10) * 100} color={totalColor} />
+                </div>
+                {/* Gradient slider */}
+                <div className="mt-8 relative">
+                  <div className="h-[5px] rounded-full bg-gradient-to-r from-[#3fb950] via-[#F4A261] to-[#f85149]" />
+                  <div
+                    className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full border-2 border-[#080C10] shadow-md transition-all duration-700"
+                    style={{ left: `${Math.min((result.annualTonnes.perCapita / 10) * 100, 97)}%`, transform: "translate(-50%, -50%)" }}
+                  />
+                  <div className="flex justify-between text-[10px] font-mono text-white/20 mt-2">
+                    <span>0t</span><span>India {result.context.indiaAverage}t</span><span>Global {result.context.globalAverage}t</span><span>10t+</span>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </>
             ) : null}
           </div>
-
-          {/* Context / Equivalents Strip */}
-          <Card className="bg-card border-border shadow-sm overflow-hidden">
-            <CardHeader className="bg-muted/30 pb-3 pt-4 px-5 border-b border-border/50">
-              <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-muted-foreground">
-                <TrendingDown className="h-4 w-4" />
-                Real-World Equivalents
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/50">
-                {isHouseholdResult(result) && (
-                  <>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
-                        <Car className="h-5 w-5 text-blue-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">
-                          {result.context.drivingKm.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-0.5">km of driving</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0">
-                        <Plane className="h-5 w-5 text-amber-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">
-                          {result.context.delhiMumbaiFlights}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-0.5">Delhi-Mumbai flights</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                        <TreeDeciduous className="h-5 w-5 text-emerald-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">{result.context.trees}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">trees to offset</div>
-                      </div>
-                    </div>
-                  </>
-                )}
-                {isBusinessResult(result) && (
-                  <>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
-                        <Car className="h-5 w-5 text-blue-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">
-                          {result.dashboard.equivalents.drivingKm.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-0.5">km of driving</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0">
-                        <Home className="h-5 w-5 text-purple-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">
-                          {result.dashboard.equivalents.homesPowered}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-0.5">homes powered/year</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                        <TreeDeciduous className="h-5 w-5 text-emerald-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">
-                          {result.dashboard.equivalents.trees}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-0.5">trees to offset</div>
-                      </div>
-                    </div>
-                  </>
-                )}
-                {isIndustryResult(result) && (
-                  <>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
-                        <Car className="h-5 w-5 text-blue-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">
-                          {result.equivalents.drivingKm.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-0.5">km of driving</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0">
-                        <Plane className="h-5 w-5 text-amber-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">
-                          {result.equivalents.flightsEquivalent}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-0.5">international flights</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 p-5 hover:bg-muted/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                        <TreeDeciduous className="h-5 w-5 text-emerald-400" />
-                      </div>
-                      <div>
-                        <div className="text-xl font-bold text-foreground">{result.equivalents.trees}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">trees to offset</div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Reduction Tips */}
-          {isBusinessResult(result) && result.dashboard.opportunities.length > 0 && (
-            <Card className="bg-card border-border shadow-sm">
-              <CardHeader className="pb-3 pt-5 px-5">
-                <CardTitle className="flex items-center gap-2 text-lg font-bold tracking-tight">
-                  <Lightbulb className="h-4 w-4 text-amber-400" />
-                  Reduction Opportunities
-                </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground">Actionable insights to lower scope footprint</CardDescription>
-              </CardHeader>
-              <CardContent className="px-5 pb-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {result.dashboard.opportunities.map((opp, index) => (
-                    <div key={index} className="flex flex-col gap-2 p-4 rounded-lg bg-secondary/30 border border-border/50">
-                      <div className="flex items-center gap-2">
-                        <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <span className="text-[10px] font-bold text-primary">{index + 1}</span>
-                        </div>
-                        <span className="text-xs text-primary font-bold uppercase tracking-wider">
-                          Save {opp.potentialReductionTonnes} tCO₂e/yr
-                        </span>
-                      </div>
-                      <p className="text-sm text-foreground ml-7">{opp.text}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-        </div> {/* End of hidden sm:block */}
-
-        {/* Footer Actions */}
-        <div className="flex flex-row items-center justify-center gap-3 mt-10">
-          <Button variant="outline" size="sm" onClick={onStartOver} className="gap-2 h-10 px-5 text-sm font-medium">
-            <RotateCcw className="h-4 w-4" />
-            Start Over
-          </Button>
-          <Button onClick={onBack} size="sm" className="gap-2 h-10 px-5 text-sm font-medium">
-            <ArrowLeft className="h-4 w-4" />
-            Edit Inputs
-          </Button>
         </div>
 
+        {/* ── Real-World Equivalents ── */}
+        <div className="relative rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden mb-4">
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="px-6 pt-5 pb-3 border-b border-white/[0.05] flex items-center gap-2">
+            <TrendingDown size={14} className="text-white/25" />
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/25">Real-World Equivalents</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.05]">
+            {isHouseholdResult(result) && (<>
+              <EquivCell icon={<Car size={18} className="text-[#4EA8DE]" />} value={result.context.drivingKm.toLocaleString()} label="km of driving" color="#4EA8DE" />
+              <EquivCell icon={<Plane size={18} className="text-[#F4A261]" />} value={result.context.delhiMumbaiFlights} label="Delhi–Mumbai flights" color="#F4A261" />
+              <EquivCell icon={<TreeDeciduous size={18} className="text-[#3fb950]" />} value={result.context.trees.toLocaleString()} label="trees to offset" color="#3fb950" />
+            </>)}
+            {isBusinessResult(result) && (<>
+              <EquivCell icon={<Car size={18} className="text-[#4EA8DE]" />} value={result.dashboard.equivalents.drivingKm.toLocaleString()} label="km of driving" color="#4EA8DE" />
+              <EquivCell icon={<Home size={18} className="text-[#a78bfa]" />} value={result.dashboard.equivalents.homesPowered} label="homes powered / yr" color="#a78bfa" />
+              <EquivCell icon={<TreeDeciduous size={18} className="text-[#3fb950]" />} value={result.dashboard.equivalents.trees} label="trees to offset" color="#3fb950" />
+            </>)}
+            {isIndustryResult(result) && (<>
+              <EquivCell icon={<Car size={18} className="text-[#4EA8DE]" />} value={result.equivalents.drivingKm.toLocaleString()} label="km of driving" color="#4EA8DE" />
+              <EquivCell icon={<Plane size={18} className="text-[#F4A261]" />} value={result.equivalents.flightsEquivalent} label="international flights" color="#F4A261" />
+              <EquivCell icon={<TreeDeciduous size={18} className="text-[#3fb950]" />} value={result.equivalents.trees} label="trees to offset" color="#3fb950" />
+            </>)}
+          </div>
+        </div>
+
+        {/* ── Household Insights ── */}
+        {isHouseholdResult(result) && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            {/* If Everyone Lived Like You */}
+            <div className="relative p-7 rounded-sm border border-white/[0.12] bg-gradient-to-br from-white/[0.04] to-transparent shadow-lg flex flex-col items-start justify-between">
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div>
+                <div className="w-10 h-10 rounded-sm bg-[#4EA8DE]/15 flex items-center justify-center mb-5">
+                  <Fingerprint className="text-[#4EA8DE]" size={18} />
+                </div>
+                <h3 className="text-[15px] font-semibold text-[#4EA8DE] tracking-[-0.01em] mb-2 leading-tight">If Everyone Lived Like You</h3>
+                <p className="text-[14px] text-white/60 leading-relaxed">
+                  We would need <span className="text-[#4EA8DE] font-semibold">{earths} Earths</span> to sustain this lifestyle.
+                </p>
+              </div>
+            </div>
+
+            {/* Your Biggest Mistake */}
+            <div className="relative p-7 rounded-sm border border-white/[0.12] bg-gradient-to-br from-[#f85149]/[0.03] to-transparent shadow-lg flex flex-col items-start justify-between">
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div>
+                <div className="w-10 h-10 rounded-sm bg-[#f85149]/15 flex items-center justify-center mb-5">
+                  <AlertCircle className="text-[#f85149]" size={18} />
+                </div>
+                <h3 className="text-[15px] font-semibold text-[#f85149] tracking-[-0.01em] mb-2 leading-tight">Your Biggest Metric</h3>
+                <p className="text-[14px] text-white/60 leading-relaxed">
+                  Your highest emissions come from <span className="text-white/85 font-semibold">{biggestMistakeName}</span>, contributing <span className="text-[#f85149] font-semibold">{Math.round(biggestMistakePct)}%</span> of your footprint.
+                </p>
+              </div>
+            </div>
+
+            {/* Small Changes, Big Impact */}
+            <div className="relative p-7 rounded-sm border border-white/[0.12] bg-gradient-to-br from-[#3fb950]/[0.03] to-transparent shadow-lg flex flex-col items-start">
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div className="w-10 h-10 rounded-sm bg-[#3fb950]/15 flex items-center justify-center mb-5">
+                <Leaf className="text-[#3fb950]" size={18} />
+              </div>
+              <h3 className="text-[15px] font-semibold text-[#3fb950] tracking-[-0.01em] mb-4 leading-tight">Small Changes, Big Impact</h3>
+              <p className="text-[13px] text-white/50 mb-3">Tackle your {biggestMistakeName} footprint:</p>
+              <div className="space-y-3 w-full">
+                {recommendedActions.map((action, i) => (
+                  <div key={i} className="flex gap-3 items-start">
+                    <CheckCircle2 size={16} className="text-[#3fb950] mt-[2px] flex-shrink-0" />
+                    <span className="text-[13px] text-white/70 leading-snug">{action}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Reduction Opportunities (Business) ── */}
+        {isBusinessResult(result) && result.dashboard.opportunities.length > 0 && (
+          <div className="relative rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 mb-4">
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="flex items-center gap-2 mb-5">
+              <Lightbulb size={14} className="text-[#F4A261]" />
+              <h2 className="text-[13px] font-semibold text-white/70 tracking-[-0.01em]">Reduction Opportunities</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {result.dashboard.opportunities.map((opp, i) => (
+                <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                  <div className="text-[10px] font-mono text-[#3fb950] uppercase tracking-[0.12em] mb-2">
+                    Save {opp.potentialReductionTonnes} tCO₂e / yr
+                  </div>
+                  <p className="text-[13px] text-white/55 font-sans leading-relaxed">{opp.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Footer Actions ── */}
+        <div className="flex items-center justify-center gap-3 mt-10 pt-8 border-t border-white/[0.05]">
+          <button
+            onClick={onStartOver}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/[0.08] bg-white/[0.025] text-white/40 hover:text-white/70 hover:border-white/[0.14] transition-all text-[11px] font-mono uppercase tracking-[0.14em] cursor-pointer"
+          >
+            <RotateCcw size={13} /> Start Over
+          </button>
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/[0.08] bg-white/[0.025] text-white/40 hover:text-white/70 hover:border-white/[0.14] transition-all text-[11px] font-mono uppercase tracking-[0.14em] cursor-pointer"
+          >
+            <ArrowLeft size={13} /> Edit Inputs
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// ── Equivalent Cell ────────────────────────────────────────────────────────────
+function EquivCell({ icon, value, label, color }: { icon: React.ReactNode; value: string | number; label: string; color: string }) {
+  return (
+    <div className="flex items-center gap-4 px-6 py-5 hover:bg-white/[0.02] transition-colors">
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${color}18` }}>
+        {icon}
+      </div>
+      <div>
+        <div className="text-[22px] font-mono font-semibold text-white/80 leading-none tracking-[-0.02em]">{value}</div>
+        <div className="text-[11px] font-mono text-white/30 mt-1 uppercase tracking-[0.08em]">{label}</div>
       </div>
     </div>
   );

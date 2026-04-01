@@ -8,6 +8,8 @@ import PlatformHome from './components/PlatformHome';
 import { NerdProvider } from './lib/NerdModeContext';
 import PerformancePanel from './components/NerdMode/PerformancePanel';
 import InspectorOverlay from './components/NerdMode/InspectorOverlay';
+import ToolsDirectory from './components/ToolsDirectory';
+import GreenwashEffect from './components/GreenwashEffect';
 
 // Pages where the performance panel should be hidden
 const CALCULATOR_PAGES = ['household', 'business', 'industry'];
@@ -45,7 +47,7 @@ const App = () => {
 
     const handleBack = () => {
         const hash = window.location.hash.replace('#', '');
-        if (hash === 'landing' || hash === 'home' || hash === 'intro') {
+        if (hash === 'landing' || hash === 'home' || hash === 'intro' || hash === 'tools') {
             window.history.back();
         } else {
             // If exiting a calculator, go explicitly to landing via history
@@ -55,17 +57,19 @@ const App = () => {
 
     const renderPage = () => {
         if (pathState === 'home') return <IntroSequence onNavigate={() => handleNavigate('intro')} />;
-        if (pathState === 'intro') return <PlatformHome onNavigate={() => handleNavigate('landing')} onBack={() => setPathState('home')} />;
-        if (pathState === 'landing') return <LandingScreen onSelect={handleNavigate} onBackToPlatform={() => setPathState('intro')} />;
+        if (pathState === 'intro') return <PlatformHome onNavigate={() => handleNavigate('tools')} onBack={() => setPathState('home')} />;
+        if (pathState === 'tools') return <ToolsDirectory onSelect={handleNavigate} onBackToPlatform={() => setPathState('intro')} />;
+        if (pathState === 'landing') return <LandingScreen onSelect={handleNavigate} onBackToPlatform={() => setPathState('tools')} />;
         if (pathState === 'household') return <HouseholdCalculator onBack={handleBack} />;
         if (pathState === 'business') return <BusinessCalculator onBack={handleBack} />;
         if (pathState === 'industry') return <IndustryCalculator onBack={handleBack} />;
-        return <PlatformHome onNavigate={handleNavigate} />;
+        return <PlatformHome onNavigate={() => handleNavigate('tools')} />;
     };
 
     return (
         <NerdProvider>
-            <div className="min-h-screen relative w-full overflow-clip flex flex-col">
+            <div className="min-h-screen relative w-full overflow-clip flex flex-col bg-[#080C10]">
+                {pathState === 'tools' && <GreenwashEffect />}
                 {/* Global Grid Overlay (680px 2-column, hidden on mobile) */}
                 <div className="absolute inset-0 pointer-events-none z-0 flex justify-center w-full">
                     <div className="hidden sm:grid grid-cols-2 w-full max-w-[680px] border-x border-dotted border-white/15 h-full opacity-60">

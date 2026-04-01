@@ -126,7 +126,7 @@ const BusinessCalculator = ({ onBack }) => {
 
     return (
         <div className="container" style={{ maxWidth: isResults ? '1000px' : '650px', margin: '0 auto', transition: 'max-width 0.3s ease' }}>
-            <button onClick={onBack} style={{ marginBottom: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <button onClick={onBack} style={{ marginBottom: '0.75rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <ChevronLeft size={16} /> Back to Selection
             </button>
             
@@ -136,7 +136,7 @@ const BusinessCalculator = ({ onBack }) => {
             </header>
 
             {t && !isResults && (
-                <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                <div style={{ marginBottom: 'clamp(1rem, 4vw, 2rem)', textAlign: 'center' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '500' }}>
                         <span>Step {currentStep + 1} of {steps.length - 1}</span>
                         <span>{activeStepData.title}</span>
@@ -152,26 +152,26 @@ const BusinessCalculator = ({ onBack }) => {
                 </div>
             )}
 
-            <main className="glass-panel" style={{ padding: '2rem', borderColor: t ? 'var(--card-border)' : 'var(--warning)' }}>
+            <main className="glass-panel" style={{ padding: 'clamp(1.2rem, 4vw, 2rem)', borderColor: t ? 'var(--card-border)' : 'var(--warning)' }}>
                 {!isResults ? (
-                    <div className="form-content" style={{ minHeight: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div className="form-content" style={{ minHeight: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                         
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem', color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: '600' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: 'clamp(1rem, 4vw, 2rem)', color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: '600' }}>
                             {activeStepData.icon} <h2>{activeStepData.title}</h2>
                         </div>
 
-                        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 4vw, 2rem)' }}>
                             
                             {/* 1. SETUP */}
                             {activeStepData.id === 'setup' && (
                                 <div className="form-group">
                                     <label>What type of business do you operate?</label>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', marginTop: '1rem' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', marginTop: '0.75rem' }}>
                                         {BUSINESS_TYPES.map(type => (
                                             <label 
                                                 key={type.id} 
                                                 style={{ 
-                                                    padding: '1rem', 
+                                                    padding: '0.75rem', 
                                                     background: t === type.id ? 'rgba(210, 153, 34, 0.15)' : 'rgba(0,0,0,0.2)', 
                                                     border: `1px solid ${t === type.id ? 'var(--warning)' : 'var(--card-border)'}`, 
                                                     borderRadius: '8px', 
@@ -228,7 +228,7 @@ const BusinessCalculator = ({ onBack }) => {
                                             </label>
                                             
                                             {data.usesFridges && (
-                                                <div style={{ marginTop: '1.5rem', paddingLeft: '2rem', borderLeft: '2px solid var(--warning)' }}>
+                                                <div style={{ marginTop: 'clamp(0.75rem, 3vw, 1.5rem)', paddingLeft: '2rem', borderLeft: '2px solid var(--warning)' }}>
                                                     <label>How many refrigeration units?</label>
                                                     <div className="range-wrap">
                                                         <input type="range" name="retailFridges" min="1" max="50" step="1" value={data.retailFridges} onChange={handleInput} />
@@ -290,7 +290,7 @@ const BusinessCalculator = ({ onBack }) => {
                                     </label>
                                     
                                     {data.usesGenerator && (
-                                        <div style={{ marginTop: '1.5rem', paddingLeft: '2rem', borderLeft: '2px solid var(--warning)' }}>
+                                        <div style={{ marginTop: 'clamp(0.75rem, 3vw, 1.5rem)', paddingLeft: '2rem', borderLeft: '2px solid var(--warning)' }}>
                                             <label>Diesel used per year (litres)</label>
                                             <div className="range-wrap">
                                                 <input type="range" name="dieselGeneratorLitres" min="50" max="10000" step="50" value={data.dieselGeneratorLitres} onChange={handleInput} />
@@ -312,7 +312,7 @@ const BusinessCalculator = ({ onBack }) => {
                                             </label>
                                             
                                             {data.usesDelivery && (
-                                                <div style={{ marginTop: '1.5rem', paddingLeft: '2rem', borderLeft: '2px solid var(--warning)' }}>
+                                                <div style={{ marginTop: 'clamp(0.75rem, 3vw, 1.5rem)', paddingLeft: '2rem', borderLeft: '2px solid var(--warning)' }}>
                                                     <label>Annual fuel consumption for deliveries (litres)</label>
                                                     <div className="range-wrap">
                                                         <input type="range" name="retailDeliveryFuel" min="100" max="10000" step="100" value={data.retailDeliveryFuel} onChange={handleInput} />
@@ -334,7 +334,7 @@ const BusinessCalculator = ({ onBack }) => {
                                             </div>
                                             <div className="form-group">
                                                 <label>Primary Vehicle type</label>
-                                                <select name="logisticsFuelType" value={data.logisticsFuelType} onChange={handleSelect} style={{ padding: '0.75rem', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', border: '1px solid var(--card-border)', borderRadius: '8px', outline: 'none', width: '100%', marginTop: '0.5rem' }}>
+                                                <select name="logisticsFuelType" value={data.logisticsFuelType} onChange={handleSelect} style={{ padding: '0.6rem', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', border: '1px solid var(--card-border)', borderRadius: '8px', outline: 'none', width: '100%', marginTop: '0.5rem' }}>
                                                     <option value="petrol">Petrol Fleet</option>
                                                     <option value="diesel">Diesel Fleet</option>
                                                     <option value="cng">CNG Fleet</option>
@@ -372,7 +372,7 @@ const BusinessCalculator = ({ onBack }) => {
                                     {t === 'office' && (
                                         <div className="form-group">
                                             <label>What is the primary commuting mode of employees?</label>
-                                            <select name="commuteMode" value={data.commuteMode} onChange={handleSelect} style={{ padding: '0.75rem', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', border: '1px solid var(--card-border)', borderRadius: '8px', outline: 'none', width: '100%', marginTop: '0.5rem' }}>
+                                            <select name="commuteMode" value={data.commuteMode} onChange={handleSelect} style={{ padding: '0.6rem', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', border: '1px solid var(--card-border)', borderRadius: '8px', outline: 'none', width: '100%', marginTop: '0.5rem' }}>
                                                 <option value="car">Car</option>
                                                 <option value="twowheeler">Two-wheeler</option>
                                                 <option value="transit">Public transport</option>
@@ -464,7 +464,7 @@ const BusinessCalculator = ({ onBack }) => {
                                     {t === 'restaurant' && (
                                         <div className="form-group">
                                             <label>Is food waste composted?</label>
-                                            <select name="compostsWaste" value={data.compostsWaste} onChange={handleSelect} style={{ padding: '0.75rem', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', border: '1px solid var(--card-border)', borderRadius: '8px', outline: 'none', width: '100%', marginTop: '0.5rem' }}>
+                                            <select name="compostsWaste" value={data.compostsWaste} onChange={handleSelect} style={{ padding: '0.6rem', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', border: '1px solid var(--card-border)', borderRadius: '8px', outline: 'none', width: '100%', marginTop: '0.5rem' }}>
                                                 <option value="no">No</option>
                                                 <option value="yes">Yes</option>
                                             </select>
@@ -475,11 +475,11 @@ const BusinessCalculator = ({ onBack }) => {
                         </div>
 
                         {t && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--card-border)' }}>
-                                <button onClick={prevStep} disabled={currentStep === 0} style={{ padding: '0.75rem 1.5rem', background: 'transparent', border: '1px solid var(--card-border)', color: 'var(--text-primary)', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: currentStep === 0 ? 'not-allowed' : 'pointer', opacity: currentStep === 0 ? 0.3 : 1 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'clamp(1rem, 4vw, 2rem)', paddingTop: '1.5rem', borderTop: '1px solid var(--card-border)' }}>
+                                <button onClick={prevStep} disabled={currentStep === 0} style={{ padding: '0.6rem 1.2rem', background: 'transparent', border: '1px solid var(--card-border)', color: 'var(--text-primary)', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: currentStep === 0 ? 'not-allowed' : 'pointer', opacity: currentStep === 0 ? 0.3 : 1 }}>
                                     <ChevronLeft size={16} /> Back
                                 </button>
-                                <button onClick={nextStep} style={{ padding: '0.75rem 1.5rem', background: 'var(--warning)', border: 'none', color: '#111', fontWeight: '600', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(210, 153, 34, 0.4)' }}>
+                                <button onClick={nextStep} style={{ padding: '0.6rem 1.2rem', background: 'var(--warning)', border: 'none', color: '#111', fontWeight: '600', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(210, 153, 34, 0.4)' }}>
                                     {currentStep === steps.length - 2 ? 'See Results' : 'Next'} {currentStep !== steps.length - 2 && <ChevronRight size={16} />}
                                 </button>
                             </div>
@@ -488,68 +488,68 @@ const BusinessCalculator = ({ onBack }) => {
                 ) : (
                     // --- RESULTS STEP ---
                     <div className="results-dashboard" style={{ animation: 'fadeInDown 0.8s ease-out' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'clamp(1rem, 4vw, 2rem)' }}>
                             <div>
-                                <h2 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', fontWeight: '600', marginBottom: '0.25rem' }}>Business Carbon Performance</h2>
+                                <h2 style={{ fontSize: '1.1rem', color: 'var(--text-primary)', fontWeight: '600', marginBottom: '0.25rem' }}>Business Carbon Performance</h2>
                                 <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', textTransform: 'capitalize' }}>
                                     {BUSINESS_TYPES.find(type => type.id === t)?.label}
                                 </div>
                             </div>
-                            <button onClick={() => setCurrentStep(0)} style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--card-border)', borderRadius: '6px', color: 'var(--text-primary)', cursor: 'pointer' }}>
+                            <button onClick={() => setCurrentStep(0)} style={{ padding: '0.4rem 0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--card-border)', borderRadius: '6px', color: 'var(--text-primary)', cursor: 'pointer' }}>
                                 Recalculate
                             </button>
                         </div>
 
                         {/* HERO SECTION */}
-                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--card-border)', marginBottom: '2rem', display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: 'clamp(1.2rem, 4vw, 2rem)', borderRadius: '12px', border: '1px solid var(--card-border)', marginBottom: 'clamp(1rem, 4vw, 2rem)', display: 'flex', flexWrap: 'wrap', gap: 'clamp(1rem, 4vw, 2rem)', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Total Carbon Footprint</div>
                                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
                                     <span style={{ fontSize: '4rem', fontWeight: '800', lineHeight: 1, color: 'var(--text-primary)' }}>
                                         {emissions.tonnes.total.toFixed(2)}
                                     </span>
-                                    <span style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', fontWeight: '500' }}>t CO₂e / year</span>
+                                    <span style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', fontWeight: '500' }}>t CO₂e / year</span>
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', gap: '2rem' }}>
+                            <div style={{ display: 'flex', gap: 'clamp(1rem, 4vw, 2rem)' }}>
                                 <div>
                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Monthly Equivalent</div>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.monthlyTonnes.toFixed(2)} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '400' }}>t / mo</span></div>
+                                    <div style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.monthlyTonnes.toFixed(2)} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '400' }}>t / mo</span></div>
                                 </div>
                                 <div>
                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>Per Employee</div>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.perEmployeeTonnes.toFixed(2)} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '400' }}>t / yr</span></div>
+                                    <div style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.perEmployeeTonnes.toFixed(2)} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '400' }}>t / yr</span></div>
                                 </div>
                             </div>
                         </div>
 
                         {/* PERFORMANCE & BENCHMARKING ROW */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.5fr)', gap: '2rem', marginBottom: '2rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.5fr)', gap: 'clamp(1rem, 4vw, 2rem)', marginBottom: 'clamp(1rem, 4vw, 2rem)' }}>
                             {/* Score Card */}
-                            <div style={{ background: 'linear-gradient(135deg, rgba(210, 153, 34, 0.1) 0%, transparent 100%)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(210, 153, 34, 0.3)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-                                <div style={{ fontSize: '0.9rem', color: 'var(--warning)', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Carbon Efficiency Score</div>
-                                <div style={{ width: '120px', height: '120px', borderRadius: '50%', border: `8px solid ${emissions.dashboard.score >= 80 ? 'var(--success)' : emissions.dashboard.score >= 60 ? 'var(--warning)' : 'var(--danger)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                            <div style={{ background: 'linear-gradient(135deg, rgba(210, 153, 34, 0.1) 0%, transparent 100%)', padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', border: '1px solid rgba(210, 153, 34, 0.3)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                                <div style={{ fontSize: '0.9rem', color: 'var(--warning)', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Carbon Efficiency Score</div>
+                                <div style={{ width: '120px', height: '120px', borderRadius: '50%', border: `8px solid ${emissions.dashboard.score >= 80 ? 'var(--success)' : emissions.dashboard.score >= 60 ? 'var(--warning)' : 'var(--danger)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
                                     <span style={{ fontSize: '3rem', fontWeight: '800', color: 'var(--text-primary)' }}>{emissions.dashboard.score}</span>
                                 </div>
                                 <div style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.ratingStr}</div>
                             </div>
 
                             {/* Industry Benchmark */}
-                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
-                                <h3 style={{ fontSize: '1rem', marginBottom: '1.5rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Activity size={18}/> Industry Benchmark Comparison</h3>
+                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
+                                <h3 style={{ fontSize: '1rem', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Activity size={18}/> Industry Benchmark Comparison</h3>
                                 
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                                     <div>
                                         <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Your Business</div>
-                                        <div style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.tonnes.total.toFixed(2)} t</div>
+                                        <div style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.tonnes.total.toFixed(2)} t</div>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
                                         <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Industry Average</div>
-                                        <div style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.benchmarkTotal.toFixed(2)} t</div>
+                                        <div style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.benchmarkTotal.toFixed(2)} t</div>
                                     </div>
                                 </div>
 
-                                <div style={{ position: 'relative', width: '100%', height: '24px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', marginBottom: '1.5rem', overflow: 'hidden' }}>
+                                <div style={{ position: 'relative', width: '100%', height: '24px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)', overflow: 'hidden' }}>
                                     <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: `${Math.min((emissions.dashboard.benchmarkTotal / Math.max(emissions.tonnes.total, emissions.dashboard.benchmarkTotal)) * 100, 100)}%`, background: 'rgba(255,255,255,0.2)', borderRight: '2px solid rgba(255,255,255,0.5)' }}></div>
                                     <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: `${Math.min((emissions.tonnes.total / Math.max(emissions.tonnes.total, emissions.dashboard.benchmarkTotal)) * 100, 100)}%`, background: emissions.tonnes.total > emissions.dashboard.benchmarkTotal ? 'var(--danger)' : 'var(--success)', opacity: 0.8 }}></div>
                                 </div>
@@ -559,7 +559,7 @@ const BusinessCalculator = ({ onBack }) => {
                                     <span style={{ fontWeight: '600' }}>{Math.abs(emissions.dashboard.benchmarkRatio).toFixed(1)}% {emissions.tonnes.total > emissions.dashboard.benchmarkTotal ? 'higher' : 'lower'}</span> than industry avg
                                 </div>
 
-                                <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--card-border)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                <div style={{ marginTop: 'clamp(0.75rem, 3vw, 1.5rem)', paddingTop: '1.5rem', borderTop: '1px solid var(--card-border)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                     <div>
                                         <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Intensity (Per Employee)</div>
                                         <div style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
@@ -576,12 +576,12 @@ const BusinessCalculator = ({ onBack }) => {
                         </div>
 
                         {/* CHARTS AND DETAILS ROW */}
-                        <div className="results-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: '2rem', marginBottom: '2rem' }}>
+                        <div className="results-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: 'clamp(1rem, 4vw, 2rem)', marginBottom: 'clamp(1rem, 4vw, 2rem)' }}>
                             {/* Activity Breakdown Chart (Left) */}
-                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
-                                <h3 style={{ fontSize: '1rem', color: 'var(--text-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Activity size={18} /> Emissions by Activity</h3>
+                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--text-primary)', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Activity size={18} /> Emissions by Activity</h3>
                                 
-                                <div style={{ height: '240px', width: '100%', marginBottom: '1.5rem' }}>
+                                <div style={{ height: '240px', width: '100%', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
                                     <ResponsiveContainer width="100%" height="100%">
                                         <PieChart>
                                             <Pie data={emissions.chartData} cx="50%" cy="50%" innerRadius={70} outerRadius={90} paddingAngle={2} dataKey="value" stroke="none">
@@ -595,10 +595,10 @@ const BusinessCalculator = ({ onBack }) => {
                                 </div>
 
                                 <div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Category Ranking</div>
+                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Category Ranking</div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                         {emissions.activityKwargs.map((act, i) => (
-                                            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem', background: 'rgba(255,255,255,0.02)', borderRadius: '6px' }}>
+                                            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem', background: 'rgba(255,255,255,0.02)', borderRadius: '6px' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                                     <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', width: '20px', fontWeight: 'bold' }}>#{i+1}</span>
                                                     <span style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>{act.name}</span>
@@ -608,7 +608,7 @@ const BusinessCalculator = ({ onBack }) => {
                                         ))}
                                     </div>
                                     {emissions.activityKwargs.length > 0 && (
-                                        <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(210, 153, 34, 0.1)', borderLeft: '3px solid var(--warning)', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                                        <div style={{ marginTop: 'clamp(0.75rem, 3vw, 1.5rem)', padding: '0.75rem', background: 'rgba(210, 153, 34, 0.1)', borderLeft: '3px solid var(--warning)', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                                             <strong style={{ color: 'var(--warning)', display: 'block', marginBottom: '0.25rem' }}>Insight:</strong> {emissions.activityKwargs[0].name} contributes the largest share of emissions to your operations.
                                         </div>
                                     )}
@@ -616,10 +616,10 @@ const BusinessCalculator = ({ onBack }) => {
                             </div>
 
                             {/* Scopes and Opportunities (Right) */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 4vw, 2rem)' }}>
                                 {/* GHG Protocol Scopes */}
-                                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                <div style={{ background: 'rgba(0,0,0,0.2)', padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
                                         <h3 style={{ fontSize: '1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Globe size={18}/> GHG Protocol Scopes</h3>
                                     </div>
                                     
@@ -679,12 +679,12 @@ const BusinessCalculator = ({ onBack }) => {
                                 </div>
 
                                 {/* Top Reduction Opportunities */}
-                                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
+                                <div style={{ background: 'rgba(0,0,0,0.2)', padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
                                     <h3 style={{ fontSize: '1rem', color: 'var(--text-primary)', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Lightbulb size={18} color="var(--warning)"/> Top Reduction Opportunities</h3>
                                     
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                                         {emissions.dashboard.opportunities.map((opp, i) => (
-                                            <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                                            <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
                                                 <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(210, 153, 34, 0.2)', color: 'var(--warning)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0 }}>{i+1}</div>
                                                 <div>
                                                     <div style={{ fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: '0.35rem', lineHeight: '1.4' }}>{opp.text}</div>
@@ -698,25 +698,25 @@ const BusinessCalculator = ({ onBack }) => {
                         </div>
 
                         {/* EQUIVALENTS ROW */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <div style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', borderRadius: '12px' }}><Car size={24} /></div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'clamp(0.75rem, 3vw, 1.5rem)', marginBottom: 'clamp(1rem, 4vw, 2rem)' }}>
+                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <div style={{ padding: '0.75rem', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', borderRadius: '12px' }}><Car size={24} /></div>
                                 <div>
-                                    <div style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.equivalents.drivingKm.toLocaleString()} km</div>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.equivalents.drivingKm.toLocaleString()} km</div>
                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Driven in a petrol car</div>
                                 </div>
                             </div>
-                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <div style={{ padding: '1rem', background: 'rgba(245, 158, 11, 0.1)', color: 'var(--warning)', borderRadius: '12px' }}><Home size={24} /></div>
+                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <div style={{ padding: '0.75rem', background: 'rgba(245, 158, 11, 0.1)', color: 'var(--warning)', borderRadius: '12px' }}><Home size={24} /></div>
                                 <div>
-                                    <div style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.equivalents.homesPowered.toLocaleString()} homes</div>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.equivalents.homesPowered.toLocaleString()} homes</div>
                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Electricity for one year</div>
                                 </div>
                             </div>
-                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)', borderRadius: '12px' }}><Leaf size={24} /></div>
+                            <div style={{ background: 'rgba(0,0,0,0.2)', padding: 'clamp(1rem, 3vw, 1.5rem)', borderRadius: '12px', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <div style={{ padding: '0.75rem', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)', borderRadius: '12px' }}><Leaf size={24} /></div>
                                 <div>
-                                    <div style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.equivalents.trees.toLocaleString()} trees</div>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)' }}>{emissions.dashboard.equivalents.trees.toLocaleString()} trees</div>
                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Needed to absorb carbon</div>
                                 </div>
                             </div>

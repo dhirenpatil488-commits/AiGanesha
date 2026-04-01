@@ -30,11 +30,15 @@ import {
   Tractor,
   Flame,
   ShoppingBag,
-  ChevronDown
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
 import { calculateIndustryEmissions, type IndustryResult } from "@/lib/calculations";
 import EmissionsResult from "@/components/calculators/emissions-result";
-
 
 interface IndustryCalculatorProps {
   onBack: () => void;
@@ -316,30 +320,42 @@ const initialData: OrgData = {
   c15InvestEquity: 0,
 };
 
-// Premium Input Row Component
-function InputRow({ label, name, value, onChange, type = "number" }: any) {
+// Input Row Component
+function InputRow({
+  label,
+  name,
+  value,
+  onChange,
+  type = "number",
+}: {
+  label: string;
+  name: string;
+  value: string | number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
+}) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between py-4 border-b border-white/5 gap-3 hover:bg-white/[0.02] transition-colors px-2 rounded-lg">
-      <label className="text-[14px] sm:text-[15px] font-sans text-white/80 flex-1">{label}</label>
-      <div className="bg-[#0d1218] border border-white/10 rounded-lg px-4 py-2 flex items-center shadow-inner min-w-[140px] focus-within:border-[#F4A261]/50 transition-all">
-        <input
-          type={type} name={name} value={value || (type==="text"?"":0)} onChange={onChange}
-          className={`${type === "text" ? "w-64 text-left" : "w-full text-right"} bg-transparent text-white/90 text-[15px] font-mono outline-none`}
-        />
-      </div>
+    <div className="flex items-center justify-between py-4 border-b border-border/30">
+      <Label className="text-sm sm:text-base font-medium text-muted-foreground flex-1">{label}</Label>
+      <Input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className={`${type === "text" ? "w-72" : "w-40"} bg-secondary/50 border-border text-right text-sm sm:text-base h-11 sm:h-12`}
+      />
     </div>
   );
 }
 
-// Premium Section Header Component
+// Section Header Component
 function SectionHeader({ title }: { title: string }) {
   return (
-    <h3 className="text-[18px] sm:text-[20px] font-sans tracking-tight text-[#F4A261] border-b border-[#F4A261]/20 pb-2 mt-8 mb-4 font-medium">
+    <h3 className="text-2xl sm:text-3xl tracking-tight leading-tight font-bold font-mono text-primary border-b border-primary/30 pb-3 mt-8 mb-6">
       {title}
     </h3>
   );
 }
-
 
 export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) {
   const [step, setStep] = useState<"org" | "hub" | "org_scope3" | "results">("org");
@@ -464,21 +480,21 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
           <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
             <SectionHeader title="Facility Details" />
             <InputRow label="Facility Name" name="name" type="text" value={fac.name} onChange={h} />
-                        <div className="flex flex-col py-4 border-b border-white/5 gap-3">
-              <label className="text-[14px] sm:text-[15px] font-sans text-white/80">Facility Type</label>
-              <div className="relative">
-                <select 
-                  value={fac.type} onChange={(e) => handleFacilityTypeChange(fac.id, e.target.value)}
-                  className="w-full bg-[#0d1218] text-[15px] text-white/90 border border-white/10 rounded-lg px-4 py-3 appearance-none outline-none focus:border-[#F4A261]/50 font-sans"
-                >
+            <div className="flex items-center justify-between py-4 border-b border-border/30">
+              <Label className="text-sm sm:text-base font-medium text-muted-foreground">Facility Type</Label>
+              <Select value={fac.type} onValueChange={(v) => handleFacilityTypeChange(fac.id, v)}>
+                <SelectTrigger className="font-mono w-72 bg-secondary/50 text-sm sm:text-base h-11 sm:h-12">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
                   {FACILITY_TYPES.map((type) => (
-                    <option key={type.id} value={type.id} className="bg-[#080C10] text-white/80">{type.label}</option>
+                    <SelectItem key={type.id} value={type.id} className="font-mono text-sm sm:text-base py-3">
+                      {type.label}
+                    </SelectItem>
                   ))}
-                </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/30"><ChevronDown className="w-4 h-4" /></div>
-              </div>
+                </SelectContent>
+              </Select>
             </div>
-
             <InputRow label="Floor Area (sq meters)" name="floorArea" value={fac.floorArea} onChange={h} />
             <InputRow label="Number of Employees" name="employees" value={fac.employees} onChange={h} />
             <InputRow label="Operating Hours/Year" name="operatingHours" value={fac.operatingHours} onChange={h} />
@@ -926,69 +942,62 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
   const facilitySteps = ["Details", "Scope 1", "Scope 2", "Scope 3 (Local)"];
 
   return (
-    <div className="w-full mx-auto transition-all duration-500 pb-20 mt-6 sm:mt-0" style={{ maxWidth: '800px' }}>
-      
-      {/* Navigation Header */}
-      <div className="mb-8 sm:mb-12 pt-10 sm:pt-4 px-4 sm:px-0">
-          {step === "hub" && !isEditingFacility && (
-            <button 
-                onClick={onBack} 
-                className="flex items-center gap-2 text-[11px] sm:text-[12px] font-mono text-white/30 hover:text-white/70 transition-colors uppercase tracking-[0.12em] mb-6 sm:mb-8 bg-transparent border-none cursor-pointer"
-            >
-                <ArrowLeft size={14} /> Exit Calculator
-            </button>
-          )}
-          
-          <h1 className="text-[28px] sm:text-[36px] font-sans tracking-[-0.03em] text-white leading-tight font-light">
-              <span className="font-semibold text-emerald-400/90">GHG Protocol</span> Hub
-          </h1>
-          {step === "hub" && !isEditingFacility && (
-            <p className="text-[14px] sm:text-[15px] text-white/40 font-sans mt-2 max-w-[480px] leading-relaxed">
-                ISO 14064 Facility-Based Architecture
-            </p>
-          )}
-      </div>
+    <div className="w-full flex flex-col relative z-10 p-4 md:p-12 font-mono">
+      <div className="max-w-[600px] w-full px-4 sm:px-0 mx-auto transition-all duration-300">
+        {/* Back Button */}
+        {step === "hub" && !isEditingFacility && (
+          <Button variant="ghost" onClick={onBack} className="mb-4 text-muted-foreground hover:text-foreground">
+            <ChevronLeft className="w-4 h-4 mr-2" /> Exit Calculator
+          </Button>
+        )}
 
-      <main className="relative z-10 w-full bg-[#080C10]/60 backdrop-blur-xl border border-white/10 sm:rounded-2xl overflow-hidden shadow-xl mx-0 sm:mx-auto">
-        <div className="flex flex-col min-h-[420px] p-6 sm:p-10">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-2xl sm:text-3xl leading-[1.2] bold text-foreground mb-4">GHG Protocol Hub</h1>
+          {step === "hub" && !isEditingFacility && (
+            <p className="text-xl text-muted-foreground">ISO 14064 Facility-Based Architecture</p>
+          )}
+        </div>
 
+        {/* Main Content */}
+        <Card className="bg-card border-border shadow-lg">
+          <CardContent className="p-8 md:p-10">
             {/* STEP 1: Organization Profile */}
             {step === "org" && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-8">
                 <div className="flex items-center gap-4 mb-8">
-                  <Building2 className="w-6 h-6 text-emerald-400" />
-                  <h2 className="text-xl font-sans text-white/90">Organization Profile</h2>
+                  <Building2 className="w-8 h-8 text-primary" />
+                  <h2 className="text-2xl font-semibold text-foreground">Organization Profile</h2>
                 </div>
 
-                <div className="bg-white/[0.02] p-6 rounded-xl border border-white/5 space-y-2">
-                  <InputRow label="Corporate Entity Name" name="orgName" type="text" value={data.orgName} onChange={handleOrgInput} />
-                  <InputRow label="Total Global Employees" name="employeesTotal" value={data.employeesTotal} onChange={handleOrgInput} />
-                  <InputRow label="Global Annual Revenue ($M)" name="revenue" value={data.revenue} onChange={handleOrgInput} />
+                <InputRow label="Corporate Entity Name" name="orgName" type="text" value={data.orgName} onChange={handleOrgInput} />
+                <InputRow label="Total Global Employees" name="employeesTotal" value={data.employeesTotal} onChange={handleOrgInput} />
+                <InputRow label="Global Annual Revenue ($M)" name="revenue" value={data.revenue} onChange={handleOrgInput} />
 
-                  <div className="flex flex-col py-4 border-b border-white/5 gap-3 mt-4">
-                    <label className="text-[14px] sm:text-[15px] font-sans text-white/80">Primary Industry Sector</label>
-                    <div className="relative">
-                      <select value={data.sector} onChange={(e) => handleSectorChange(e.target.value)} className="w-full bg-[#0d1218] text-[15px] text-white/90 border border-white/10 rounded-lg px-4 py-3 appearance-none outline-none focus:border-[#F4A261]/50 font-sans">
-                        <option value="" disabled>Select industry sector</option>
-                        {SECTORS.map((sector) => (
-                          <option key={sector.id} value={sector.id} className="bg-[#080C10] text-white/80">{sector.label}</option>
-                        ))}
-                      </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">
-                        <ChevronDown className="w-4 h-4" />
-                      </div>
-                    </div>
-                  </div>
+                <div className="space-y-4 mt-8">
+                  <Label className="text-foreground font-medium text-lg">Primary Industry Sector</Label>
+                  <Select value={data.sector} onValueChange={(v) => handleSectorChange(v)}>
+                    <SelectTrigger className="font-mono text-sm sm:text-base h-11 sm:h-12">
+                      <SelectValue placeholder="Select industry sector" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SECTORS.map((sector) => (
+                        <SelectItem key={sector.id} value={sector.id} className="font-mono text-sm sm:text-base py-2 sm:py-3">
+                          {sector.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                <div className="flex justify-between items-center pt-8 mt-6 border-t border-white/5">
-                  <button onClick={onBack} className="flex items-center gap-2 px-6 py-3 border border-white/10 rounded-lg text-[12px] font-mono text-white/50 uppercase tracking-widest hover:bg-white/5 hover:text-white/90 transition-colors">
-                    <ArrowLeft className="w-4 h-4" /> Home
-                  </button>
+                <div className="flex justify-between pt-6 border-t border-border">
+                  <Button variant="outline" onClick={onBack}>
+                    <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
+                  </Button>
                   {data.sector && (
-                    <button onClick={() => setStep("hub")} className="group relative inline-flex items-center justify-center gap-3 px-8 py-3 rounded-lg border text-[12px] font-mono uppercase tracking-[0.14em] transition-all overflow-hidden" style={{ borderColor: 'rgba(52, 211, 153, 0.4)', color: '#fff', background: 'rgba(52, 211, 153, 0.1)' }}>
-                      <span className="relative z-10 flex items-center gap-3">Begin <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" /></span>
-                    </button>
+                    <Button onClick={() => setStep("hub")} className="bg-primary hover:bg-primary/90">
+                      Begin Facility Analysis <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
                   )}
                 </div>
               </div>
@@ -996,118 +1005,151 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
 
             {/* STEP 2: Facilities Hub */}
             {step === "hub" && !isEditingFacility && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div className="space-y-8">
+                <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-4">
-                    <Globe className="w-6 h-6 text-emerald-400" />
-                    <h2 className="text-xl font-sans text-white/90">Facilities Network</h2>
+                    <Globe className="w-8 h-8 text-primary" />
+                    <h2 className="text-2xl font-semibold text-foreground">Facilities Network</h2>
                   </div>
-                  <button onClick={addFacility} className="flex items-center gap-2 px-4 py-2 bg-[#080C10] border border-emerald-400/30 rounded-lg text-[12px] text-emerald-400 font-mono uppercase tracking-widest hover:border-emerald-400 transition-colors">
-                    <Plus className="w-4 h-4" /> Add Location
-                  </button>
+                  <Button variant="outline" size="lg" onClick={addFacility} className="border-primary text-primary hover:bg-primary/10 text-base">
+                    <Plus className="w-5 h-5 mr-2" /> Add Physical Location
+                  </Button>
                 </div>
 
-                <p className="text-[14px] text-white/50 leading-relaxed font-sans mb-8">
-                  Scopes 1, 2, and localized Scope 3 metrics (commuting, waste, travel) are mapped directly to physical facilities. Click into each facility to configure its emissions payload.
+                <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+                  Scopes 1, 2, and localized Scope 3 metrics (commuting, waste, travel) are mapped directly to physical facilities.
+                  Click into each facility to configure its emissions payload.
                 </p>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {data.facilities.map((fac) => (
-                    <div key={fac.id} className="p-5 rounded-xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-white/20 transition-colors">
+                    <div
+                      key={fac.id}
+                      className="p-4 sm:p-6 rounded-xl bg-secondary/30 border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    >
                       <div>
-                        <h3 className="font-sans text-[16px] text-white/90 flex items-center gap-3 mb-1.5">
-                          <Factory className="w-4 h-4 text-[#F4A261]" /> {fac.name}
+                        <h3 className="font-medium text-lg text-foreground flex items-center gap-2 mb-1">
+                          <Factory className="w-5 h-5 text-muted-foreground" />
+                          {fac.name}
                         </h3>
-                        <p className="text-[13px] text-white/40 font-mono">
-                          {FACILITY_TYPES.find((t) => t.id === fac.type)?.label || fac.type} | {fac.employees} Staff
+                        <p className="text-base text-muted-foreground">
+                          Type: {FACILITY_TYPES.find((t) => t.id === fac.type)?.label || fac.type} | {fac.employees} Staff
                         </p>
                       </div>
-                      <button
+                      <Button
+                        size="lg"
                         onClick={() => setActiveFacilityId(fac.id)}
-                        className={`px-6 py-2.5 rounded-lg text-[12px] font-mono uppercase tracking-widest border transition-all ${fac.isComplete ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400" : "border-white/10 bg-[#080C10] text-white/80 hover:bg-white/5"}`}
+                        className={`text-base px-6 ${fac.isComplete ? "bg-emerald-600 hover:bg-emerald-700" : "bg-primary hover:bg-primary/90"}`}
                       >
-                        {fac.isComplete ? <span className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Ready</span> : "Enter Data"}
-                      </button>
+                        {fac.isComplete ? (
+                          <>
+                            <CheckCircle className="w-5 h-5 mr-2" /> Data Ready
+                          </>
+                        ) : (
+                          "Enter Data"
+                        )}
+                      </Button>
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-between items-center pt-8 mt-6 border-t border-white/5">
-                  <button onClick={() => setStep("org")} className="flex items-center gap-2 px-6 py-3 border border-white/10 rounded-lg text-[12px] font-mono text-white/50 uppercase tracking-widest hover:bg-white/5 hover:text-white/90 transition-colors">
-                    <ChevronLeft className="w-4 h-4" /> Back
-                  </button>
-                  <button onClick={() => setStep("org_scope3")} disabled={!allFacilitiesComplete} className="group relative flex items-center gap-3 px-8 py-3 rounded-lg border text-[12px] font-mono uppercase tracking-[0.14em] transition-all disabled:opacity-30 disabled:cursor-not-allowed text-white bg-sky-400/10" style={{ borderColor: 'rgba(56, 189, 248, 0.4)' }}>
-                    <span>Org-Level <ChevronRight size={16} className="inline group-hover:translate-x-1 transition-transform" /></span>
-                  </button>
+                <div className="flex flex-col sm:flex-row justify-between gap-4 pt-8 border-t border-border mt-8">
+                  <Button variant="outline" size="lg" onClick={() => setStep("org")} className="w-full sm:w-auto text-sm sm:text-base px-4 sm:px-6 h-11 sm:h-12 font-medium">
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" /> Back
+                  </Button>
+                  <Button
+                    size="lg"
+                    onClick={() => setStep("org_scope3")}
+                    disabled={!allFacilitiesComplete}
+                    className="w-full sm:w-auto bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base px-4 sm:px-6 h-11 sm:h-12 font-medium"
+                  >
+                    Proceed to Org-Level Emissions <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+                  </Button>
                 </div>
               </div>
             )}
 
             {/* FACILITY WIZARD */}
             {isEditingFacility && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 bg-white/[0.01] p-6 sm:p-8 rounded-2xl border border-white/5">
+              <>
                 {(() => {
                   const fac = data.facilities.find((f) => f.id === activeFacilityId);
                   if (!fac) return null;
 
                   return (
-                    <div className="space-y-8">
-                      <div className="flex items-center gap-4 mb-2">
-                        <button onClick={() => setActiveFacilityId(null)} className="text-white/40 hover:text-white/90 transition-colors bg-white/5 p-2 rounded-lg">
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setActiveFacilityId(null)}
+                          className="p-0 h-auto text-muted-foreground hover:text-foreground"
+                        >
                           <ArrowLeft className="w-4 h-4" />
-                        </button>
-                        <h2 className="text-[18px] sm:text-[20px] font-sans text-white/90">
-                          Configuring: <span className="text-[#F4A261] font-semibold">{fac.name}</span>
+                        </Button>
+                        <h2 className="text-lg font-semibold text-foreground">
+                          Configuring: <span className="text-primary">{fac.name}</span>
                         </h2>
                       </div>
 
                       {/* Progress Steps */}
-                      <div>
-                        <div className="flex gap-2 mb-3">
-                          {facilitySteps.map((_, i) => (
-                            <div key={i} className={`flex-1 h-1 rounded-full transition-colors ${i <= facilityStep ? "bg-[#F4A261]" : "bg-white/10"}`} />
-                          ))}
-                        </div>
-                        <div className="text-[11px] font-mono text-[#F4A261] uppercase tracking-widest">
-                          Step {facilityStep + 1} of {facilitySteps.length}: {facilitySteps[facilityStep]}
-                        </div>
+                      <div className="flex gap-2">
+                        {facilitySteps.map((_, i) => (
+                          <div
+                            key={i}
+                            className={`flex-1 h-1 rounded-full transition-colors ${
+                              i <= facilityStep ? "bg-primary" : "bg-border"
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="text-sm text-muted-foreground mb-4">
+                        Step {facilityStep + 1} of {facilitySteps.length}: {facilitySteps[facilityStep]}
                       </div>
 
                       {renderFacilityStep(fac)}
 
-                      <div className="flex justify-between pt-8 mt-8 border-t border-white/5">
-                        <button onClick={() => setFacilityStep((p) => Math.max(0, p - 1))} disabled={facilityStep === 0} className="px-6 py-3 border border-white/10 rounded-lg text-[12px] font-mono text-white/50 uppercase tracking-widest hover:bg-white/5 disabled:opacity-30">
+                      <div className="flex justify-between pt-6 border-t border-border">
+                        <Button
+                          variant="outline"
+                          onClick={() => setFacilityStep((p) => Math.max(0, p - 1))}
+                          disabled={facilityStep === 0}
+                        >
                           Back
-                        </button>
+                        </Button>
                         {facilityStep < facilitySteps.length - 1 ? (
-                          <button onClick={() => setFacilityStep((p) => p + 1)} className="flex items-center gap-2 px-8 py-3 bg-white/10 hover:bg-white/15 border border-white/10 rounded-lg text-[12px] text-white font-mono uppercase tracking-widest">
-                            Next <ChevronRight className="w-4 h-4" />
-                          </button>
+                          <Button onClick={() => setFacilityStep((p) => p + 1)} className="bg-primary hover:bg-primary/90">
+                            Next <ChevronRight className="w-4 h-4 ml-2" />
+                          </Button>
                         ) : (
-                          <button onClick={() => closeFacilityWizard(fac.id)} className="flex items-center gap-2 px-8 py-3 border rounded-lg text-[12px] font-mono uppercase tracking-[0.14em] text-white" style={{ borderColor: 'rgba(52, 211, 153, 0.5)', background: 'rgba(52, 211, 153, 0.1)' }}>
-                            <CheckCircle className="w-4 h-4 text-emerald-400" /> Save Facility
-                          </button>
+                          <Button
+                            onClick={() => closeFacilityWizard(fac.id)}
+                            className="bg-emerald-600 hover:bg-emerald-700"
+                          >
+                            <CheckCircle className="w-4 h-4 mr-2" /> Save & Return to Hub
+                          </Button>
                         )}
                       </div>
                     </div>
                   );
                 })()}
-              </div>
+              </>
             )}
 
             {/* STEP 3: Organization-Level Scope 3 */}
             {step === "org_scope3" && (
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="flex items-center gap-4 mb-4">
-                  <Truck className="w-6 h-6 text-sky-400" />
-                  <h2 className="text-xl font-sans text-white/90">Org-Level Upstream/Downstream</h2>
+              <div className="space-y-8">
+                <div className="flex items-center gap-4 mb-8">
+                  <Truck className="w-8 h-8 text-primary" />
+                  <h2 className="text-2xl sm:text-3xl tracking-tight leading-tight font-bold font-mono text-foreground">Organization-Level Upstream/Downstream</h2>
                 </div>
 
-                <p className="text-[14px] text-white/50 leading-relaxed font-sans mb-8">
-                  These Scope 3 emissions map across the entire value chain rather than tying solely to specific facilities.
+                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
+                  These Scope 3 emissions map across the entire value chain rather than tying to specific facilities.
                 </p>
 
-                <div className="bg-white/[0.02] p-6 rounded-xl border border-white/5 space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                <div className="max-h-[500px] overflow-y-auto pr-2 space-y-4">
                   <SectionHeader title="Category 1: Purchased Goods" />
                   <InputRow label="Total spend on goods (USD)" name="c1Spend" value={data.c1Spend} onChange={handleOrgInput} />
 
@@ -1115,25 +1157,26 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
                   <InputRow label="Purchased Machinery (USD Spend)" name="c2Machinery" value={data.c2Machinery} onChange={handleOrgInput} />
                   <InputRow label="Purchased IT Equip (USD Spend)" name="c2IT" value={data.c2IT} onChange={handleOrgInput} />
 
-                  <SectionHeader title="Category 11: Sold Products" />
+                  <SectionHeader title="Category 11: Use of Sold Products" />
                   <InputRow label="Lifetime product power use (kWh/yr)" name="c11ProductEnergy" value={data.c11ProductEnergy} onChange={handleOrgInput} />
 
                   <SectionHeader title="Category 15: Corporate Investments" />
                   <InputRow label="Investments in equities (USD Millions)" name="c15InvestEquity" value={data.c15InvestEquity} onChange={handleOrgInput} />
                 </div>
 
-                <div className="flex flex-col sm:flex-row justify-between pt-8 border-t border-white/5 mt-6 gap-4">
-                  <button onClick={() => setStep("hub")} className="flex items-center justify-center gap-2 px-6 py-3 border border-white/10 rounded-lg text-[12px] font-mono text-white/50 uppercase tracking-widest hover:bg-white/5 hover:text-white/90 transition-colors">
-                    <ChevronLeft className="w-4 h-4" /> Facilities Hub
-                  </button>
-                  <button onClick={calculateResults} className="flex justify-center items-center gap-3 px-8 py-3 rounded-lg border text-[12px] font-mono uppercase tracking-[0.14em] hover:bg-[#F4A261]/20 transition-colors" style={{ borderColor: 'rgba(244,162,97,0.4)', color: '#fff', background: 'rgba(244,162,97,0.1)' }}>
-                    Calculate ESG Report <Activity className="w-4 h-4" />
-                  </button>
+                <div className="flex flex-col sm:flex-row justify-between gap-4 pt-8 border-t border-border mt-8">
+                  <Button variant="outline" size="lg" onClick={() => setStep("hub")} className="w-full sm:w-auto text-xs sm:text-sm h-12 px-6 sm:h-14 sm:px-8 font-mono uppercase tracking-widest">
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" /> Back to Facilities
+                  </Button>
+                  <Button size="lg" onClick={calculateResults} className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-xs sm:text-sm h-12 px-6 sm:h-14 sm:px-8 font-mono uppercase tracking-widest">
+                    Calculate ESG Report <Activity className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+                  </Button>
                 </div>
               </div>
             )}
-        </div>
-      </main>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

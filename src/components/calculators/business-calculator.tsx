@@ -2,15 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { ArrowLeft, Building2, Zap, Truck, Users, ShoppingCart, Trash2, ChevronLeft, ChevronRight, Gauge } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
 import { calculateBusinessEmissions, type BusinessData, type BusinessResult } from "@/lib/calculations";
 import EmissionsResult from "@/components/calculators/emissions-result";
 
@@ -66,15 +57,90 @@ const initialData: BusinessData = {
   compostsWaste: "no",
 };
 
+// --- Premium UI Sub-components ---
+
+const PremiumLabel = ({ icon, text, subtext }: { icon?: React.ReactNode; text: string; subtext?: string }) => (
+    <div className="mb-4">
+        <label className="flex items-center gap-2.5 text-[14px] sm:text-[15px] text-white/90 font-sans tracking-[-0.01em]">
+            {icon && <span className="text-[#F4A261] opacity-80">{icon}</span>}
+            {text}
+        </label>
+        {subtext && <p className="text-[12px] text-white/40 mt-1 font-sans leading-relaxed">{subtext}</p>}
+    </div>
+);
+
+const PremiumRange = ({ min, max, step, value, onChange, unit }: { min: number, max: number, step: number, value: number, onChange: (val: number) => void, unit?: string }) => (
+    <div className="flex items-center gap-5">
+        <input 
+            type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} 
+            className="flex-1 h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-[#F4A261]"
+        />
+        <div className="flex items-center gap-2 bg-[#0d1218] border border-white/10 rounded-lg px-4 py-2.5 min-w-[120px]">
+            <input 
+                type="number" value={value || 0} onChange={(e) => onChange(Number(e.target.value))}
+                className="w-full bg-transparent text-white/90 text-[15px] font-mono outline-none text-right"
+            />
+            {unit && <span className="text-[11px] font-mono text-white/30 uppercase tracking-[0.1em]">{unit}</span>}
+        </div>
+    </div>
+);
+
+const PremiumSelect = ({ value, onChange, options }: { value: string, onChange: (val: string) => void, options: {value: string, label: string}[] }) => (
+    <div className="relative">
+        <select 
+            value={value} onChange={(e) => onChange(e.target.value)}
+            className="w-full bg-[#0d1218]/80 text-[14px] sm:text-[15px] text-white/80 border border-white/10 rounded-xl px-5 py-4 appearance-none outline-none focus:border-[#F4A261]/50 focus:bg-white/5 transition-all font-sans"
+        >
+            {options.map(opt => (
+                <option key={opt.value} value={opt.value} className="bg-[#080C10] text-white/80">{opt.label}</option>
+            ))}
+        </select>
+        <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-white/30">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+    </div>
+);
+
+const PremiumToggle = ({ checked, onChange, label, subtext }: { checked: boolean, onChange: (checked: boolean) => void, label: string, subtext?: string }) => (
+    <label className={`flex items-start gap-4 p-5 rounded-xl border transition-all duration-300 cursor-pointer ${checked ? 'bg-[#F4A261]/[0.05] border-[#F4A261]/30' : 'bg-[#0d1218]/50 border-white/5 hover:border-white/20'}`}>
+        <div className="pt-0.5">
+            <div 
+                onClick={(e) => { e.preventDefault(); onChange(!checked); }}
+                className={`w-10 h-5 rounded-full p-1 transition-colors duration-300 ease-in-out ${checked ? 'bg-[#F4A261]' : 'bg-white/10'}`}
+            >
+                <div className={`w-3 h-3 bg-white rounded-full shadow-md transform transition-transform duration-300 ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
+            </div>
+        </div>
+        <div className="flex-1" onClick={(e) => { e.preventDefault(); onChange(!checked); }}>
+            <div className={`text-[14px] sm:text-[15px] font-sans ${checked ? 'text-white/90' : 'text-white/70'}`}>{label}</div>
+            {subtext && <div className="text-[12px] text-white/40 mt-1">{subtext}</div>}
+        </div>
+    </label>
+);
+
+const PremiumInput = ({ value, onChange, placeholder, prefix, hint }: { value: number, onChange: (val: number) => void, placeholder?: string, prefix?: string, hint?: string }) => (
+    <div className="space-y-2">
+      <div className="bg-[#0d1218] border border-white/10 rounded-lg px-4 py-3 flex items-center shadow-inner">
+          {prefix && <span className="text-white/40 mr-2 font-mono">{prefix}</span>}
+          <input 
+              type="number" value={value || 0} onChange={(e) => onChange(Number(e.target.value))} placeholder={placeholder}
+              className="w-full bg-transparent text-white/90 text-[15px] font-mono outline-none"
+          />
+      </div>
+      {hint && <p className="text-[12px] text-white/40 font-sans tracking-wide">{hint}</p>}
+    </div>
+);
+
+// --- Main Form ---
+
 export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState<BusinessData>(initialData);
   const [result, setResult] = useState<BusinessResult | null>(null);
 
-  // Scroll to top when changing steps
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentStep]);
+  }, [currentStep, result]);
 
   const updateData = <K extends keyof BusinessData>(key: K, value: BusinessData[K]) => {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -110,598 +176,353 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
     );
   }
 
-  const progress = (currentStep / steps.length) * 100;
+  const activeStepData = steps[currentStep - 1];
+  const progressPercent = (currentStep / steps.length) * 100;
   const t = data.businessType;
 
   return (
-    <div className="w-full flex flex-col relative z-10 font-mono">
-      {/* Sticky Top Wrapper */}
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-md shadow-sm border-b border-border/50">
-        <div className="container mx-auto px-4 py-3">
-          {/* Top row: Back button, Title, % */}
-          <div className="flex items-center justify-between mb-3">
-            <Button variant="ghost" size="sm" onClick={onBack} className="gap-2 h-8 px-2 -ml-2 text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Back</span>
-            </Button>
-            
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded bg-sky-500/10 flex items-center justify-center">
-                <Building2 className="h-3 w-3 text-sky-400" />
-              </div>
-              <span className="text-sm font-medium text-foreground hidden sm:block">Business</span>
-              <span className="text-sm font-medium text-muted-foreground mx-2 hidden sm:block">/</span>
-              <span className="text-sm font-medium text-foreground">{steps[currentStep - 1].title}</span>
-            </div>
-
-            <div className="text-sm font-medium text-primary">
-              {Math.round(progress)}%
-            </div>
-          </div>
-
-          <Progress value={progress} className="h-2 mb-2" />
+    <div className="w-full mx-auto transition-all duration-500 pb-20" style={{ maxWidth: '680px' }}>
+      
+      {/* Navigation Header */}
+      <div className="mb-8 sm:mb-12 pt-10 sm:pt-4 px-4 sm:px-0">
+          <button 
+              onClick={onBack} 
+              className="flex items-center gap-2 text-[11px] sm:text-[12px] font-mono text-white/30 hover:text-white/70 transition-colors uppercase tracking-[0.12em] mb-6 sm:mb-8 bg-transparent border-none cursor-pointer"
+          >
+              <ArrowLeft size={14} /> Back to Selection
+          </button>
           
-          {/* Steps Flowchart - compressed */}
-          <div className="flex justify-between overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 sm:overflow-visible hide-scrollbar pt-1">
-            {steps.map((step) => (
-              <button
-                key={step.id}
-                onClick={() => setCurrentStep(step.id)}
-                className={`flex flex-col items-center gap-1 transition-colors min-w-[50px] ${step.id === currentStep
-                    ? "text-primary"
-                    : step.id < currentStep
-                      ? "text-primary/60"
-                      : "text-muted-foreground/40"
-                  }`}
-              >
-                <step.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="text-[10px] sm:text-xs hidden md:block whitespace-nowrap">{step.title}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+          <h1 className="text-[28px] sm:text-[36px] font-sans tracking-[-0.03em] text-white leading-tight font-light">
+              <span className="font-semibold text-sky-400/90">Business</span> Footprint
+          </h1>
+          <p className="text-[14px] sm:text-[15px] text-white/40 font-sans mt-2 max-w-[480px] leading-relaxed">
+              Calculate operational emissions across energy, logistics, procurement, and your team.
+          </p>
       </div>
 
-      {/* Form Content */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-[680px] w-full px-4 sm:px-0 mx-auto">
-          {/* Step 1: Business Type */}
-          {currentStep === 1 && (
-            <Card className="bg-card border-border shadow-lg">
-              <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-3xl sm:text-4xl tracking-tight leading-tight font-bold font-mono">
-                  <Building2 className="h-8 w-8 text-primary" />
-                  Business Type
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base leading-relaxed mt-2 text-muted-foreground">Select the type that best describes your business</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-10">
-                <Select value={data.businessType} onValueChange={(v) => updateData("businessType", v as BusinessData["businessType"])}>
-                  <SelectTrigger className="font-mono text-sm sm:text-base py-4 sm:py-6">
-                    <SelectValue placeholder="Select business type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {BUSINESS_TYPES.map((type) => (
-                      <SelectItem key={type.id} value={type.id} className="font-mono text-sm sm:text-base py-3 sm:py-4">
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+      {/* Progress Bar */}
+      <div className="mb-8 px-4 sm:px-0">
+          <div className="flex justify-between items-end mb-3">
+              <div className="inline-flex items-center px-3 py-1 rounded-full border border-sky-400/10 bg-sky-400/5 text-sky-400/60 text-[10px] uppercase font-mono tracking-[0.1em]">
+                  Step {currentStep} of {steps.length}
+              </div>
+              <span className="text-[12px] font-mono uppercase tracking-[0.1em] text-sky-400/80">
+                  {activeStepData.title}
+              </span>
+          </div>
+          <div className="w-full h-[3px] bg-white/5 rounded-full overflow-hidden">
+              <div 
+                  className="h-full bg-sky-400/70 transition-all duration-500 ease-out"
+                  style={{ width: `${progressPercent}%` }}
+              />
+          </div>
+      </div>
 
-                <div className="space-y-4">
-                  <Label className="text-sm sm:text-base font-medium">Number of employees</Label>
-                  <div className="flex items-center gap-6">
-                    <Slider
-                      value={[data.employees]}
-                      onValueChange={([v]) => updateData("employees", v)}
-                      min={1}
-                      max={100}
-                      step={1}
-                      className="flex-1"
-                    />
-                    <span className="text-2xl sm:text-4xl font-bold font-mono text-primary w-12 sm:w-16 text-center">{data.employees}</span>
-                  </div>
+      {/* Container */}
+      <main className="relative z-10 w-full bg-[#080C10]/60 backdrop-blur-xl border border-white/10 sm:rounded-2xl overflow-hidden shadow-xl mx-0 sm:mx-auto">
+        <div className="flex flex-col min-h-[420px] p-6 sm:p-10">
+          <div className="flex-grow space-y-10 sm:space-y-12">
+            
+            {/* Step 1: Business Type */}
+            {currentStep === 1 && (
+              <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div>
+                  <PremiumLabel icon={<Building2 size={16} />} text="Business Type" subtext="Select the type that best describes your business" />
+                  <PremiumSelect
+                    value={data.businessType}
+                    onChange={(v) => updateData("businessType", v as BusinessData["businessType"])}
+                    options={BUSINESS_TYPES.map(type => ({ value: type.id, label: type.label }))}
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          )}
+                <div>
+                  <PremiumLabel text="Number of employees" />
+                  <PremiumRange min={1} max={100} step={1} value={data.employees} onChange={(v) => updateData("employees", v)} unit="staff" />
+                </div>
+              </div>
+            )}
 
-          {/* Step 2: Energy */}
-          {currentStep === 2 && (
-            <Card className="bg-card border-border">
-              <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-3xl sm:text-4xl tracking-tight leading-tight font-bold font-mono">
-                  <Zap className="h-8 w-8 text-primary" />
-                  Energy Consumption
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base leading-relaxed mt-2 text-muted-foreground">Electricity and fuel usage</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-10">
+            {/* Step 2: Energy */}
+            {currentStep === 2 && (
+              <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {t === "home" ? (
-                  <div className="space-y-4">
-                    <Label htmlFor="homeElec" className="text-sm sm:text-base font-medium">Additional electricity for business (INR/month)</Label>
-                    <Input
-                      id="homeElec"
-                      type="number"
-                      value={data.homeAddtlElectricity}
-                      onChange={(e) => updateData("homeAddtlElectricity", Number(e.target.value))}
-                      placeholder="e.g., 500"
-                      className="text-sm sm:text-base py-4 sm:py-6"
-                    />
-                    <p className="text-xs sm:text-sm text-muted-foreground">
-                      Estimate the portion of your home electricity used for business
-                    </p>
+                  <div>
+                    <PremiumLabel icon={<Zap size={16} />} text="Additional electricity for business (INR/month)" subtext="Estimate the portion of your home electricity used for business" />
+                    <PremiumInput value={data.homeAddtlElectricity} onChange={(v) => updateData("homeAddtlElectricity", v)} prefix="₹" />
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    <Label htmlFor="electricity" className="text-sm sm:text-base font-medium">Monthly electricity bill (INR)</Label>
-                    <Input
-                      id="electricity"
-                      type="number"
-                      value={data.electricityBillPerMonth}
-                      onChange={(e) => updateData("electricityBillPerMonth", Number(e.target.value))}
-                      placeholder="e.g., 5000"
-                      className="text-sm sm:text-base py-4 sm:py-6"
-                    />
+                  <div>
+                    <PremiumLabel icon={<Zap size={16} />} text="Monthly electricity bill (INR)" />
+                    <PremiumInput value={data.electricityBillPerMonth} onChange={(v) => updateData("electricityBillPerMonth", v)} prefix="₹" />
                   </div>
                 )}
 
                 {t === "office" && (
                   <>
-                    <div className="space-y-4">
-                      <Label className="text-sm sm:text-base font-medium">Number of air conditioners</Label>
-                      <div className="flex items-center gap-6">
-                        <Slider
-                          value={[data.acCount || 0]}
-                          onValueChange={([v]) => updateData("acCount", v)}
-                          min={0}
-                          max={20}
-                          step={1}
-                          className="flex-1"
-                        />
-                        <span className="text-2xl sm:text-3xl font-bold font-mono text-primary w-8 sm:w-12 text-center">{data.acCount}</span>
-                      </div>
+                    <div className="animate-in fade-in duration-300">
+                      <PremiumLabel text="Number of air conditioners" />
+                      <PremiumRange min={0} max={20} step={1} value={data.acCount || 0} onChange={(v) => updateData("acCount", v)} unit="units" />
                     </div>
-                    <div className="space-y-4">
-                      <Label className="text-sm sm:text-base font-medium">Number of computers/workstations</Label>
-                      <div className="flex items-center gap-6">
-                        <Slider
-                          value={[data.computerCount || 0]}
-                          onValueChange={([v]) => updateData("computerCount", v)}
-                          min={0}
-                          max={50}
-                          step={1}
-                          className="flex-1"
-                        />
-                        <span className="text-2xl sm:text-3xl font-bold font-mono text-primary w-8 sm:w-12 text-center">{data.computerCount}</span>
-                      </div>
+                    <div className="animate-in fade-in duration-300">
+                      <PremiumLabel text="Number of computers/workstations" />
+                      <PremiumRange min={0} max={50} step={1} value={data.computerCount || 0} onChange={(v) => updateData("computerCount", v)} unit="units" />
                     </div>
                   </>
                 )}
 
                 {t === "retail" && (
-                  <div className="flex items-center justify-between p-6 rounded-xl bg-secondary/50">
-                    <div className="space-y-2">
-                      <Label className="text-sm sm:text-base font-medium">Do you use refrigeration?</Label>
-                      <p className="text-xs sm:text-sm text-muted-foreground">Display fridges, cold storage</p>
-                    </div>
-                    <Switch checked={data.usesFridges} onCheckedChange={(v) => updateData("usesFridges", v)} />
-                  </div>
-                )}
-
-                {t === "retail" && data.usesFridges && (
-                  <div className="space-y-4">
-                    <Label className="text-sm sm:text-base font-medium">Number of refrigeration units</Label>
-                    <Input
-                      type="number"
-                      value={data.retailFridges}
-                      onChange={(e) => updateData("retailFridges", Number(e.target.value))}
-                      placeholder="e.g., 3"
-                      className="text-sm sm:text-base py-4 sm:py-6"
+                  <div className="animate-in fade-in duration-300 space-y-4">
+                    <PremiumToggle 
+                      checked={data.usesFridges} 
+                      onChange={(v) => updateData("usesFridges", v)}
+                      label="Do you use refrigeration?" 
+                      subtext="Display fridges, cold storage."
                     />
+                    {data.usesFridges && (
+                      <div className="pl-6 border-l-2 border-sky-400/30 ml-4 animate-in fade-in duration-300">
+                        <PremiumLabel text="Number of refrigeration units" />
+                        <PremiumInput value={data.retailFridges} onChange={(v) => updateData("retailFridges", v)} />
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {t === "restaurant" && (
-                  <>
-                    <div className="space-y-4">
-                      <Label className="text-sm sm:text-base font-medium">Commercial fridges/freezers</Label>
-                      <Input
-                        type="number"
-                        value={data.commercialFridges}
-                        onChange={(e) => updateData("commercialFridges", Number(e.target.value))}
-                        placeholder="e.g., 4"
-                        className="text-sm sm:text-base py-4 sm:py-6"
-                      />
+                  <div className="animate-in fade-in duration-300 space-y-10">
+                    <div>
+                      <PremiumLabel text="Commercial fridges/freezers" />
+                      <PremiumInput value={data.commercialFridges} onChange={(v) => updateData("commercialFridges", v)} />
                     </div>
-                    <div className="space-y-4">
-                      <Label className="text-sm sm:text-base font-medium">LPG cylinders used per year</Label>
-                      <Input
-                        type="number"
-                        value={data.commercialLpgCylinders}
-                        onChange={(e) => updateData("commercialLpgCylinders", Number(e.target.value))}
-                        placeholder="e.g., 24"
-                        className="text-sm sm:text-base py-4 sm:py-6"
-                      />
+                    <div>
+                      <PremiumLabel text="LPG cylinders used per year" />
+                      <PremiumInput value={data.commercialLpgCylinders} onChange={(v) => updateData("commercialLpgCylinders", v)} />
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {t === "home" && (
-                  <div className="space-y-4">
-                    <Label className="text-sm sm:text-base font-medium">LPG cylinders for business per year</Label>
-                    <Input
-                      type="number"
-                      value={data.homeBusinessLpg}
-                      onChange={(e) => updateData("homeBusinessLpg", Number(e.target.value))}
-                      placeholder="e.g., 2"
-                      className="text-sm sm:text-base py-4 sm:py-6"
-                    />
+                  <div className="animate-in fade-in duration-300">
+                    <PremiumLabel text="LPG cylinders for business per year" />
+                    <PremiumInput value={data.homeBusinessLpg} onChange={(v) => updateData("homeBusinessLpg", v)} />
                   </div>
                 )}
 
                 {t === "workshop" && (
-                  <div className="flex items-center justify-between p-6 rounded-xl bg-secondary/50">
-                    <div className="space-y-2">
-                      <Label className="text-sm sm:text-base font-medium">Do you use a diesel generator?</Label>
-                      <p className="text-xs sm:text-sm text-muted-foreground">For backup power</p>
-                    </div>
-                    <Switch checked={data.usesGenerator} onCheckedChange={(v) => updateData("usesGenerator", v)} />
-                  </div>
-                )}
-
-                {t === "workshop" && data.usesGenerator && (
-                  <div className="space-y-4">
-                    <Label className="text-sm sm:text-base font-medium">Diesel used per year (litres)</Label>
-                    <Input
-                      type="number"
-                      value={data.dieselGeneratorLitres}
-                      onChange={(e) => updateData("dieselGeneratorLitres", Number(e.target.value))}
-                      placeholder="e.g., 500"
-                      className="text-sm sm:text-base py-4 sm:py-6"
+                  <div className="animate-in fade-in duration-300 space-y-4">
+                    <PremiumToggle 
+                      checked={data.usesGenerator} 
+                      onChange={(v) => updateData("usesGenerator", v)}
+                      label="Do you use a diesel generator?" 
+                      subtext="For backup power."
                     />
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Step 3: Operations */}
-          {currentStep === 3 && (
-            <Card className="bg-card border-border">
-              <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-3xl sm:text-4xl tracking-tight leading-tight font-bold font-mono">
-                  <Truck className="h-8 w-8 text-primary" />
-                  Operations & Transport
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base leading-relaxed mt-2 text-muted-foreground">Delivery, logistics, and business travel</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-10">
-                {t === "retail" && (
-                  <>
-                    <div className="flex items-center justify-between p-6 rounded-xl bg-secondary/50">
-                      <div className="space-y-2">
-                        <Label className="text-sm sm:text-base font-medium">Do you offer delivery?</Label>
-                        <p className="text-xs sm:text-sm text-muted-foreground">Using your own vehicles</p>
-                      </div>
-                      <Switch checked={data.usesDelivery} onCheckedChange={(v) => updateData("usesDelivery", v)} />
-                    </div>
-                    {data.usesDelivery && (
-                      <div className="space-y-4">
-                        <Label className="text-sm sm:text-base font-medium">Fuel used for delivery per year (litres)</Label>
-                        <Input
-                          type="number"
-                          value={data.retailDeliveryFuel}
-                          onChange={(e) => updateData("retailDeliveryFuel", Number(e.target.value))}
-                          placeholder="e.g., 1000"
-                          className="text-sm sm:text-base py-4 sm:py-6"
-                        />
+                    {data.usesGenerator && (
+                      <div className="pl-6 border-l-2 border-sky-400/30 ml-4 animate-in fade-in duration-300">
+                        <PremiumLabel text="Diesel used per year (litres)" />
+                        <PremiumInput value={data.dieselGeneratorLitres} onChange={(v) => updateData("dieselGeneratorLitres", v)} />
                       </div>
                     )}
-                  </>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step 3: Operations */}
+            {currentStep === 3 && (
+              <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {t === "retail" && (
+                  <div className="animate-in fade-in duration-300 space-y-4">
+                    <PremiumToggle 
+                      checked={data.usesDelivery} 
+                      onChange={(v) => updateData("usesDelivery", v)}
+                      label="Do you offer delivery?" 
+                      subtext="Using your own vehicles."
+                    />
+                    {data.usesDelivery && (
+                      <div className="pl-6 border-l-2 border-sky-400/30 ml-4 animate-in fade-in duration-300">
+                        <PremiumLabel icon={<Truck size={16}/>} text="Fuel used for delivery per year (litres)" />
+                        <PremiumInput value={data.retailDeliveryFuel} onChange={(v) => updateData("retailDeliveryFuel", v)} />
+                      </div>
+                    )}
+                  </div>
                 )}
 
                 {t === "logistics" && (
-                  <>
-                    <div className="space-y-4">
-                      <Label className="text-sm sm:text-base font-medium">Fuel type</Label>
-                      <Select
+                  <div className="animate-in fade-in duration-300 space-y-10">
+                    <div>
+                      <PremiumLabel icon={<Truck size={16}/>} text="Fleet fuel type" />
+                      <PremiumSelect
                         value={data.logisticsFuelType}
-                        onValueChange={(v) => updateData("logisticsFuelType", v as BusinessData["logisticsFuelType"])}
-                      >
-                        <SelectTrigger className="font-mono text-sm sm:text-base py-4 sm:py-6">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="diesel" className="font-mono text-sm sm:text-base py-3 sm:py-4">Diesel</SelectItem>
-                          <SelectItem value="petrol" className="font-mono text-sm sm:text-base py-3 sm:py-4">Petrol</SelectItem>
-                          <SelectItem value="cng" className="font-mono text-sm sm:text-base py-3 sm:py-4">CNG</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-4">
-                      <Label className="text-sm sm:text-base font-medium">Total fuel used per year (litres/kg)</Label>
-                      <Input
-                        type="number"
-                        value={data.logisticsFuelLitres}
-                        onChange={(e) => updateData("logisticsFuelLitres", Number(e.target.value))}
-                        placeholder="e.g., 5000"
-                        className="text-sm sm:text-base py-4 sm:py-6"
+                        onChange={(v) => updateData("logisticsFuelType", v as BusinessData["logisticsFuelType"])}
+                        options={[
+                          { value: "diesel", label: "Diesel" },
+                          { value: "petrol", label: "Petrol" },
+                          { value: "cng", label: "CNG" },
+                        ]}
                       />
                     </div>
-                  </>
+                    <div>
+                      <PremiumLabel text="Total fuel used per year (litres/kg)" />
+                      <PremiumInput value={data.logisticsFuelLitres} onChange={(v) => updateData("logisticsFuelLitres", v)} />
+                    </div>
+                  </div>
                 )}
 
                 {t === "office" && (
-                  <>
-                    <div className="space-y-4">
-                      <Label htmlFor="flights" className="text-sm sm:text-base font-medium">Business flights per year (total km)</Label>
-                      <Input
-                        id="flights"
-                        type="number"
-                        value={data.flightsKmPerYear}
-                        onChange={(e) => updateData("flightsKmPerYear", Number(e.target.value))}
-                        placeholder="e.g., 10000"
-                        className="text-sm sm:text-base py-4 sm:py-6"
-                      />
-                      <p className="text-xs sm:text-sm text-muted-foreground">
-                        Tip: Delhi-Mumbai is ~1400km one way
-                      </p>
+                  <div className="animate-in fade-in duration-300 space-y-10">
+                    <div>
+                      <PremiumLabel text="Business flights per year (total km)" hint="Tip: Delhi-Mumbai is ~1400km one way" />
+                      <PremiumInput value={data.flightsKmPerYear} onChange={(v) => updateData("flightsKmPerYear", v)} />
                     </div>
-                    <div className="space-y-4">
-                      <Label htmlFor="trains" className="text-sm sm:text-base font-medium">Train travel per year (km)</Label>
-                      <Input
-                        id="trains"
-                        type="number"
-                        value={data.trainKmPerYear}
-                        onChange={(e) => updateData("trainKmPerYear", Number(e.target.value))}
-                        placeholder="e.g., 5000"
-                        className="text-sm sm:text-base py-4 sm:py-6"
-                      />
+                    <div>
+                      <PremiumLabel text="Train travel per year (km)" />
+                      <PremiumInput value={data.trainKmPerYear} onChange={(v) => updateData("trainKmPerYear", v)} />
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {!["retail", "logistics", "office"].includes(t) && (
-                  <div className="p-6 rounded-xl bg-secondary/50 text-center">
-                    <p className="text-muted-foreground text-lg">
-                      No specific transport questions for this business type.
-                    </p>
-                    <p className="text-base text-muted-foreground mt-2">
-                      Employee commuting is captured in the next step.
-                    </p>
+                  <div className="p-8 border border-dashed border-white/10 rounded-xl text-center">
+                    <div className="text-white/40 text-[14px] font-sans">No specific transport questions for this business type.</div>
+                    <div className="text-white/30 text-[12px] mt-2 font-mono">Employee commuting is captured next.</div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            )}
 
-          {/* Step 4: Employees */}
-          {currentStep === 4 && (
-            <Card className="bg-card border-border">
-              <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-3xl sm:text-4xl tracking-tight leading-tight font-bold font-mono">
-                  <Users className="h-8 w-8 text-primary" />
-                  Employee Commuting
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base leading-relaxed mt-2 text-muted-foreground">Daily commute of your team</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-10">
+            {/* Step 4: Employees (Commuting) */}
+            {currentStep === 4 && (
+              <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {t !== "home" ? (
                   <>
-                    <div className="space-y-4">
-                      <Label className="text-sm sm:text-base font-medium">Average one-way commute distance (km)</Label>
-                      <div className="flex items-center gap-6">
-                        <Slider
-                          value={[data.avgCommuteKm || 0]}
-                          onValueChange={([v]) => updateData("avgCommuteKm", v)}
-                          min={0}
-                          max={50}
-                          step={1}
-                          className="flex-1"
-                        />
-                        <span className="text-2xl sm:text-3xl font-bold font-mono text-primary w-16 sm:w-20 text-center">{data.avgCommuteKm} km</span>
-                      </div>
+                    <div>
+                      <PremiumLabel icon={<Users size={16} />} text="Average one-way commute distance (km)" />
+                      <PremiumRange min={0} max={50} step={1} value={data.avgCommuteKm || 0} onChange={(v) => updateData("avgCommuteKm", v)} unit="km" />
                     </div>
-
-                    <div className="p-6 rounded-xl bg-primary/5 border border-primary/20">
-                      <p className="text-lg text-foreground">
-                        <strong>Calculation:</strong> {data.employees} employees × {data.avgCommuteKm} km × 2 (round trip) × 52 weeks
-                      </p>
-                      <p className="text-base text-muted-foreground mt-2">
-                        = {((data.employees || 0) * (data.avgCommuteKm || 0) * 2 * 52).toLocaleString()} km total commuting per year
+                    
+                    <div className="p-5 rounded-xl bg-sky-400/5 border border-sky-400/10">
+                      <p className="text-[13px] text-sky-200/80 font-mono tracking-wide leading-relaxed">
+                        <strong className="text-sky-400 font-semibold uppercase">Calc:</strong> {data.employees} emp × {data.avgCommuteKm}km × 2 × 52w = 
+                        <span className="text-white ml-2">
+                        {((data.employees || 0) * (data.avgCommuteKm || 0) * 2 * 52).toLocaleString()} km/yr
+                        </span>
                       </p>
                     </div>
 
-                    <div className="p-6 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                      <p className="text-base text-amber-200">
-                        <strong>Tip:</strong> Encourage carpooling, public transit, or work-from-home days to reduce commuting emissions.
+                    <div className="p-4 rounded-lg bg-[#F4A261]/10 border border-[#F4A261]/20">
+                      <p className="text-[13px] font-sans text-white/80 leading-relaxed">
+                        <strong className="text-[#F4A261]">Tip:</strong> Encourage carpooling, public transit, or work-from-home days to reduce group commuting emissions.
                       </p>
                     </div>
                   </>
                 ) : (
-                  <div className="p-6 rounded-xl bg-secondary/50 text-center">
-                    <p className="text-lg text-muted-foreground">
-                      Home-based businesses typically have minimal commuting emissions.
-                    </p>
+                  <div className="p-8 border border-dashed border-white/10 rounded-xl text-center">
+                    <div className="text-white/40 text-[14px] font-sans">Home-based businesses typically have minimal commuting emissions.</div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            )}
 
-          {/* Step 5: Procurement */}
-          {currentStep === 5 && (
-            <Card className="bg-card border-border">
-              <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-3xl sm:text-4xl tracking-tight leading-tight font-bold font-mono">
-                  <ShoppingCart className="h-8 w-8 text-primary" />
-                  Procurement & Purchases
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base leading-relaxed mt-2 text-muted-foreground">Monthly spend on business supplies</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-10">
+            {/* Step 5: Procurement */}
+            {currentStep === 5 && (
+              <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {t === "office" && (
-                  <div className="space-y-4">
-                    <Label htmlFor="supplies" className="text-sm sm:text-base font-medium">Office supplies spend (INR/month)</Label>
-                    <Input
-                      id="supplies"
-                      type="number"
-                      value={data.spendOfficeSupplies}
-                      onChange={(e) => updateData("spendOfficeSupplies", Number(e.target.value))}
-                      placeholder="e.g., 10000"
-                      className="text-sm sm:text-base py-4 sm:py-6"
-                    />
-                    <p className="text-xs sm:text-sm text-muted-foreground">Paper, stationery, cleaning supplies, etc.</p>
+                  <div className="animate-in fade-in duration-300">
+                    <PremiumLabel icon={<ShoppingCart size={16} />} text="Office supplies spend (INR/month)" subtext="Paper, stationery, cleaning supplies, etc." />
+                    <PremiumInput value={data.spendOfficeSupplies} onChange={(v) => updateData("spendOfficeSupplies", v)} prefix="₹" />
                   </div>
                 )}
 
                 {t === "retail" && (
-                  <div className="space-y-4">
-                    <Label htmlFor="resale" className="text-sm sm:text-base font-medium">Goods for resale spend (INR/month)</Label>
-                    <Input
-                      id="resale"
-                      type="number"
-                      value={data.spendResaleGoods}
-                      onChange={(e) => updateData("spendResaleGoods", Number(e.target.value))}
-                      placeholder="e.g., 100000"
-                      className="text-sm sm:text-base py-4 sm:py-6"
-                    />
-                    <p className="text-xs sm:text-sm text-muted-foreground">Cost of inventory purchased</p>
+                  <div className="animate-in fade-in duration-300">
+                    <PremiumLabel icon={<ShoppingCart size={16} />} text="Goods for resale spend (INR/month)" subtext="Cost of inventory purchased" />
+                    <PremiumInput value={data.spendResaleGoods} onChange={(v) => updateData("spendResaleGoods", v)} prefix="₹" />
                   </div>
                 )}
 
                 {t === "restaurant" && (
-                  <div className="space-y-4">
-                    <Label htmlFor="food" className="text-sm sm:text-base font-medium">Food & supplies spend (INR/month)</Label>
-                    <Input
-                      id="food"
-                      type="number"
-                      value={data.spendFoodSupply}
-                      onChange={(e) => updateData("spendFoodSupply", Number(e.target.value))}
-                      placeholder="e.g., 150000"
-                      className="text-sm sm:text-base py-4 sm:py-6"
-                    />
-                    <p className="text-xs sm:text-sm text-muted-foreground">Ingredients, packaging, disposables</p>
+                  <div className="animate-in fade-in duration-300">
+                    <PremiumLabel icon={<ShoppingCart size={16} />} text="Food & supplies spend (INR/month)" subtext="Ingredients, packaging, disposables" />
+                    <PremiumInput value={data.spendFoodSupply} onChange={(v) => updateData("spendFoodSupply", v)} prefix="₹" />
                   </div>
                 )}
 
                 {t === "workshop" && (
-                  <div className="space-y-4">
-                    <Label htmlFor="materials" className="text-sm sm:text-base font-medium">Raw materials spend (INR/month)</Label>
-                    <Input
-                      id="materials"
-                      type="number"
-                      value={data.spendRawMaterials}
-                      onChange={(e) => updateData("spendRawMaterials", Number(e.target.value))}
-                      placeholder="e.g., 200000"
-                      className="text-sm sm:text-base py-4 sm:py-6"
-                    />
+                  <div className="animate-in fade-in duration-300">
+                    <PremiumLabel icon={<ShoppingCart size={16} />} text="Raw materials spend (INR/month)" />
+                    <PremiumInput value={data.spendRawMaterials} onChange={(v) => updateData("spendRawMaterials", v)} prefix="₹" />
                   </div>
                 )}
 
                 {t === "home" && (
-                  <div className="space-y-4">
-                    <Label htmlFor="packaging" className="text-sm sm:text-base font-medium">Packaging & supplies spend (INR/month)</Label>
-                    <Input
-                      id="packaging"
-                      type="number"
-                      value={data.spendPackaging}
-                      onChange={(e) => updateData("spendPackaging", Number(e.target.value))}
-                      placeholder="e.g., 5000"
-                      className="text-sm sm:text-base py-4 sm:py-6"
-                    />
+                  <div className="animate-in fade-in duration-300">
+                    <PremiumLabel icon={<ShoppingCart size={16} />} text="Packaging & supplies spend (INR/month)" />
+                    <PremiumInput value={data.spendPackaging} onChange={(v) => updateData("spendPackaging", v)} prefix="₹" />
                   </div>
                 )}
 
                 {t === "logistics" && (
-                  <div className="p-6 rounded-xl bg-secondary/50 text-center">
-                    <p className="text-lg text-muted-foreground">
-                      Logistics businesses primarily emit through fuel use, captured earlier.
-                    </p>
+                  <div className="p-8 border border-dashed border-white/10 rounded-xl text-center animate-in fade-in duration-300">
+                    <div className="text-white/40 text-[14px] font-sans">Logistics businesses primarily emit through fuel use, captured earlier.</div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            )}
 
-          {/* Step 6: Waste */}
-          {currentStep === 6 && (
-            <Card className="bg-card border-border">
-              <CardHeader className="pb-8">
-                <CardTitle className="flex items-center gap-3 text-3xl sm:text-4xl tracking-tight leading-tight font-bold font-mono">
-                  <Trash2 className="h-8 w-8 text-primary" />
-                  Waste Generation
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base leading-relaxed mt-2 text-muted-foreground">Business waste output</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-10">
+            {/* Step 6: Waste */}
+            {currentStep === 6 && (
+              <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {t !== "logistics" ? (
                   <>
-                    <div className="space-y-4">
-                      <Label className="text-sm sm:text-base font-medium">Garbage bags per week</Label>
-                      <div className="flex items-center gap-6">
-                        <Slider
-                          value={[data.wasteBags || 0]}
-                          onValueChange={([v]) => updateData("wasteBags", v)}
-                          min={0}
-                          max={50}
-                          step={1}
-                          className="flex-1"
-                        />
-                        <span className="text-2xl sm:text-3xl font-bold font-mono text-primary w-8 sm:w-12 text-center">{data.wasteBags}</span>
-                      </div>
+                    <div className="animate-in fade-in duration-300">
+                      <PremiumLabel icon={<Trash2 size={16}/>} text="Garbage bags per week" />
+                      <PremiumRange min={0} max={50} step={1} value={data.wasteBags || 0} onChange={(v) => updateData("wasteBags", v)} unit="bags" />
                     </div>
 
                     {t === "restaurant" && (
-                      <div className="space-y-4">
-                        <Label className="text-sm sm:text-base font-medium">Do you compost food waste?</Label>
-                        <Select value={data.compostsWaste} onValueChange={(v) => updateData("compostsWaste", v as BusinessData["compostsWaste"])}>
-                          <SelectTrigger className="font-mono text-sm sm:text-base py-4 sm:py-6">
-                            <SelectValue placeholder="Select an option" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="yes" className="font-mono text-sm sm:text-base py-3 sm:py-4">Yes, we compost</SelectItem>
-                            <SelectItem value="no" className="font-mono text-sm sm:text-base py-3 sm:py-4">No</SelectItem>
-                          </SelectContent>
-                        </Select>
+                      <div className="animate-in fade-in duration-300">
+                        <PremiumLabel text="Do you compost food waste?" />
+                        <PremiumSelect
+                          value={data.compostsWaste}
+                          onChange={(v) => updateData("compostsWaste", v as BusinessData["compostsWaste"])}
+                          options={[
+                            { value: "yes", label: "Yes, we compost" },
+                            { value: "no", label: "No, we don't" },
+                          ]}
+                        />
                       </div>
                     )}
                   </>
                 ) : (
-                  <div className="p-6 rounded-xl bg-secondary/50 text-center">
-                    <p className="text-lg text-muted-foreground">
-                      Logistics businesses typically have minimal waste emissions.
-                    </p>
+                  <div className="p-8 border border-dashed border-white/10 rounded-xl text-center">
+                    <div className="text-white/40 text-[14px] font-sans">Logistics businesses typically have minimal waste emissions compared to fuel.</div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            )}
 
-          {/* Navigation */}
-          <div className="flex items-center justify-between mt-8 sm:mt-12 mb-10 sm:mb-20">
-            <Button variant="outline" size="lg" onClick={handlePrev} disabled={currentStep === 1} className="gap-2 text-xs sm:text-sm px-8 py-6 font-mono uppercase tracking-widest">
-              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-              Previous
-            </Button>
-            <Button size="lg" onClick={handleNext} className="gap-2 text-xs sm:text-sm px-8 py-6 font-mono uppercase tracking-widest">
-              {currentStep === steps.length ? (
-                <>
-                  Calculate
-                  <Gauge className="h-4 w-4 sm:h-5 sm:w-5" />
-                </>
-              ) : (
-                <>
-                  Next
-                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-                </>
-              )}
-            </Button>
+          </div>
+
+          {/* Navigation Footer */}
+          <div className="flex justify-between items-center mt-12 pt-8 border-t border-white/5">
+              <button 
+                  onClick={handlePrev} disabled={currentStep === 1}
+                  className={`flex items-center gap-2 px-6 py-3.5 border border-white/10 rounded-lg text-[12px] font-mono text-white/50 uppercase tracking-widest transition-colors cursor-pointer ${currentStep === 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white/5 hover:text-white/90'}`}
+              >
+                  <ChevronLeft size={16} /> Back
+              </button>
+              <button 
+                  onClick={handleNext} 
+                  className="group relative inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-lg border text-[12px] font-mono uppercase tracking-[0.14em] transition-all duration-400 overflow-hidden cursor-pointer"
+                  style={{ borderColor: 'rgba(56, 189, 248, 0.4)', color: '#fff', background: 'rgba(56, 189, 248, 0.1)' }}
+              >
+                  <div className="absolute inset-0 bg-gradient-to-r from-sky-400/0 via-sky-400/20 to-sky-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <span className="relative z-10 flex items-center gap-3">
+                      {currentStep === steps.length ? 'Calculate' : 'Next'} 
+                      {currentStep === steps.length ? <Gauge size={16} /> : <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />}
+                  </span>
+              </button>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,261 +1,220 @@
 import React, { useState } from 'react';
-import { Leaf, ArrowRight, Info, X } from 'lucide-react';
+import { ArrowRight, X, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function PlatformHome({ onNavigate, onBack }) {
     const [showReasoning, setShowReasoning] = useState(false);
 
     return (
-        <main className="min-h-screen flex flex-col relative z-10 transition-colors duration-500">
-            {/* ── Navigation ─────────────────────────────────────────────── */}
-            <header className="border-b border-dotted border-white/10 sticky top-0 z-50 bg-[#080C10]/85 backdrop-blur-md">
-                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0 flex justify-between">
-                    <div className="py-3.5 sm:py-5 flex items-center">
-                        <div
-                            className="flex items-center cursor-pointer"
-                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        >
-                            <span className="font-semibold text-[18px] sm:text-[22px] text-white/90 tracking-[-0.03em]">
-                                ai<span style={{ color: "#F4A261" }}>G</span>anesha
-                            </span>
-                        </div>
-                    </div>
-                    <div className="py-3.5 sm:py-5 flex items-center gap-5 sm:gap-6">
+        <main className="min-h-screen flex flex-col font-sans">
+
+            {/* ── Nav ── */}
+            <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080C10]/90 backdrop-blur-xl">
+                <div className="w-full max-w-[860px] mx-auto px-6 sm:px-8 flex justify-between items-center py-5">
+                    <span className="font-semibold text-[20px] text-white/90 tracking-[-0.03em] cursor-pointer"
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                        ai<span style={{ color: "#F4A261" }}>G</span>anesha
+                    </span>
+                    <div className="flex items-center gap-6">
                         {onBack && (
-                            <button
-                                onClick={onBack}
-                                className="text-[11px] sm:text-[12px] font-mono text-white/30 hover:text-white/70 transition-colors duration-300 uppercase tracking-[0.12em]"
-                            >
+                            <button onClick={onBack}
+                                className="text-[11px] font-mono text-white/25 hover:text-white/60 transition-colors uppercase tracking-[0.14em]">
                                 ← Back
                             </button>
                         )}
-                        <a
-                            href="mailto:founder@aiganesha.org"
-                            className="text-[11px] sm:text-[12px] font-mono text-white/30 hover:text-white/70 transition-colors duration-300 uppercase tracking-[0.12em] hidden sm:block"
-                        >
+                        <a href="mailto:founder@aiganesha.org"
+                            className="hidden sm:block text-[11px] font-mono text-white/25 hover:text-white/60 transition-colors uppercase tracking-[0.14em]">
                             Contact
                         </a>
                     </div>
                 </div>
             </header>
 
-            {/* ── Hero ───────────────────────────────────────────────────── */}
-            <section className="relative overflow-hidden border-b border-dotted border-white/10">
-                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-                    <div className="pt-8 pb-12 sm:pt-12 sm:pb-20 space-y-6 sm:space-y-8">
+            <div className="w-full max-w-[860px] mx-auto px-6 sm:px-8">
 
-                        {/* Eyebrow + Headline Group */}
-                        <div>
-                            <div className="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/40 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.12em] mb-4 sm:mb-5">
-                                <span>Building for the future</span>
-                            </div>
+                {/* ── Hero ── */}
+                {/* ── Hero ── */}
+                <div className="pt-10 sm:pt-16 pb-16 sm:pb-20 border-b border-white/[0.06]">
+                    
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 rounded-sm border border-white/[0.08] bg-white/[0.025] text-white/30 text-[10px] font-mono uppercase tracking-[0.16em]">
+                        <span className="w-1 h-1 rounded-sm bg-[#F4A261]/50" />
+                        Building for the future
+                    </div>
 
-                            {/* Headline — two tone */}
-                            <h1 className="text-[26px] min-[375px]:text-[28px] sm:text-[36px] md:text-[42px] leading-[1.15] tracking-[-0.03em] text-white font-sans">
-                                <span className="font-semibold">Intelli<span style={{ color: "#F4A261" }}>g</span>ence for a</span><br />
-                                <span className="font-light text-white/50">Sustainable Future</span>
-                            </h1>
-                        </div>
+                    <h1 className="text-[38px] sm:text-[52px] md:text-[64px] font-semibold leading-[1.05] tracking-[-0.04em] text-white mb-6">
+                        Intelligence for a<br />
+                        <span style={{ color: 'rgba(255,255,255,0.22)' }} className="font-light">Sustainable Future</span>
+                    </h1>
 
-                        {/* Description */}
-                        <p className="text-[14px] sm:text-[15px] md:text-[16px] leading-[1.65] tracking-[-0.01em] text-white/35 max-w-[520px] font-sans font-normal">
-                            ai<span style={{ color: "#F4A261" }}>G</span>anesha provides accessible tools to understand and measure GHG emissions across households, businesses, and industries using structured carbon accounting methodologies.
-                        </p>
+                    <p className="text-[15px] sm:text-[17px] leading-[1.75] text-white/30 max-w-[500px] mb-10 sm:mb-12">
+                        ai<span style={{ color: "#F4A261" }}>G</span>anesha offers tools that help individuals and businesses see their true climate impact, so what was invisible becomes clear, and what is clear can be transformed.
+                    </p>
 
-                        {/* Ghost CTA button */}
-                        <div className="pt-2 sm:pt-4 w-full">
-                            <button
-                                onClick={() => onNavigate('landing')}
-                                className="group relative inline-flex items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 border text-[11px] sm:text-[12px] font-mono uppercase tracking-[0.14em] transition-all duration-400 overflow-hidden"
-                                style={{
-                                    borderColor: 'rgba(244,162,97,0.35)',
-                                    color: 'rgba(255,255,255,0.78)',
-                                    background: 'rgba(244,162,97,0.04)',
-                                }}
-                                onMouseEnter={e => {
-                                    e.currentTarget.style.borderColor = 'rgba(244,162,97,0.65)';
-                                    e.currentTarget.style.color = 'rgba(255,255,255,1)';
-                                    e.currentTarget.style.boxShadow = '0 0 20px rgba(244,162,97,0.12)';
-                                    e.currentTarget.style.background = 'rgba(244,162,97,0.08)';
-                                }}
-                                onMouseLeave={e => {
-                                    e.currentTarget.style.borderColor = 'rgba(244,162,97,0.35)';
-                                    e.currentTarget.style.color = 'rgba(255,255,255,0.78)';
-                                    e.currentTarget.style.boxShadow = 'none';
-                                    e.currentTarget.style.background = 'rgba(244,162,97,0.04)';
-                                }}
+                    <button
+                        onClick={() => onNavigate('landing')}
+                        className="group inline-flex items-center gap-3 px-7 py-4 rounded-sm border text-[12px] sm:text-[13px] font-mono uppercase tracking-[0.14em] transition-all duration-300"
+                        style={{ borderColor: '#F4A261', color: '#fff', background: 'rgba(244,162,97,0.14)' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(244,162,97,0.22)'; e.currentTarget.style.boxShadow = '0 0 32px rgba(244,162,97,0.2)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(244,162,97,0.14)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    >
+                        Take Your First Step
+                        <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </button>
+
+                    {/* ── Fact Strip (Original Research) ── */}
+                    <div className="mt-16 sm:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        {[
+                            { value: "50", unit: "yrs", label: "Until 1.5°C is locked in" },
+                            { value: "200M", unit: "ppl", label: "Displaced by climate" },
+                            { value: "7M", unit: "/yr", label: "Deaths from air pollution" },
+                            { value: "50%", unit: "land", label: "Used by humans" },
+                        ].map((stat, i) => (
+                            <div key={i}
+                                className="group relative flex flex-col p-5 sm:p-6 rounded-sm border border-white/[0.06] bg-white/[0.02] overflow-hidden transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.035]"
                             >
-                                <span className="relative z-10 flex items-center gap-2.5 sm:gap-3">
-                                    Take Your First Step
-                                    <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 group-hover:translate-x-0.5 transition-transform duration-400" />
-                                </span>
-                            </button>
-                        </div>
+                                {/* Subtle top accent */}
+                                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                        {/* ── Climate Stats Grid ── */}
-                        <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-l border-dotted border-white/10 mt-8 sm:mt-12">
-                            {[
-                                { value: "50", unit: "years", label: "Until 1.5°C is locked in" },
-                                { value: "200M", unit: "people", label: "Displaced by climate" },
-                                { value: "7M", unit: "/ year", label: "Deaths from air pollution" },
-                                { value: "50%", unit: "land", label: "Used by humans" },
-                            ].map((stat, i) => (
-                                <div
-                                    key={i}
-                                    className="py-6 sm:py-8 px-4 sm:px-6 border-r border-b border-dotted border-white/10"
-                                >
-                                    <div className="text-[20px] sm:text-[24px] md:text-[28px] font-semibold text-white leading-none tracking-[-0.03em] mb-2">
+                                {/* Number + unit */}
+                                <div className="flex items-baseline gap-1.5 mb-3">
+                                    <span className="text-[28px] sm:text-[32px] font-mono font-semibold text-white/85 leading-none tracking-[-0.03em]">
                                         {stat.value}
-                                        <span className="text-[12px] sm:text-[13px] font-mono text-white/40 ml-1">{stat.unit}</span>
-                                    </div>
-                                    <div className="text-[10px] sm:text-[11px] font-mono text-white/30 uppercase tracking-[0.1em] leading-[1.4]">
-                                        {stat.label}
-                                    </div>
+                                    </span>
+                                    <span className="text-[11px] font-mono text-white/30 tracking-[0.05em]">
+                                        {stat.unit}
+                                    </span>
                                 </div>
-                            ))}
-                        </div>
 
+                                {/* Label */}
+                                <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.12em] leading-[1.65] text-white/35 group-hover:text-white/50 transition-colors duration-300">
+                                    {stat.label}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            </section>
 
-            {/* ── Principles ─────────────────────────────────────────────── */}
-            <section className="border-b border-dotted border-white/10">
-                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-
+                {/* ── Content Sections ── */}
+                <div className="divide-y divide-white/[0.06]">
                     {/* Climate Reality */}
-                    <div className="py-7 sm:py-10 border-b border-dotted border-white/10 relative">
-                        <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-                            <h2 className="text-[15px] sm:text-[16px] leading-[1.65] text-white/45 font-sans">
-                                Climate Reality
-                            </h2>
-                            {/* Mobile/Tablet button */}
-                            <button
-                                onClick={() => setShowReasoning(true)}
-                                className="flex lg:hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group cursor-pointer"
-                            >
-                                <Info className="h-3 w-3 text-[#F4A261] opacity-70 group-hover:opacity-100 transition-opacity" />
-                                <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.1em] text-white/40 group-hover:text-white/70 transition-colors pt-0.5">
-                                    Reasoning
-                                </span>
-                            </button>
-                        </div>
-                        
-                        <div className="relative w-full min-h-[40px]">
-                            <p className="text-[15px] sm:text-[16px] leading-[1.65] text-white/45 font-sans mb-2 sm:mb-0 sm:w-[85%] pr-4 md:pr-0">
+                    <div className="py-12 sm:py-16 relative">
+                        <p className="text-[11px] sm:text-[13px] font-mono text-white/20 uppercase tracking-[0.2em] mb-6">Climate Reality</p>
+
+                        <div className="flex flex-col sm:flex-row sm:items-end gap-5 sm:gap-10">
+                            <p className="text-[22px] sm:text-[28px] md:text-[32px] leading-[1.55] text-white/50 font-light max-w-[600px]">
                                 We have about a decade left to avoid the most severe and irreversible climate impacts.
                             </p>
 
-                            {/* Laptop hand-drawn annotation almost touching the grid line */}
+                            {/* Mobile CTA: standard button */}
                             <button
                                 onClick={() => setShowReasoning(true)}
-                                className="hidden lg:flex absolute left-full ml-2 top-1/2 -translate-y-[40%] items-center gap-3 cursor-pointer group opacity-90 hover:opacity-100 transition-opacity w-max"
+                                className="flex sm:hidden mt-2 items-center gap-2.5 px-4 py-2.5 rounded-sm border border-white/[0.07] bg-white/[0.02] text-white/40 active:bg-white/[0.06] transition-all text-[11px] font-mono uppercase tracking-[0.12em] self-start"
                             >
-                                {/* Hand-drawn SVG arrow pointing LEFT towards paragraph */}
-                                <svg width="45" height="16" viewBox="0 0 45 16" fill="none" className="text-[#e76f51] group-hover:-translate-x-1.5 transition-transform translate-y-0.5">
-                                    <path d="M45 8 Q 28 14 10 8 M 10 8 Q 14 3 16 1 M 10 8 Q 14 13 16 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                                <span className="text-[#e76f51] text-[16px] xl:text-[17px] whitespace-nowrap" style={{ fontFamily: '"Comic Sans MS", "Chalkboard SE", "Marker Felt", hand, cursive', transform: 'rotate(-4deg)', letterSpacing: '0.01em' }}>
-                                    Know the reasoning
-                                </span>
+                                <Info className="h-3.5 w-3.5" />
+                                See the reasoning
                             </button>
+
                         </div>
+
+                        {/* Desktop CTA: Hand-drawn annotation — left side, outside frame */}
+                        <button
+                            onClick={() => setShowReasoning(true)}
+                            className="hidden md:flex flex-row items-center gap-4 cursor-pointer group opacity-60 hover:opacity-100 transition-opacity duration-300 absolute"
+                            style={{ top: '65%', left: '-15px', transform: 'translateX(-100%) translateY(-50%)' }}
+                        >
+                            <span className="text-[#e07b54] whitespace-nowrap select-none"
+                                style={{
+                                    fontFamily: '"Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive',
+                                    fontSize: '18px',
+                                    transform: 'rotate(-4deg)',
+                                    display: 'inline-block',
+                                    letterSpacing: '0.01em',
+                                    marginTop: '-4px'
+                                }}>
+                                Know the reasoning
+                            </span>
+                            {/* Hand-drawn arrow (original shape, flipped horizontally) */}
+                            <svg width="44" height="16" viewBox="0 0 44 16" fill="none"
+                                className="text-[#e07b54] group-hover:translate-x-1 transition-transform duration-300 mt-1 scale-x-[-1]">
+                                <path d="M44 8 Q 28 14 10 8 M 10 8 Q 14 3 16 1 M 10 8 Q 14 13 16 15"
+                                    stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
                     </div>
 
                     {/* Our Vision */}
-                    <div className="py-7 sm:py-10 border-b border-dotted border-white/10">
-                        <h2 className="text-[15px] sm:text-[16px] leading-[1.65] text-white/45 font-sans mb-1">
-                            Our Vision
-                        </h2>
-                        <p className="text-[15px] sm:text-[16px] leading-[1.65] text-white/45 font-sans">
+                    <div className="py-12 sm:py-16">
+                        <p className="text-[11px] sm:text-[13px] font-mono text-white/20 uppercase tracking-[0.2em] mb-6">Our Vision</p>
+                        <p className="text-[22px] sm:text-[28px] md:text-[32px] leading-[1.55] text-white/50 font-light max-w-[600px]">
                             To buy more time for the planet and the life it sustains.
                         </p>
                     </div>
 
                     {/* Our Mission */}
-                    <div className="py-7 sm:py-10">
-                        <h2 className="text-[15px] sm:text-[16px] leading-[1.65] text-white/45 font-sans mb-1">
-                            Our Mission
-                        </h2>
-                        <p className="text-[15px] sm:text-[16px] leading-[1.65] text-white/45 font-sans">
+                    <div className="py-12 sm:py-16">
+                        <p className="text-[11px] sm:text-[13px] font-mono text-white/20 uppercase tracking-[0.2em] mb-6">Our Mission</p>
+                        <p className="text-[22px] sm:text-[28px] md:text-[32px] leading-[1.55] text-white/50 font-light max-w-[600px]">
                             To make sustainability intelligence accessible through powerful and responsible tools.
                         </p>
                     </div>
                 </div>
-            </section>
 
-            {/* ── Footer ─────────────────────────────────────────────────── */}
-            <footer className="py-6 sm:py-8">
-                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-                    <div className="text-[10px] sm:text-[11px] font-mono text-white/20 flex flex-col sm:flex-row justify-between uppercase tracking-[0.12em] gap-2 sm:gap-0">
-                        <p>Based on GHG Protocol methodology.</p>
-                        <p>Data: IPCC · DEFRA · CEA India</p>
+                {/* ── Bottom CTA ── */}
+                <div className="py-16 sm:py-20 border-t border-white/[0.06] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
+                    <div>
+                        <p className="text-[11px] sm:text-[13px] font-mono text-white/20 uppercase tracking-[0.2em] mb-3">
+                            Ready to start?
+                        </p>
+                        <p className="text-[22px] sm:text-[26px] font-semibold tracking-[-0.03em] text-white/80 leading-[1.2]">
+                            Measure your impact.<br />
+                            <span className="text-white/25 font-light">Then reduce it.</span>
+                        </p>
                     </div>
-                </div>
-            </footer>
 
-            {/* ── Reasoning Modal ────────────────────────────────────────────── */}
+                    <button
+                        onClick={() => onNavigate('landing')}
+                        className="group inline-flex items-center gap-3 px-7 py-4 rounded-sm border text-[12px] sm:text-[13px] font-mono uppercase tracking-[0.14em] transition-all duration-300 flex-shrink-0"
+                        style={{ borderColor: '#F4A261', color: '#fff', background: 'rgba(244,162,97,0.14)' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(244,162,97,0.22)'; e.currentTarget.style.boxShadow = '0 0 32px rgba(244,162,97,0.2)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(244,162,97,0.14)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    >
+                        Take Your First Step
+                        <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </button>
+                </div>
+
+                {/* Footer */}
+                <div className="border-t border-white/[0.05] py-8">
+                    <p className="text-[10px] font-mono text-white/12 uppercase tracking-[0.15em]">
+                        GHG Protocol · IPCC · DEFRA · CEA India
+                    </p>
+                </div>
+
+            </div>
+
+            {/* ── Reasoning Modal ── */}
             <AnimatePresence>
                 {showReasoning && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             onClick={() => setShowReasoning(false)}
-                            className="absolute inset-0 bg-[#080C10]/80 backdrop-blur-sm"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                            className="relative w-full max-w-[520px] bg-[#0d1218] border border-white/10 p-6 sm:p-8 rounded-2xl shadow-2xl overflow-y-auto max-h-[85vh] hide-scrollbar"
-                        >
-                            <button
-                                onClick={() => setShowReasoning(false)}
-                                className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white/80 transition-colors"
-                            >
+                            className="absolute inset-0 bg-[#080C10]/85 backdrop-blur-md" />
+                        <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 10 }}
+                            className="relative w-full max-w-[500px] bg-[#0a0f15] border border-white/[0.08] p-7 sm:p-9 rounded-md shadow-2xl overflow-y-auto max-h-[85vh]">
+                            <button onClick={() => setShowReasoning(false)}
+                                className="absolute top-5 right-5 p-1.5 rounded-sm bg-white/[0.04] hover:bg-white/[0.08] text-white/30 hover:text-white/65 transition-colors">
                                 <X className="h-4 w-4" />
                             </button>
-
-                            <div className="flex items-center gap-3 mb-5 sm:mb-6">
-                                <div className="h-8 w-8 rounded-full bg-[#F4A261]/10 flex items-center justify-center border border-[#F4A261]/20">
-                                    <Info className="h-4 w-4 text-[#F4A261]" />
+                            <h3 className="text-[16px] font-semibold text-white/80 tracking-[-0.02em] mb-6">The Math Behind the Decade</h3>
+                            <div className="space-y-4 text-[14px] leading-[1.8] text-white/38">
+                                <p>The carbon budget is the total CO₂ that can still be emitted while keeping warming within 1.5°C.</p>
+                                <p>Remaining budget: <span className="text-white/65">200–400 billion tonnes.</span> Annual emissions: <span className="text-white/65">~40 billion tonnes/year.</span></p>
+                                <div className="py-4 px-5 rounded-sm border border-white/[0.07] bg-white/[0.02] font-mono text-[12px] text-white/40 space-y-2.5">
+                                    <div className="text-[9px] uppercase tracking-[0.14em] text-white/18 mb-3">At current pace:</div>
+                                    <div className="flex justify-between"><span>200 ÷ 40</span><span className="text-white/65">= 5 years</span></div>
+                                    <div className="flex justify-between"><span>400 ÷ 40</span><span className="text-white/65">= 10 years</span></div>
                                 </div>
-                                <h3 className="text-[16px] sm:text-[18px] font-semibold text-white/90 tracking-[-0.01em]">
-                                    The Math Behind the Decade
-                                </h3>
-                            </div>
-
-                            <div className="space-y-4 text-[13px] sm:text-[15px] leading-[1.65] text-white/50 font-sans tracking-[-0.01em]">
-                                <p>
-                                    The carbon budget is the total amount of CO₂ that can still be emitted while keeping global warming within safer limits, such as 1.5°C.
-                                </p>
-                                <p>
-                                    Current scientific estimates place this remaining budget at approximately <span className="text-white/80 font-medium">200–400 billion tonnes</span> of CO₂.
-                                </p>
-                                <p>
-                                    At the same time, global emissions are about <span className="text-white/80 font-medium">40 billion tonnes</span> of CO₂ per year.
-                                </p>
-                                
-                                <div className="py-4 px-5 rounded-lg border border-white/10 bg-white/[0.02] my-5 font-mono text-[12px] sm:text-[13px] text-white/60">
-                                    <div className="mb-2 uppercase text-[10px] tracking-[0.1em] text-white/30">If emissions continue at this rate:</div>
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span><span className="text-[#F4A261]">200</span> ÷ 40</span>
-                                        <span className="text-white/80">= 5 years</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span><span className="text-[#F4A261]">400</span> ÷ 40</span>
-                                        <span className="text-white/80">= 10 years</span>
-                                    </div>
-                                </div>
-
-                                <p>
-                                    This means the remaining carbon budget could be exhausted within roughly <strong className="text-white/90 font-medium">5 to 10 years</strong>.
-                                </p>
-                                <p>
-                                    As this budget is used up, the likelihood of exceeding 1.5°C increases, along with the risk of severe and irreversible climate impacts.
-                                </p>
+                                <p>The budget could be exhausted within <span className="text-white/65 font-medium">5 to 10 years.</span></p>
                             </div>
                         </motion.div>
                     </div>

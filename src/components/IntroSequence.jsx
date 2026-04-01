@@ -264,9 +264,9 @@ export default function IntroSequence({ onNavigate }) {
                         className="text-left"
                     >
                         <h2 className="text-[24px] min-[375px]:text-[26px] sm:text-[38px] md:text-[44px] font-semibold leading-[1.3] tracking-[-0.02em]">
-                            <span className="text-white/45">The problem isn't intent.</span><br />
+                            <span className="text-white/45">What you cannot see,</span><br />
                             <span className="text-white">
-                                It's <span className="underline decoration-[#F4A261]/60 decoration-2 underline-offset-6 sm:underline-offset-8">visibility</span>.
+                                you cannot <span className="underline decoration-[#F4A261]/60 decoration-2 underline-offset-6 sm:underline-offset-8">change</span>.
                             </span>
                         </h2>
                     </motion.div>

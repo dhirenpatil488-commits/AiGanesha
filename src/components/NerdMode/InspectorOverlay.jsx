@@ -53,9 +53,38 @@ export default function InspectorOverlay() {
             if (!element || element.closest('#nerd-inspector-tooltip') || element.closest('.nerd-mode-element')) return;
 
             const rect = element.getBoundingClientRect();
+            const vw = window.innerWidth;
+
+            // ── Skip background/wrapper elements ──────────────────────────────
+            // 1. Skip root-level tags that are just containers
+            const tag = element.tagName.toLowerCase();
+            if (['html', 'body'].includes(tag)) {
+                setHoveredElement(null);
+                return;
+            }
+
+            // 2. Skip any element whose width fills ≥85% of viewport
+            //    (these are full-bleed wrappers/backgrounds, not content)
+            if (rect.width >= vw * 0.85) {
+                setHoveredElement(null);
+                return;
+            }
+
+            // 3. Skip if cursor is outside the centered content frame
+            //    The content lives in a max-w-[860px] centered container.
+            //    Find that container and check horizontal bounds.
+            const contentFrame = document.querySelector('[class*="max-w-"]');
+            if (contentFrame) {
+                const frameRect = contentFrame.getBoundingClientRect();
+                if (e.clientX < frameRect.left || e.clientX > frameRect.right) {
+                    setHoveredElement(null);
+                    return;
+                }
+            }
+            // ─────────────────────────────────────────────────────────────────
 
             setHoveredElement({
-                tagName: element.tagName.toLowerCase(),
+                tagName: tag,
                 classes: element.className && typeof element.className === 'string' ? element.className.split(' ').filter(Boolean) : [],
                 rect: {
                     top: rect.top,

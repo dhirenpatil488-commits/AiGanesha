@@ -73,14 +73,14 @@ const createEmptyFacility = (id = 1) => ({
 });
 
 const InputRow = ({ label, name, value, onChange, type="number" }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
         <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', flex: 1 }}>{label}</label>
         <input type={type} name={name} value={value} onChange={onChange} className="number-input" style={{ width: type==='text' ? '200px' : '120px' }} />
     </div>
 );
 
 const SectionHeader = ({ title }) => (
-    <h3 style={{ fontSize: '0.95rem', color: 'var(--danger)', borderBottom: '1px solid rgba(239, 68, 68, 0.3)', paddingBottom: '0.5rem', marginBottom: '1rem', marginTop: '1.5rem' }}>{title}</h3>
+    <h3 style={{ fontSize: '0.95rem', color: 'var(--danger)', borderBottom: '1px solid rgba(239, 68, 68, 0.3)', paddingBottom: '0.5rem', marginBottom: '0.75rem', marginTop: 'clamp(0.75rem, 3vw, 1.5rem)' }}>{title}</h3>
 );
 
 const IndustryCalculator = ({ onBack }) => {
@@ -168,7 +168,7 @@ const IndustryCalculator = ({ onBack }) => {
                     <div style={{ height: '500px', overflowY: 'auto', paddingRight: '1rem' }}>
                         <SectionHeader title="Facility Details" />
                         <InputRow label="Facility Name" name="name" type="text" value={fac.name} onChange={h} />
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                             <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Facility Type</label>
                             <select name="type" value={fac.type} onChange={h} style={{ padding: '0.5rem', background: 'rgba(0,0,0,0.4)', color: 'white', border: '1px solid var(--card-border)', borderRadius: '4px' }}>
                                 <option value="manufacturing">Manufacturing Plant</option>
@@ -611,23 +611,23 @@ const IndustryCalculator = ({ onBack }) => {
     return (
         <div className="container" style={{ maxWidth: step === 'results' ? '1100px' : '800px', margin: '0 auto', transition: 'max-width 0.3s ease' }}>
             {step === 'hub' && !isEditingFacility && (
-                <button onClick={onBack} style={{ marginBottom: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button onClick={onBack} style={{ marginBottom: '0.75rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <ChevronLeft size={16} /> Exit Calculator
                 </button>
             )}
 
-            <header className="header" style={{ marginBottom: '2rem' }}>
+            <header className="header" style={{ marginBottom: 'clamp(1rem, 4vw, 2rem)' }}>
                 <h1>GHG Protocol Hub</h1>
                 {step === 'hub' && !isEditingFacility && <p>ISO 14064 Facility-Based Architecture</p>}
             </header>
 
             {/* MAIN APP ROUTER */}
-            <main className="glass-panel" style={{ padding: '2rem', borderColor: s ? 'var(--card-border)' : 'var(--danger)' }}>
+            <main className="glass-panel" style={{ padding: 'clamp(1.2rem, 4vw, 2rem)', borderColor: s ? 'var(--card-border)' : 'var(--danger)' }}>
                 
                 {/* --- APP STEP 1: ORGANIZATION --- */}
                 {step === 'org' && (
                     <div className="form-content">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem', color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: '600' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: 'clamp(1rem, 4vw, 2rem)', color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: '600' }}>
                             <Building2 size={18} /> <h2>Organization Profile</h2>
                         </div>
                         <InputRow label="Corporate Entity Name" name="orgName" type="text" value={data.orgName} onChange={handleOrgInput} />
@@ -638,7 +638,7 @@ const IndustryCalculator = ({ onBack }) => {
                             <label>Primary Industry Sector</label>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem', marginTop: '0.5rem' }}>
                                 {SECTORS.map(type => (
-                                    <label key={type.id} style={{ padding: '0.75rem', background: s === type.id ? 'rgba(239, 68, 68, 0.15)' : 'rgba(0,0,0,0.2)', border: `1px solid ${s === type.id ? 'var(--danger)' : 'var(--card-border)'}`, borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem', transition: 'all 0.2s', fontSize: '0.85rem' }}>
+                                    <label key={type.id} style={{ padding: '0.6rem', background: s === type.id ? 'rgba(239, 68, 68, 0.15)' : 'rgba(0,0,0,0.2)', border: `1px solid ${s === type.id ? 'var(--danger)' : 'var(--card-border)'}`, borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem', transition: 'all 0.2s', fontSize: '0.85rem' }}>
                                         <input type="radio" name="sector" value={type.id} checked={s === type.id} onChange={handleOrgInput} style={{ accentColor: 'var(--danger)' }} />
                                         <span style={{ color: 'var(--text-primary)' }}>{type.label}</span>
                                     </label>
@@ -647,13 +647,13 @@ const IndustryCalculator = ({ onBack }) => {
                         </div>
 
                         {s && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'clamp(1rem, 4vw, 2rem)' }}>
                                 <button onClick={onBack} className="secondary-btn"><ArrowLeft size={16} /> Back to Home</button>
                                 <button onClick={() => setStep('hub')} className="primary-btn">Begin Facility Analysis <ChevronRight size={16} /></button>
                             </div>
                         )}
                         {!s && (
-                            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '2rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 'clamp(1rem, 4vw, 2rem)' }}>
                                 <button onClick={onBack} className="secondary-btn"><ArrowLeft size={16} /> Back to Home</button>
                             </div>
                         )}
@@ -663,22 +663,22 @@ const IndustryCalculator = ({ onBack }) => {
                 {/* --- APP STEP 2: HYBRID DASHBOARD (THE HUB) --- */}
                 {isAllHub && !isEditingFacility && (
                     <div className="form-content">
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
-                            <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-primary)', fontSize: '1.2rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'clamp(1rem, 4vw, 2rem)' }}>
+                            <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-primary)', fontSize: '1.1rem' }}>
                                 <Globe size={18} color="var(--danger)" /> Facilities Network
                             </h2>
-                            <button onClick={addFacility} style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '0.5rem 1rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                            <button onClick={addFacility} style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '0.4rem 0.8rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
                                 <Plus size={14} /> Add Physical Location
                             </button>
                         </div>
 
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)', lineHeight: 1.5 }}>
                             Scopes 1, 2, and localized Scope 3 metrics (commuting, waste, travel) are mapped directly to physical facilities. Click into each facility to configure its emissions payload.
                         </p>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: 'clamp(1rem, 4vw, 2rem)' }}>
                             {data.facilities.map(fac => (
-                                <div key={fac.id} style={{ padding: '1.5rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--card-border)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div key={fac.id} style={{ padding: 'clamp(1rem, 3vw, 1.5rem)', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--card-border)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div>
                                         <h3 style={{ fontSize: '1rem', color: 'var(--text-primary)', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                             <Factory size={14} color="var(--text-secondary)" /> {fac.name}
@@ -689,7 +689,7 @@ const IndustryCalculator = ({ onBack }) => {
                                         onClick={() => setActiveFacilityId(fac.id)}
                                         style={{ 
                                             background: fac.isComplete ? 'rgba(16, 185, 129, 0.15)' : 'var(--danger)', 
-                                            border: 'none', color: fac.isComplete ? '#10b981' : '#fff', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '500'
+                                            border: 'none', color: fac.isComplete ? '#10b981' : '#fff', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '500'
                                         }}
                                     >
                                         {fac.isComplete ? <><CheckCircle size={14} /> Data Ready</> : 'Enter Data'}
@@ -700,7 +700,7 @@ const IndustryCalculator = ({ onBack }) => {
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--card-border)', paddingTop: '1.5rem' }}>
                             <button onClick={() => setStep('org')} className="secondary-btn"><ChevronLeft size={16} /> Back</button>
-                            <button onClick={() => setStep('org_scope3')} disabled={!data.facilities.every(f => f.isComplete)} style={{ padding: '0.75rem 1.5rem', background: data.facilities.every(f => f.isComplete) ? 'var(--danger)' : 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: data.facilities.every(f => f.isComplete) ? 'pointer' : 'not-allowed' }}>
+                            <button onClick={() => setStep('org_scope3')} disabled={!data.facilities.every(f => f.isComplete)} style={{ padding: '0.6rem 1.2rem', background: data.facilities.every(f => f.isComplete) ? 'var(--danger)' : 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: data.facilities.every(f => f.isComplete) ? 'pointer' : 'not-allowed' }}>
                                 Proceed to Org-Level Emissions <ChevronRight size={16} />
                             </button>
                         </div>
@@ -715,12 +715,12 @@ const IndustryCalculator = ({ onBack }) => {
                             const facSteps = ['Details', 'Scope 1', 'Scope 2', 'Scope 3 (Local)'];
                             return (
                                 <>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
                                         <button onClick={() => setActiveFacilityId(null)} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0' }}><ArrowLeft size={16} /></button>
                                         <h2 style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>Configuring: <span style={{ color: 'var(--danger)' }}>{fac.name}</span></h2>
                                     </div>
                                     
-                                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+                                    <div style={{ display: 'flex', gap: '0.75rem', marginBottom: 'clamp(1rem, 4vw, 2rem)' }}>
                                         {facSteps.map((s, i) => (
                                             <div key={i} style={{ flex: 1, height: '4px', background: i <= facilityStep ? 'var(--danger)' : 'var(--card-border)', borderRadius: '2px' }}></div>
                                         ))}
@@ -728,7 +728,7 @@ const IndustryCalculator = ({ onBack }) => {
 
                                     {renderFacilityStep(fac)}
 
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--card-border)', marginTop: '1.5rem', paddingTop: '1.5rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--card-border)', marginTop: 'clamp(0.75rem, 3vw, 1.5rem)', paddingTop: '1.5rem' }}>
                                         <button onClick={() => setFacilityStep(p => Math.max(0, p-1))} disabled={facilityStep === 0} className="secondary-btn">Back</button>
                                         {facilityStep < facSteps.length - 1 ? (
                                             <button onClick={() => setFacilityStep(p => p+1)} className="primary-btn">Next <ChevronRight size={16} /></button>
@@ -745,10 +745,10 @@ const IndustryCalculator = ({ onBack }) => {
                 {/* --- APP STEP 3: ORGANIZATION LEVEL SCOPE 3 --- */}
                 {step === 'org_scope3' && (
                     <div className="form-content">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem', color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: '600' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: 'clamp(1rem, 4vw, 2rem)', color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: '600' }}>
                             <Truck size={18} /> <h2>Organization-Level Upstream/Downstream</h2>
                         </div>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)', lineHeight: 1.5 }}>
                             These Scope 3 emissions map across the entire value chain rather than tying to specific facilities.
                         </p>
                         
@@ -767,7 +767,7 @@ const IndustryCalculator = ({ onBack }) => {
                             <InputRow label="Investments in equities (USD Millions)" name="c15InvestEquity" value={data.c15InvestEquity} onChange={handleOrgInput} />
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--card-border)', marginTop: '2rem', paddingTop: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--card-border)', marginTop: 'clamp(1rem, 4vw, 2rem)', paddingTop: '1.5rem' }}>
                             <button onClick={() => setStep('hub')} className="secondary-btn"><ChevronLeft size={16} /> Back to Facilities</button>
                             <button onClick={() => setStep('results')} className="primary-btn">Calculate ESG Report <Activity size={16} /></button>
                         </div>
@@ -777,10 +777,10 @@ const IndustryCalculator = ({ onBack }) => {
                 {/* --- APP STEP 4: SECTOR MODULES --- */}
                 {step === 'sector_modules' && s && ['finance', 'tech', 'agriculture', 'logistics', 'hospitality', 'healthcare'].includes(s) && (
                     <div className="form-content">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem', color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: '600' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: 'clamp(1rem, 4vw, 2rem)', color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: '600' }}>
                             <Briefcase size={18} /> <h2>Sector-Specific Overrides</h2>
                         </div>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)', lineHeight: 1.5 }}>
                             Provide industry-specific scaling factors required by your sector.
                         </p>
                         
@@ -841,7 +841,7 @@ const IndustryCalculator = ({ onBack }) => {
                             </div>
                         )}
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--card-border)', marginTop: '2rem', paddingTop: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--card-border)', marginTop: 'clamp(1rem, 4vw, 2rem)', paddingTop: '1.5rem' }}>
                             <button onClick={() => setStep('org_scope3')} className="secondary-btn"><ChevronLeft size={16} /> Back to Scope 3</button>
                             <button onClick={() => setStep('results')} className="primary-btn">Calculate ESG Report <Activity size={16} /></button>
                         </div>
@@ -864,8 +864,8 @@ const IndustryCalculator = ({ onBack }) => {
                     const bmAvgPos = (e.benchmark.avg / bmScale) * 100;
                     const bmHighPos = (e.benchmark.high / bmScale) * 100;
 
-                    const sectionStyle = { marginBottom: '2rem' };
-                    const cardStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '1.5rem' };
+                    const sectionStyle = { marginBottom: 'clamp(1rem, 4vw, 2rem)' };
+                    const cardStyle = { background: 'rgba(255,255,255,0.03)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: 'clamp(1rem, 3vw, 1.5rem)' };
                     const sectionTitle = (icon, title) => (
                         <h3 style={{ fontSize: '1rem', color: 'var(--text-primary)', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '600' }}>
                             {icon} {title}
@@ -875,11 +875,11 @@ const IndustryCalculator = ({ onBack }) => {
                     return (
                         <div style={{ padding: '0' }}>
                             {/* Back nav */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
                                 <button onClick={() => setStep('org_scope3')} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                     <ArrowLeft size={16}/> Back
                                 </button>
-                                <button onClick={() => window.print()} style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '500', fontSize: '0.9rem' }}>
+                                <button onClick={() => window.print()} style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '0.4rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '500', fontSize: '0.9rem' }}>
                                     <Download size={14}/> Download Report
                                 </button>
                             </div>
@@ -887,7 +887,7 @@ const IndustryCalculator = ({ onBack }) => {
                             {/* ===== 1. EXECUTIVE SUMMARY ===== */}
                             <div style={sectionStyle}>
                                 {sectionTitle(<Activity size={16} color="var(--danger)"/>, 'Executive Summary')}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
                                     {[
                                         { label: 'Total Corporate Footprint', value: fmt(e.tonnes.total), unit: 'tCO₂e/yr', color: '#ef4444', sub: `${data.facilities.length} facility locations` },
                                         { label: 'Emissions per Employee', value: fmt(e.dashboard.perEmployeeTonnes), unit: 'tCO₂e / person', color: '#f59e0b', sub: `${data.employeesTotal || 0} total employees` },
@@ -907,7 +907,7 @@ const IndustryCalculator = ({ onBack }) => {
                             {/* ===== 2. SCOPE BREAKDOWN ===== */}
                             <div style={sectionStyle}>
                                 {sectionTitle(<Zap size={16} color="var(--danger)"/>, 'Scope Breakdown')}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                     <div style={cardStyle}>
                                         {[
                                             { label: 'Scope 1 — Direct', t: e.tonnes.scope1, color: '#ef4444' },
@@ -996,7 +996,7 @@ const IndustryCalculator = ({ onBack }) => {
                             {e.scope3ChartData.length > 0 && (
                                 <div style={sectionStyle}>
                                     {sectionTitle(<Globe size={16} color="var(--danger)"/>, 'Scope 3 Breakdown (GHG Protocol Categories)')}
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                         <div style={{ ...cardStyle, height: '320px' }}>
                                             <ResponsiveContainer>
                                                 <PieChart>
@@ -1026,7 +1026,7 @@ const IndustryCalculator = ({ onBack }) => {
                             <div style={sectionStyle}>
                                 {sectionTitle(<Target size={16} color="var(--danger)"/>, 'Industry Benchmark Comparison')}
                                 <div style={cardStyle}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
                                         <div>
                                             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '0.25rem' }}>Sector: <strong style={{ color: 'var(--text-primary)'}}>{e.benchmark.label}</strong></p>
                                             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Your intensity: <strong style={{ color: statusColors[e.benchmark.status], fontSize: '1.1rem' }}>{fmt(e.benchmark.userValue, 1)} tCO₂e/employee/yr</strong></p>
@@ -1036,7 +1036,7 @@ const IndustryCalculator = ({ onBack }) => {
                                         </span>
                                     </div>
                                     {/* Gauge ruler */}
-                                    <div style={{ position: 'relative', height: '32px', background: 'linear-gradient(to right, #10b981 0%, #f59e0b 40%, #f97316 70%, #ef4444 100%)', borderRadius: '16px', marginBottom: '1.5rem' }}>
+                                    <div style={{ position: 'relative', height: '32px', background: 'linear-gradient(to right, #10b981 0%, #f59e0b 40%, #f97316 70%, #ef4444 100%)', borderRadius: '16px', marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)' }}>
                                         {/* Markers */}
                                         {[{pos: bmLowPos, label: `Low\n${e.benchmark.low}t`}, {pos: bmAvgPos, label: `Avg\n${e.benchmark.avg}t`}, {pos: bmHighPos, label: `High\n${e.benchmark.high}t`}].map(m => (
                                             <div key={m.label} style={{ position: 'absolute', left: `${m.pos}%`, top: 0, bottom: 0, width: '2px', background: 'rgba(0,0,0,0.5)'}}/>
@@ -1056,7 +1056,7 @@ const IndustryCalculator = ({ onBack }) => {
                             {/* ===== 7. CARBON INTENSITY METRICS ===== */}
                             <div style={sectionStyle}>
                                 {sectionTitle(<Activity size={16} color="var(--danger)"/>, 'Carbon Intensity Metrics')}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
                                     {[
                                         { label: 'Per Employee', value: fmt(e.dashboard.perEmployeeTonnes, 2), unit: 'tCO₂e / employee / yr', icon: <Users size={20} color="#f59e0b"/>, color: '#f59e0b' },
                                         { label: 'Per $1M Revenue', value: fmt(e.dashboard.revenueIntensity, 2), unit: 'tCO₂e / $1M revenue', icon: <TrendingDown size={20} color="#8b5cf6"/>, color: '#8b5cf6' },
@@ -1078,7 +1078,7 @@ const IndustryCalculator = ({ onBack }) => {
                                     {sectionTitle(<TrendingDown size={16} color="var(--danger)"/>, 'Top Reduction Opportunities')}
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                         {e.reductionOpportunities.map((op, i) => (
-                                            <div key={i} style={{ ...cardStyle, display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '1rem 1.25rem' }}>
+                                            <div key={i} style={{ ...cardStyle, display: 'flex', alignItems: 'flex-start', gap: '0.75rem', padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.25rem)' }}>
                                                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--danger)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.8rem', flexShrink: 0 }}>#{i+1}</div>
                                                 <div style={{ flex: 1 }}>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
@@ -1086,7 +1086,7 @@ const IndustryCalculator = ({ onBack }) => {
                                                         <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.5rem', borderRadius: '10px' }}>{op.scope}</span>
                                                     </div>
                                                     <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '0.4rem' }}>{op.tip}</p>
-                                                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.78rem' }}>
+                                                    <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.78rem' }}>
                                                         <span style={{ color: '#ef4444' }}>Current: <strong>{fmt(op.tonnes, 1)} tCO₂e</strong></span>
                                                         <span style={{ color: '#10b981' }}>Est. saving: <strong>↓ {fmt(op.savingsTonnes, 1)} tCO₂e/yr</strong></span>
                                                     </div>
@@ -1100,7 +1100,7 @@ const IndustryCalculator = ({ onBack }) => {
                             {/* ===== 9. RENEWABLE ENERGY IMPACT ===== */}
                             <div style={sectionStyle}>
                                 {sectionTitle(<Sun size={16} color="var(--danger)"/>, 'Renewable Energy Impact')}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
                                     {[
                                         { label: 'On-site Generation', value: fmt(e.renewable.totalKwh / 1000, 1), unit: 'MWh/yr', icon: <Sun size={20} color="#fcd34d"/>, color: '#fcd34d' },
                                         { label: 'CO₂ Avoided', value: fmt(e.renewable.offsetTonnes, 2), unit: 'tCO₂e offset', icon: <Wind size={20} color="#10b981"/>, color: '#10b981' },
@@ -1126,14 +1126,14 @@ const IndustryCalculator = ({ onBack }) => {
                             {/* ===== 10. REAL-WORLD EQUIVALENTS ===== */}
                             <div style={sectionStyle}>
                                 {sectionTitle(<Globe size={16} color="var(--danger)"/>, 'Real-World Equivalents')}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem' }}>
                                     {[
                                         { label: 'Km driven by car', value: fmt(e.equivalents.drivingKm, 0), icon: <Car size={24} color="#f59e0b"/>, color: '#f59e0b' },
                                         { label: 'Homes powered/yr', value: fmt(e.equivalents.homesPowered, 0), icon: <Home size={24} color="#60a5fa"/>, color: '#60a5fa' },
                                         { label: 'Trees needed to offset', value: fmt(e.equivalents.trees, 0), icon: <TreePine size={24} color="#10b981"/>, color: '#10b981' },
                                         { label: 'Return flights equivalent', value: fmt(e.equivalents.flightsEquivalent, 0), icon: <Plane size={24} color="#a78bfa"/>, color: '#a78bfa' },
                                     ].map(m => (
-                                        <div key={m.label} style={{ ...cardStyle, textAlign: 'center', padding: '1.25rem 1rem' }}>
+                                        <div key={m.label} style={{ ...cardStyle, textAlign: 'center', padding: 'clamp(1rem, 3vw, 1.25rem) clamp(0.75rem, 2vw, 1rem)' }}>
                                             <div style={{ marginBottom: '0.75rem' }}>{m.icon}</div>
                                             <div style={{ fontSize: '1.6rem', fontWeight: '700', color: m.color }}>{m.value}</div>
                                             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.3rem', lineHeight: 1.3 }}>{m.label}</div>
@@ -1143,14 +1143,14 @@ const IndustryCalculator = ({ onBack }) => {
                             </div>
 
                             {/* Bottom actions */}
-                            <div style={{ textAlign: 'center', paddingTop: '1rem', borderTop: '1px solid var(--card-border)', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                                <button onClick={onBack} style={{ padding: '0.75rem 1.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--text-secondary)', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <div style={{ textAlign: 'center', paddingTop: '1rem', borderTop: '1px solid var(--card-border)', display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                                <button onClick={onBack} style={{ padding: '0.6rem 1.2rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: 'var(--text-secondary)', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                     <ArrowLeft size={14}/> Back to Home
                                 </button>
-                                <button onClick={() => setStep('hub')} style={{ padding: '0.75rem 1.5rem', background: 'transparent', border: '1px solid var(--card-border)', color: 'var(--text-primary)', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
+                                <button onClick={() => setStep('hub')} style={{ padding: '0.6rem 1.2rem', background: 'transparent', border: '1px solid var(--card-border)', color: 'var(--text-primary)', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
                                     Adjust Facility Data
                                 </button>
-                                <button onClick={() => window.print()} style={{ padding: '0.75rem 1.75rem', background: 'var(--danger)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '500' }}>
+                                <button onClick={() => window.print()} style={{ padding: '0.6rem 1.4rem', background: 'var(--danger)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '500' }}>
                                     <Download size={14}/> Download Report
                                 </button>
                             </div>

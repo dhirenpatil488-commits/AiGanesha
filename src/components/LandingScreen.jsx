@@ -1,202 +1,173 @@
-import React, { useEffect } from "react";
-import { Home, Building2, Factory, BarChart3, Target, Globe, ArrowRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Home, Building2, Factory, BarChart3, ArrowRight } from "lucide-react";
 
 const calculatorOptions = [
   {
     id: "household",
     title: "Household",
-    description: "Calculate your personal and family carbon footprint",
+    eyebrow: "Personal",
+    description: "Energy, transport, diet, and consumption habits.",
     icon: Home,
-    features: ["Energy consumption", "Transportation", "Food & diet", "Shopping habits"],
+    features: ["Energy consumption", "Transportation", "Food & diet", "Shopping"],
   },
   {
     id: "business",
     title: "Business",
-    description: "Small to medium business emissions tracking",
+    eyebrow: "SME",
+    description: "Office operations, fleet, travel, and supply chain.",
     icon: Building2,
-    features: ["Office operations", "Employee commuting", "Business travel", "Procurement"],
+    features: ["Office operations", "Commuting", "Business travel", "Procurement"],
   },
   {
     id: "industry",
     title: "Industry",
-    description: "Enterprise-level GHG Protocol reporting",
+    eyebrow: "Enterprise",
+    description: "Full Scope 1-3 reporting across multiple facilities.",
     icon: Factory,
-    features: ["Multi-facility tracking", "Full Scope 1-3", "Sector benchmarking", "Reduction targets"],
+    features: ["Multi-facility", "Full Scope 1–3", "Benchmarking", "Targets"],
   },
 ];
 
-const stats = [
-  { value: "2.0", label: "India Average", sublabel: "tCO₂e/person/yr" },
-  { value: "4.7", label: "Global Average", sublabel: "tCO₂e/person/yr" },
-  { value: "1.5°C", label: "Paris Target", sublabel: "Max warming" },
-];
-
 export default function LandingScreen({ onSelect, onBackToPlatform }) {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+  const [hovered, setHovered] = useState(null);
 
-    return (
-        <main className="min-h-screen flex flex-col relative z-10 transition-colors duration-500">
-            {/* ── Navigation ─────────────────────────────────────────────── */}
-            <header className="border-b border-dotted border-white/10 sticky top-0 z-50 bg-[#080C10]/85 backdrop-blur-md">
-                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0 flex justify-between">
-                    <div className="py-3.5 sm:py-5 flex items-center">
-                        <div
-                            className="flex items-center cursor-pointer"
-                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        >
-                            <span className="font-semibold text-[18px] sm:text-[22px] text-white/90 tracking-[-0.03em] select-none">
-                                ai<span style={{ color: "#F4A261" }}>G</span>anesha
-                            </span>
-                        </div>
-                    </div>
-                    <div className="py-3.5 sm:py-5 flex items-center gap-5 sm:gap-6">
-                        {onBackToPlatform && (
-                            <button
-                                onClick={onBackToPlatform}
-                                className="text-[11px] sm:text-[12px] font-mono text-white/30 hover:text-white/70 transition-colors duration-300 uppercase tracking-[0.12em]"
-                            >
-                                ← Back
-                            </button>
-                        )}
-                    </div>
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  return (
+    <main className="min-h-screen flex flex-col font-sans">
+
+      {/* ── Nav ── */}
+      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080C10]/90 backdrop-blur-xl">
+        <div className="w-full max-w-[860px] mx-auto px-6 sm:px-8 flex justify-between items-center py-5">
+          <span className="font-semibold text-[20px] text-white/90 tracking-[-0.03em]">
+            ai<span style={{ color: "#F4A261" }}>G</span>anesha
+          </span>
+          {onBackToPlatform && (
+            <button onClick={onBackToPlatform}
+              className="text-[11px] font-mono text-white/25 hover:text-white/60 transition-colors uppercase tracking-[0.14em]">
+              ← Back
+            </button>
+          )}
+        </div>
+      </header>
+
+      <div className="w-full max-w-[860px] mx-auto px-6 sm:px-8">
+
+        {/* ── Hero ── */}
+        <div className="pt-10 sm:pt-16 pb-14 sm:pb-20 border-b border-white/[0.06]">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 rounded-sm border border-white/[0.08] bg-white/[0.025] text-white/30 text-[10px] font-mono uppercase tracking-[0.16em]">
+            <BarChart3 className="h-3 w-3 opacity-50" />
+            Measure. Understand. Reduce.
+          </div>
+
+          <h1 className="text-[38px] sm:text-[52px] md:text-[62px] font-semibold leading-[1.05] tracking-[-0.04em] text-white mb-5">
+            Calculate Your<br />
+            <span style={{ color: 'rgba(255,255,255,0.22)' }} className="font-light">Carbon Footprint</span>
+          </h1>
+
+          <p className="text-[15px] sm:text-[17px] leading-[1.75] text-white/30 max-w-[520px] mb-10 sm:mb-12">
+            Structured carbon accounting for households, businesses, and industries — built on GHG Protocol methodology.
+          </p>
+
+          {/* Stats strip */}
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 md:gap-14">
+            {[
+              { value: "2.0", label: "India Average", sub: "tCO₂e/person/yr" },
+              { value: "4.7", label: "Global Average", sub: "tCO₂e/person/yr" },
+              { value: "1.5°C", label: "Paris Target", sub: "Max warming" },
+            ].map((s, i) => (
+              <div key={i} className="flex items-baseline gap-3 sm:block">
+                <span className="text-[28px] sm:text-[32px] font-semibold tracking-[-0.04em] text-white leading-none">{s.value}</span>
+                <div className="sm:mt-2">
+                  <div className="text-[11px] font-mono text-white/30 uppercase tracking-[0.1em]">{s.label}</div>
+                  <div className="text-[10px] font-mono text-white/15 uppercase tracking-[0.08em] mt-0.5">{s.sub}</div>
                 </div>
-            </header>
+              </div>
+            ))}
+          </div>
+        </div>
 
-            {/* ── Hero Section ─────────────────────────────────────────────── */}
-            <section className="relative overflow-hidden border-b border-dotted border-white/10">
-                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-                    <div className="pt-8 pb-12 sm:pt-12 sm:pb-20 space-y-6 sm:space-y-8">
+        {/* ── Calculator Selection ── */}
+        <div className="py-12 sm:py-16">
+          <p className="text-[10px] sm:text-[11px] font-mono text-white/20 uppercase tracking-[0.2em] mb-8 sm:mb-10">
+            Select a Calculator
+          </p>
 
-                        {/* Eyebrow + Headline Group */}
-                        <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/40 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.12em] mb-4 sm:mb-5">
-                                <BarChart3 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                                <span>Measure. Understand. Reduce.</span>
-                            </div>
+          <div className="flex flex-col gap-4">
+            {calculatorOptions.map((option) => {
+              const Icon = option.icon;
+              const isHovered = hovered === option.id;
+              return (
+                <div
+                  key={option.id}
+                  onClick={() => onSelect(option.id)}
+                  onMouseEnter={() => setHovered(option.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  className="flex items-center gap-5 sm:gap-7 p-6 sm:p-7 rounded-sm border cursor-pointer transition-all duration-300"
+                  style={{
+                    background: isHovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.018)',
+                    borderColor: isHovered ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.06)',
+                    transform: isHovered ? 'translateY(-2px)' : 'none',
+                    boxShadow: isHovered ? '0 12px 40px rgba(0,0,0,0.4)' : 'none',
+                  }}
+                >
+                  {/* Icon */}
+                  <div className="flex-shrink-0 h-11 w-11 sm:h-12 sm:w-12 rounded-sm flex items-center justify-center border transition-all duration-300"
+                    style={{
+                      background: isHovered ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.03)',
+                      borderColor: isHovered ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.07)',
+                    }}>
+                    <Icon className="h-5 w-5 transition-colors duration-300"
+                      style={{ color: isHovered ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.25)' }} />
+                  </div>
 
-                            {/* Headline */}
-                            <h1 className="text-[26px] min-[375px]:text-[28px] sm:text-[36px] md:text-[42px] leading-[1.15] tracking-[-0.03em] text-white font-sans">
-                                <span className="font-semibold">Calculate Your</span><br />
-                                <span className="font-light text-white/50">Carbon Footprint</span>
-                            </h1>
-                        </div>
-
-                        <p className="text-[14px] sm:text-[15px] md:text-[16px] leading-[1.65] tracking-[-0.01em] text-white/35 max-w-[520px] font-sans font-normal">
-                            Make informed decisions about your environmental impact. Our tools help households, businesses, and industries measure and reduce their greenhouse gas emissions.
-                        </p>
-
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-3 border-t border-l border-dotted border-white/10 mt-8 sm:mt-12">
-                            {stats.map((stat, i) => (
-                                <div
-                                    key={i}
-                                    className="py-6 sm:py-8 px-4 sm:px-5 border-r border-b border-dotted border-white/10 flex flex-col justify-between"
-                                >
-                                    <div className="text-[18px] sm:text-[22px] md:text-[26px] font-semibold text-white leading-none tracking-[-0.03em] mb-2">
-                                        {stat.value}
-                                    </div>
-                                    <div>
-                                        <div className="text-[10px] sm:text-[11px] font-mono text-white/30 uppercase tracking-[0.1em] leading-[1.4] mb-0.5">
-                                            {stat.label}
-                                        </div>
-                                        <div className="text-[9px] sm:text-[10px] font-mono text-white/20 uppercase tracking-[0.1em] leading-[1.4]">
-                                            {stat.sublabel}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-3 mb-1.5">
+                      <h2 className="text-[20px] sm:text-[24px] font-semibold tracking-[-0.03em] transition-colors duration-300"
+                        style={{ color: isHovered ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.75)' }}>
+                        {option.title}
+                      </h2>
+                      <span className="text-[10px] font-mono uppercase tracking-[0.12em]"
+                        style={{ color: isHovered ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.18)' }}>
+                        {option.eyebrow}
+                      </span>
                     </div>
-                </div>
-            </section>
-
-            {/* ── Calculator Selection ─────────────────────────────────────────────── */}
-            <section className="border-b border-dotted border-white/10">
-                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-                    
-                    <div className="grid grid-cols-1">
-                        {calculatorOptions.map((option, idx) => (
-                            <div
-                                key={option.id}
-                                className={`py-12 sm:py-16 flex flex-col ${idx !== calculatorOptions.length - 1 ? "border-b border-dotted border-white/10" : ""}`}
-                            >
-                                <div className="flex items-center gap-4 sm:gap-5 mb-5 sm:mb-6">
-                                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
-                                        <option.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white/60" />
-                                    </div>
-                                    <h3 className="text-[20px] sm:text-[24px] md:text-[28px] font-semibold text-white/90 leading-none tracking-[-0.02em]">
-                                        {option.title}
-                                    </h3>
-                                </div>
-                                
-                                <p className="text-[14px] sm:text-[15px] md:text-[16px] leading-[1.65] tracking-[-0.01em] text-white/45 mb-8 sm:mb-10 max-w-[480px]">
-                                    {option.description}
-                                </p>
-
-                                <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-10 max-w-[480px]">
-                                    {option.features.map((feature) => (
-                                        <li key={feature} className="flex items-center gap-4 sm:gap-5 text-[14px] sm:text-[15px] text-white/50">
-                                            <span className="text-white/20 text-[12px] sm:text-[14px] font-mono tracking-widest select-none shrink-0">—</span>
-                                            <span className="leading-tight font-light">{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-
-                                <div>
-                                    <button
-                                        onClick={() => onSelect(option.id)}
-                                        className="group relative inline-flex items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 border text-[11px] sm:text-[12px] font-mono uppercase tracking-[0.14em] transition-all duration-400 overflow-hidden"
-                                        style={{
-                                            borderColor: 'rgba(255,255,255,0.2)',
-                                            color: 'rgba(255,255,255,0.5)',
-                                        }}
-                                        onMouseEnter={e => {
-                                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)';
-                                            e.currentTarget.style.color = 'rgba(255,255,255,1)';
-                                            e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                                        }}
-                                        onMouseLeave={e => {
-                                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
-                                            e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-                                            e.currentTarget.style.background = 'transparent';
-                                        }}
-                                    >
-                                        <span className="relative z-10 flex items-center gap-2.5 sm:gap-3">
-                                            Start {option.title}
-                                            <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 group-hover:translate-x-0.5 transition-transform duration-400" />
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                    <p className="text-[13px] sm:text-[14px] leading-relaxed mb-3 transition-colors duration-300"
+                      style={{ color: isHovered ? 'rgba(255,255,255,0.38)' : 'rgba(255,255,255,0.25)' }}>
+                      {option.description}
+                    </p>
+                    <div className="hidden sm:flex flex-wrap gap-x-4 gap-y-1">
+                      {option.features.map((f) => (
+                        <span key={f} className="text-[11px] font-mono flex items-center gap-1.5 transition-colors duration-300"
+                          style={{ color: 'rgba(255,255,255,0.18)' }}>
+                          <span className="w-0.5 h-0.5 rounded-full bg-white/20" />
+                          {f}
+                        </span>
+                      ))}
                     </div>
-                </div>
-            </section>
+                  </div>
 
-            {/* ── Footer ─────────────────────────────────────────────────── */}
-            <footer className="py-8 sm:py-12">
-                <div className="w-full max-w-[680px] mx-auto px-4 sm:px-0">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
-                        <div>
-                            <h4 className="text-[11px] sm:text-[12px] font-mono text-white/30 mb-2.5 flex items-center gap-2 uppercase tracking-[0.1em]">
-                                <BarChart3 className="h-3.5 w-3.5" />
-                                Detailed Breakdown
-                            </h4>
-                            <p className="text-[13px] sm:text-[14px] leading-[1.6] text-white/20">Visualize your emissions by category with interactive charts.</p>
-                        </div>
-
-                        <div>
-                            <h4 className="text-[11px] sm:text-[12px] font-mono text-white/30 mb-2.5 flex items-center gap-2 uppercase tracking-[0.1em]">
-                                <Target className="h-3.5 w-3.5" />
-                                Reduction Tips
-                            </h4>
-                            <p className="text-[13px] sm:text-[14px] leading-[1.6] text-white/20">Get personalized recommendations to lower your footprint.</p>
-                        </div>
-                    </div>
+                  {/* Arrow */}
+                  <ArrowRight className="flex-shrink-0 h-4 w-4 transition-all duration-300"
+                    style={{
+                      color: isHovered ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.15)',
+                      transform: isHovered ? 'translateX(3px)' : 'none',
+                    }} />
                 </div>
-            </footer>
-        </main>
-    );
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Footer line */}
+        <div className="border-t border-white/[0.05] py-8">
+          <p className="text-[10px] font-mono text-white/12 uppercase tracking-[0.15em]">
+            GHG Protocol · IPCC · DEFRA · CEA India
+          </p>
+        </div>
+
+      </div>
+    </main>
+  );
 }

@@ -34,6 +34,8 @@ import {
 } from "lucide-react";
 import { calculateIndustryEmissions, type IndustryResult } from "@/lib/calculations";
 import EmissionsResult from "@/components/calculators/emissions-result";
+import LeadCaptureModal from "@/components/LeadCaptureModal";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 
 interface IndustryCalculatorProps {
@@ -324,6 +326,7 @@ function InputRow({ label, name, value, onChange, type = "number" }: any) {
       <div className="bg-[#0d1218] border border-white/10 rounded-lg px-4 py-2 flex items-center shadow-inner min-w-[140px] focus-within:border-[#F4A261]/50 transition-all">
         <input
           type={type} name={name} value={value || (type==="text"?"":0)} onChange={onChange}
+          onFocus={e => e.target.select()}
           className={`${type === "text" ? "w-64 text-left" : "w-full text-right"} bg-transparent text-white/90 text-[15px] font-mono outline-none`}
         />
       </div>
@@ -345,8 +348,11 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
   const [step, setStep] = useState<"org" | "hub" | "org_scope3" | "results">("org");
   const [data, setData] = useState<OrgData>(initialData);
   const [result, setResult] = useState<IndustryResult | null>(null);
+  const [pendingResult, setPendingResult] = useState<IndustryResult | null>(null);
+  const [showLeadModal, setShowLeadModal] = useState(false);
   const [activeFacilityId, setActiveFacilityId] = useState<number | null>(null);
   const [facilityStep, setFacilityStep] = useState(0);
+  const isMobile = useIsMobile();
 
   // Scroll to top when changing steps
   useEffect(() => {
@@ -447,8 +453,14 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
     };
 
     const calcResult = calculateIndustryEmissions(calcData);
-    setResult(calcResult);
-    setStep("results");
+    const isSubscribed = localStorage.getItem('aiganesha_subscribed') === '1';
+    if (isMobile || isSubscribed) {
+      setResult(calcResult);
+      setStep("results");
+    } else {
+      setPendingResult(calcResult);
+      setShowLeadModal(true);
+    }
   };
 
   const isEditingFacility = activeFacilityId !== null;
@@ -893,6 +905,21 @@ export default function IndustryCalculator({ onBack }: IndustryCalculatorProps) 
         return null;
     }
   };
+
+  if (showLeadModal && pendingResult) {
+    return (
+      <LeadCaptureModal
+        calculatorType="industry"
+        totalTonnes={pendingResult.tonnes?.total}
+        onSuccess={() => {
+          setShowLeadModal(false);
+          setResult(pendingResult);
+          setPendingResult(null);
+          setStep("results");
+        }}
+      />
+    );
+  }
 
   if (result) {
     return (

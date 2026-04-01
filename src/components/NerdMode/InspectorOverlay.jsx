@@ -1,5 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNerdMode } from '@/lib/NerdModeContext';
+
+// Hook to play a subtle "tick" sound
+function useAudioTick(trigger) {
+    const audioCtxRef = useRef(null);
+    const lastKeyRef = useRef(null);
+
+    useEffect(() => {
+        if (!trigger) {
+            lastKeyRef.current = null;
+            return;
+        }
+
+        // Create a unique key for the element so we only tick when it changes
+        const key = `${trigger.tagName}-${trigger.rect.top}-${trigger.rect.left}-${trigger.rect.width}-${trigger.rect.height}`;
+        if (key === lastKeyRef.current) return;
+        lastKeyRef.current = key;
+        
+        try {
+            if (!audioCtxRef.current) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtxRef.current = new AudioContext();
+                }
+            }
+            
+            const ctx = audioCtxRef.current;
+            if (!ctx) return;
+
+            // Browsers suspend audio contexts if not created during a click.
+            // We must resume it explicitly.
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            // Pleasing 'Glass Tap' / 'Drop' sound profile
+            osc.type = 'sine';
+            
+            // Stable, pleasant pitch (C5)
+            osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+            
+            // ADSR Envelope - Crucial for a "pleasing" sound without harsh clicks
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.01); // 10ms soft attack
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15); // 150ms natural fade-out
+            
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.15);
+        } catch (e) {
+            console.error("Audio tick failed", e);
+        }
+    }, [trigger]);
+}
 
 // Tries to find a position for the tooltip that doesn't overlap the target element.
 // Tries: right → left → below → above, picks first that fits on-screen.
@@ -38,6 +96,8 @@ function calcTooltipPos(rect, tooltipW, tooltipH) {
 export default function InspectorOverlay() {
     const { isNerdMode } = useNerdMode();
     const [hoveredElement, setHoveredElement] = useState(null);
+
+    useAudioTick(hoveredElement);
 
     useEffect(() => {
         if (!isNerdMode) {

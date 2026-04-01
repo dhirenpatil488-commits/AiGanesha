@@ -34,19 +34,19 @@ export default function PlatformHome({ onNavigate, onBack }) {
 
                 {/* ── Hero ── */}
                 {/* ── Hero ── */}
-                <div className="pt-10 sm:pt-16 pb-16 sm:pb-20 border-b border-white/[0.06]">
+                <div className="pt-2 sm:pt-6 pb-12 sm:pb-16 border-b border-white/[0.06]">
                     
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 rounded-sm border border-white/[0.08] bg-white/[0.025] text-white/30 text-[10px] font-mono uppercase tracking-[0.16em]">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-5 rounded-sm border border-white/[0.08] bg-white/[0.025] text-white/30 text-[10px] font-mono uppercase tracking-[0.16em]">
                         <span className="w-1 h-1 rounded-sm bg-[#F4A261]/50" />
                         Building for the future
                     </div>
 
-                    <h1 className="text-[38px] sm:text-[52px] md:text-[64px] font-semibold leading-[1.05] tracking-[-0.04em] text-white mb-6">
+                    <h1 className="text-[38px] sm:text-[52px] md:text-[64px] font-semibold leading-[1.05] tracking-[-0.04em] text-white mb-5">
                         Intelligence for a<br />
                         <span style={{ color: 'rgba(255,255,255,0.22)' }} className="font-light">Sustainable Future</span>
                     </h1>
 
-                    <p className="text-[15px] sm:text-[17px] leading-[1.75] text-white/30 max-w-[500px] mb-10 sm:mb-12">
+                    <p className="text-[15px] sm:text-[17px] leading-[1.75] text-white/30 max-w-[500px] mb-8 sm:mb-10">
                         ai<span style={{ color: "#F4A261" }}>G</span>anesha offers tools that help individuals and businesses see their true climate impact, so what was invisible becomes clear, and what is clear can be transformed.
                     </p>
 
@@ -62,7 +62,7 @@ export default function PlatformHome({ onNavigate, onBack }) {
                     </button>
 
                     {/* ── Fact Strip (Original Research) ── */}
-                    <div className="mt-16 sm:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div className="mt-12 sm:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-3">
                         {[
                             { value: "50", unit: "yrs", label: "Until 1.5°C is locked in" },
                             { value: "200M", unit: "ppl", label: "Displaced by climate" },

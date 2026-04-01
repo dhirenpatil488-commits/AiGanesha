@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowLeft, TreeDeciduous, Car, Plane, Home, TrendingDown, Lightbulb, RotateCcw, Share2, Download, Fingerprint, AlertCircle, Leaf, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, TreeDeciduous, Car, Plane, Home, TrendingDown, Lightbulb, RotateCcw, Share2, Download, Fingerprint, AlertCircle, Leaf, CheckCircle2, Monitor } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import type { HouseholdResult, BusinessResult, IndustryResult } from "@/lib/calculations";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface EmissionsResultProps {
   result: HouseholdResult | BusinessResult | IndustryResult;
@@ -99,6 +100,7 @@ function ScopeBar({ label, value, pct, color }: { label: string; value: string; 
 }
 
 export default function EmissionsResult({ result, type, onBack, onStartOver }: EmissionsResultProps) {
+  const isMobile = useIsMobile();
   const chartData = result.chartData.map((item, i) => ({
     ...item,
     fill: CHART_COLORS[i % CHART_COLORS.length],
@@ -145,6 +147,78 @@ export default function EmissionsResult({ result, type, onBack, onStartOver }: E
   // ── Color for total ───────────────────────────────────────────────────────────
   const totalColor =
     perCapitaTonnes < 2 ? "#3fb950" : perCapitaTonnes < 5 ? "#F4A261" : "#f85149";
+
+  // ── Mobile truncated view ─────────────────────────────────────────────────────
+  if (isMobile) {
+    return (
+      <div className="min-h-screen pb-24 font-sans" style={{ background: "#080C10" }}>
+        {/* Sticky Nav */}
+        <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080C10]/90 backdrop-blur-xl">
+          <div className="w-full max-w-[900px] mx-auto px-5 py-4 flex items-center justify-between">
+            <button onClick={onBack}
+              className="flex items-center gap-2 text-[11px] font-mono text-white/30 hover:text-white/70 uppercase tracking-[0.14em] transition-colors bg-transparent border-none cursor-pointer">
+              <ArrowLeft size={14} /> Back to Form
+            </button>
+            <span className="font-semibold text-[16px] text-white/80 tracking-[-0.03em]">
+              ai<span style={{ color: '#F4A261' }}>G</span>anesha
+            </span>
+          </div>
+        </header>
+
+        <div className="w-full max-w-[900px] mx-auto px-5 pt-8">
+          {/* Page Title */}
+          <div className="mb-8">
+            <p className="text-[11px] font-mono text-white/20 uppercase tracking-[0.2em] mb-2">Results</p>
+            <h1 className="text-[24px] font-semibold tracking-[-0.03em] text-white leading-tight">
+              Emissions Dashboard
+            </h1>
+            <p className="text-[13px] text-white/30 font-mono mt-1">Your key figures at a glance.</p>
+          </div>
+
+          {/* 3 KPI Cards */}
+          <div className="grid grid-cols-1 gap-3 mb-6">
+            <StatCard value={totalTonnes.toFixed(1)} label="Total tCO₂e / year" accent={totalColor} />
+            <StatCard
+              value={perCapitaTonnes.toFixed(2)}
+              label={type === "household" ? "Per person  t / year" : "Per employee  t / year"}
+            />
+            <StatCard value={thirdValue} label={thirdLabel} sub={thirdSub} />
+          </div>
+
+          {/* Desktop nudge */}
+          <div className="relative rounded-2xl border border-white/[0.07] bg-white/[0.02] p-8 text-center overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#F4A261]/30 to-transparent" />
+
+            {/* Blurred chart teaser */}
+            <div className="flex justify-center gap-2 items-end mb-6 opacity-20" style={{ filter: 'blur(4px)' }}>
+              {[50, 80, 35, 95, 60, 70, 45].map((h, i) => (
+                <div key={i} className="w-4 rounded-t-sm"
+                     style={{ height: `${h}px`, backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }} />
+              ))}
+            </div>
+
+            <div className="w-11 h-11 rounded-xl border border-[#F4A261]/20 bg-[#F4A261]/10
+                            flex items-center justify-center mx-auto mb-4">
+              <Monitor size={18} className="text-[#F4A261]" />
+            </div>
+            <h2 className="text-[17px] font-semibold text-white/80 tracking-[-0.02em] mb-2">
+              Your full breakdown awaits on desktop.
+            </h2>
+            <p className="text-[13px] text-white/40 leading-relaxed max-w-[300px] mx-auto mb-6">
+              The complete chart analysis, scope breakdown, real-world equivalents,
+              and personalised reduction plan require a larger screen.
+            </p>
+            <button onClick={onStartOver}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/[0.08]
+                         bg-white/[0.025] text-white/40 hover:text-white/70 hover:border-white/[0.14]
+                         transition-all text-[11px] font-mono uppercase tracking-[0.14em] cursor-pointer">
+              <RotateCcw size={12} /> Recalculate
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pb-24 font-sans" style={{ background: "#080C10" }}>

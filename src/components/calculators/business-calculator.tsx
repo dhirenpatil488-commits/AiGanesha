@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, Building2, Zap, Truck, Users, ShoppingCart, Trash2, ChevronLeft, ChevronRight, Gauge } from "lucide-react";
 import { calculateBusinessEmissions, type BusinessData, type BusinessResult } from "@/lib/calculations";
 import EmissionsResult from "@/components/calculators/emissions-result";
+import LeadCaptureModal from "@/components/LeadCaptureModal";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface BusinessCalculatorProps {
   onBack: () => void;
@@ -78,6 +80,7 @@ const PremiumRange = ({ min, max, step, value, onChange, unit }: { min: number, 
         <div className="flex items-center gap-2 bg-[#0d1218] border border-white/10 rounded-lg px-4 py-2.5 min-w-[120px]">
             <input 
                 type="number" value={value || 0} onChange={(e) => onChange(Number(e.target.value))}
+                onFocus={e => e.target.select()}
                 className="w-full bg-transparent text-white/90 text-[15px] font-mono outline-none text-right"
             />
             {unit && <span className="text-[11px] font-mono text-white/30 uppercase tracking-[0.1em]">{unit}</span>}
@@ -124,6 +127,7 @@ const PremiumInput = ({ value, onChange, placeholder, prefix, hint }: { value: n
           {prefix && <span className="text-white/40 mr-2 font-mono">{prefix}</span>}
           <input 
               type="number" value={value || 0} onChange={(e) => onChange(Number(e.target.value))} placeholder={placeholder}
+              onFocus={e => e.target.select()}
               className="w-full bg-transparent text-white/90 text-[15px] font-mono outline-none"
           />
       </div>
@@ -137,6 +141,9 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState<BusinessData>(initialData);
   const [result, setResult] = useState<BusinessResult | null>(null);
+  const [pendingResult, setPendingResult] = useState<BusinessResult | null>(null);
+  const [showLeadModal, setShowLeadModal] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -151,7 +158,13 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
       setCurrentStep(currentStep + 1);
     } else {
       const emissions = calculateBusinessEmissions(data);
-      setResult(emissions);
+      const isSubscribed = localStorage.getItem('aiganesha_subscribed') === '1';
+      if (isMobile || isSubscribed) {
+        setResult(emissions);
+      } else {
+        setPendingResult(emissions);
+        setShowLeadModal(true);
+      }
     }
   };
 
@@ -160,6 +173,20 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
       setCurrentStep(currentStep - 1);
     }
   };
+
+  if (showLeadModal && pendingResult) {
+    return (
+      <LeadCaptureModal
+        calculatorType="business"
+        totalTonnes={pendingResult.tonnes?.total}
+        onSuccess={() => {
+          setShowLeadModal(false);
+          setResult(pendingResult);
+          setPendingResult(null);
+        }}
+      />
+    );
+  }
 
   if (result) {
     return (
@@ -369,7 +396,7 @@ export default function BusinessCalculator({ onBack }: BusinessCalculatorProps) 
                 {t === "office" && (
                   <div className="animate-in fade-in duration-300 space-y-10">
                     <div>
-                      <PremiumLabel text="Business flights per year (total km)" hint="Tip: Delhi-Mumbai is ~1400km one way" />
+                      <PremiumLabel text="Business flights per year (total km)" subtext="Tip: Delhi-Mumbai is ~1400km one way" />
                       <PremiumInput value={data.flightsKmPerYear} onChange={(v) => updateData("flightsKmPerYear", v)} />
                     </div>
                     <div>
